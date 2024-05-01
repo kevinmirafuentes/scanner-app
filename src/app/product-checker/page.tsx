@@ -4,14 +4,14 @@ import { useState } from "react";
 
 export default function ProductChecker() {
 
-  let [decodedText, setDecodedText] = useState();
+  let [decodedText, setDecodedText] = useState<string|null>(null);
 
   const successCallback = (text: string) => {
     setDecodedText(text);
   }
 
   const handleReset =  () => {
-    setDecodedText('');
+    setDecodedText(null);
   }
 
   return (

@@ -1,5 +1,6 @@
 "use client"
 import BarcodeScanner from "@/components/BarcodeScanner";
+import ProductDetails from "@/components/ProductDetails";
 import { useState } from "react";
 
 export default function ProductChecker() {
@@ -21,6 +22,9 @@ export default function ProductChecker() {
 				<div>Value: { decodedText }</div>
 				<button onClick={handleReset}>Reset</button>
 			</div>
+      {decodedText && 
+        <ProductDetails code={decodedText} />
+      }
     </main>
   );
 }

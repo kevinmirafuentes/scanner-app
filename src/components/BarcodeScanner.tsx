@@ -29,7 +29,7 @@ let scanner: Html5Qrcode;
 type OnScan = (decodedText: string) => void;
 
 interface BarcodeScannerProps {
-	onScan?: OnScan|undefined
+	onScan: OnScan
 };
 
 export default function BarcodeScanner({ onScan }: BarcodeScannerProps) {

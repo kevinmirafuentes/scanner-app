@@ -1,13 +1,47 @@
-"use server"
-
 import { getBarcode } from "@/repository/barcodes"
+import { useEffect, useState } from "react"
 
-export default async function ProductDetails(props: { code: string|null}) {
-  const barcode = await getBarcode('20600005428');
+export default function ProductDetails(props: { code: string|null}) {
+
+  let emptyBarcode = {product_id: null, barcode: null};
+  let [barcode, setBarcode] = useState(emptyBarcode);
+
+  const fetchBarcode = async (code: string|null) => {
+    let bcode;
+
+    if (code) {
+      let res = await fetch('/api/products?barcode=' + code);
+      let data = await res.json();
+      bcode = data ? data[0] : null;
+    }
+
+    if (bcode) {
+      setBarcode(bcode);
+      return;
+    } 
+    setBarcode(emptyBarcode);
+  };
+
+  useEffect(() => {
+    fetchBarcode(props.code)
+  }, [props]);
+  
+  if (!props.code) {
+    return (<></>);
+  }
+  
+  if (!barcode.product_id) {
+    return (
+      <div className="bg-gray-100 p-5 text-black">
+        Barcode is unrecorgnized
+      </div>
+    );
+  }
+
   return (
-    <div>
+    <div className="bg-gray-100 p-5 text-black">
       <div>Product ID: {barcode.product_id}</div>
-      <div>Barcode: {barcode.barcode}</div>
+      <div>Barcode In Database: {barcode.barcode}</div>
       <div>Scanned code: {props.code}</div>
     </div>
   )

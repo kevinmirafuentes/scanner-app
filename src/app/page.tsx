@@ -9,7 +9,7 @@ export default function Home() {
         </h2>
         <ul className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
           <li>
-            <Link href="/api/products">/api/products</Link>
+            <Link href="/products">/products</Link>
           </li>
           <li>
             <Link href="/product-checker">/product-checker</Link>

@@ -4,7 +4,7 @@ import sql from 'mssql';
 var config = {
   user: 'sa',
   password: '9522468',
-  server: '192.168.68.116', 
+  server: '192.168.68.109', 
   database: 'IMASTERPROFILES',
   options: {
       "encrypt": false

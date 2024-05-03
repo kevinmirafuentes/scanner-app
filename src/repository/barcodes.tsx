@@ -6,8 +6,12 @@ export interface Barcode {
 }
 
 export async function getBarcode(code: string) {
-  let queryString = `select top 10 * from BarcodeH = "${code}"`;
+  let queryString = `select top 1 * from BarcodeH where barcode='${code}'`;
   let resultSet = await query(queryString);
-  // @ts-ignore: This somehow works in mobile
-  return resultSet.recordsets[0];
+
+  if (typeof resultSet.recordset[0] !== 'undefined') {
+    return resultSet.recordset[0];
+  }
+
+  return [];
 }

@@ -13,5 +13,5 @@ export async function getBarcode(code: string) {
     return resultSet.recordset[0];
   }
 
-  return [];
+  return {};
 }

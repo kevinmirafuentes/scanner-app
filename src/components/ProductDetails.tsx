@@ -10,9 +10,8 @@ export default function ProductDetails(props: { code: string|null}) {
     let bcode;
 
     if (code) {
-      let res = await fetch('/api/products?barcode=' + code);
-      let data = await res.json();
-      bcode = data ? data[0] : null;
+      let res = await fetch('/api/products/barcodes/' + code);
+      bcode = await res.json();
     }
 
     if (bcode) {

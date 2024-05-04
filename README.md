@@ -17,9 +17,19 @@ By default, camera access is restricted, follow this steps in this [GUIDE](https
 3. Add any addresses you want to ignore the secure origin policy for. Remember to include the port number too (if required).
 4. Save and restart Chrome.
 
+## Dev Setup
+
+Since the vmware machine changes IP every time. We can set the database IP via hosts file (`C:\Windows\System32\drivers\etc\hosts`).
+
+example: 
+```
+192.168.68.109	vm.host
+```
+
+
 
 ## Demo URLs
 
 
-* [http://localhost:3000/api/products](http://localhost:3000/api/products)
+* [http://localhost:3000/products](http://localhost:3000/products)
 * [http://localhost:3000/product-checker](http://localhost:3000/product-checker)

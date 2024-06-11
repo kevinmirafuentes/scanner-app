@@ -1,21 +1,82 @@
+import { Box, Center, Container, Grid, GridItem, Icon, Image, LinkBox, LinkOverlay, Text, VStack } from "@chakra-ui/react";
 import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconDefinition, faBarcode, faBoxOpen, faBoxesPacking, faTag } from "@fortawesome/free-solid-svg-icons";
+
+type DashboardButtonProps = {
+  icon: IconDefinition, 
+  href: string,
+  label: string
+}
+
+export function DashboardButton({
+  icon, 
+  href, 
+  label
+}: DashboardButtonProps) {
+  return (
+    <LinkBox>
+      <Center 
+        rounded='md' 
+        boxShadow='md'
+        borderWidth={1} 
+        borderColor='gray.100'
+        height='131px'
+      >
+        <VStack>
+          <FontAwesomeIcon 
+            icon={icon} 
+            fontSize='50px'
+            color='#4FD1C5'
+          ></FontAwesomeIcon>
+          <LinkOverlay href={href} color='teal.300'>
+            <Text fontSize='sm'>{label}</Text>
+          </LinkOverlay>
+        </VStack>
+      </Center>
+    </LinkBox>
+  )
+}
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-8">
-      <div>
-        <h2 className="mb-3 text-2xl font-semibold">
-          Demo Links
-        </h2>
-        <ul className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-          <li>
-            <Link href="/products">/products</Link>
-          </li>
-          <li>
-            <Link href="/product-checker">/product-checker</Link>
-          </li>
-        </ul>
-      </div>
-    </main>
+    <VStack>
+      <Container 
+        marginTop='60px'
+        marginBottom='20px;'
+      >
+        <Center>
+          <Image src="/cart.png" width="150px" alt="Logo"></Image>
+        </Center>
+      </Container>
+      <Container
+        marginBottom="20px"
+      >
+        <Text fontSize='sm'>
+          You are connected to <Text display='inline' color='teal.300'>Branch Name</Text>.
+        </Text>
+      </Container>
+      <Container>
+        <Grid
+          w='100%'
+          templateRows='repeat(2, 1fr)'
+          templateColumns='repeat(2, 1fr)'
+          gap='15px'
+        >
+          <GridItem>
+            <DashboardButton icon={faBarcode} href='/price-checker' label='Price Checker'></DashboardButton>
+          </GridItem>
+          <GridItem>
+            <DashboardButton icon={faBoxOpen} href='/check-inventory' label='Check Inventory'></DashboardButton>
+          </GridItem>
+          <GridItem>
+            <DashboardButton icon={faBoxesPacking} href='/stock-request' label='Stock Request'></DashboardButton>
+          </GridItem>
+          <GridItem>
+            <DashboardButton icon={faTag} href='/request-tag' label='Request Tag'></DashboardButton>
+          </GridItem>
+        </Grid>
+      </Container>
+    </VStack>
   );
 }

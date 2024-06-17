@@ -46,48 +46,50 @@ function ProductCard() {
 
 export default function StockRequest() {
   return (
-    <VStack>
-      <Navbar>Stock Request</Navbar>
-      <Container 
-        height='calc(100vh - 114px)' 
-        paddingY='30px'
-        overflow='scroll'
-      >
-        <VStack 
-          spacing='20px'  
+    <>
+      <VStack>
+        <Navbar>Stock Request</Navbar>
+        <Container 
+          height='calc(100vh - 114px)' 
+          paddingY='30px'
+          overflow='scroll'
         >
-          <FormControl>
-            <FormLabel>Reference No.</FormLabel>
-            <Input type='text' />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Remarks</FormLabel>
-            <Input type='text' />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Date</FormLabel>
-            <Input type='date' />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Type of Scan Barcode</FormLabel>
-            <InputGroup>
-              <Input type='text' placeholder='Enter barcode' />
-              <InputRightElement pointerEvents='none'>
-                <FontAwesomeIcon 
-                  icon={faBarcode}
-                ></FontAwesomeIcon>
-              </InputRightElement>
-            </InputGroup>
-          </FormControl>
+          <VStack 
+            spacing='20px'  
+          >
+            <FormControl>
+              <FormLabel>Reference No.</FormLabel>
+              <Input type='text' />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Remarks</FormLabel>
+              <Input type='text' />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Date</FormLabel>
+              <Input type='date' />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Type of Scan Barcode</FormLabel>
+              <InputGroup>
+                <Input type='text' placeholder='Enter barcode' />
+                <InputRightElement pointerEvents='none'>
+                  <FontAwesomeIcon 
+                    icon={faBarcode}
+                  ></FontAwesomeIcon>
+                </InputRightElement>
+              </InputGroup>
+            </FormControl>
 
-          
-          <ProductCard></ProductCard>
-          <ProductCard></ProductCard>
-          <ProductCard></ProductCard>
-          
-        </VStack>
-      </Container>
-      <FooterNav active='stock-request'></FooterNav>
-    </VStack>   
+            
+            <ProductCard></ProductCard>
+            <ProductCard></ProductCard>
+            <ProductCard></ProductCard>
+            
+          </VStack>
+        </Container>
+        <FooterNav active='stock-request'></FooterNav>
+      </VStack>   
+    </>
   )
 }

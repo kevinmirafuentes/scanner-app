@@ -1,5 +1,4 @@
 "use client"
-import BarcodeScanner from "@/components/BarcodeScanner";
 import ProductDetails from "@/components/ProductDetails";
 import Link from "next/link";
 import { useState } from "react";
@@ -18,7 +17,6 @@ export default function ProductChecker() {
 
   return (
     <main className="min-h-screen items-center justify-between">
-      <BarcodeScanner onScan={successCallback} />
       <div className="w-full p-5 bg-white text-black flex flex-row items-center justify-between">
 				<div>Value: { decodedText }</div>
 				<button onClick={handleReset}>Reset</button>

@@ -5,14 +5,15 @@ import Navbar from "@/components/Navbar"
 import FooterNav from "@/components/FooterNav";
 import BarcodeInput from "@/components/BarcodeInput";
 import { useState } from "react";
+import Viewport from "@/components/Viewport";
 
 export default function PriceChecker() {
-  let [productDetails, setProductDetails] = useState();
+  let [barcode, setBarcode] = useState<string|null>();
   
   const onBarcodeChange = (barcode: string) => {
     // todo: find barcode details
-    setProductDetails(1);
-  }
+    setBarcode(barcode);
+  };
 
   return (
     <>
@@ -20,17 +21,12 @@ export default function PriceChecker() {
         <Navbar>
           Price Checker
         </Navbar>
-        <VStack 
-          width='100%' 
-          height='calc(100vh - 114px)' 
-          spacing='30px'
-          paddingY='30px'
-        >
+        <Viewport>
           <Container>
             <BarcodeInput onChange={onBarcodeChange} />
           </Container>
 
-          {productDetails && (
+          {barcode && (
             <>
               <Container>
                 <Select 
@@ -52,7 +48,7 @@ export default function PriceChecker() {
                         justify="space-between"
                       >
                         <Text fontSize='xs'>Product code:</Text>
-                        <Text fontSize='xs'>123123123213</Text>
+                        <Text fontSize='xs'>{barcode}</Text>
                       </HStack>
                       <Text fontSize='xl'>Lucky Me Pancit Canton</Text>
                       <Text fontSize='3xl' fontWeight='bold'>Php 100.00</Text>
@@ -78,7 +74,7 @@ export default function PriceChecker() {
             </>
           )}
           
-        </VStack>
+        </Viewport>
         
         <FooterNav active='price-checker'></FooterNav>
       </VStack>      

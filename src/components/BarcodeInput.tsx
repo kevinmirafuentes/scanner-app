@@ -2,17 +2,18 @@ import { Input, InputGroup, InputRightAddon, Modal, ModalBody, ModalCloseButton,
 import { faBarcode } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useRef, useState } from "react";
-import Scanner from "@/app/lib/scanner/scanner";
+import Scanner from "@/lib/scanner/Scanner";
 
 interface BarcodeInputProps {
   onChange: CallableFunction
 };
 
 let scannerObject = new Scanner;
+let debounce: any;
 
 export default function BarcodeInput({ onChange }: BarcodeInputProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  let [barcode, setBarcode] = useState<string|number>('');
+  let [barcode, setBarcode] = useState<string|null>();
   const audioRef = useRef();
   
   const playBeepSound = () => {
@@ -36,13 +37,23 @@ export default function BarcodeInput({ onChange }: BarcodeInputProps) {
     onOpen();
     setTimeout(() => scannerObject.start(successCallback), 100);
   }
+
+  const handleChange = (e: any) => {
+    if (debounce) {
+      clearTimeout(debounce);
+    }
+    debounce = setTimeout(() => {
+      // setBarcode(e.target.value);
+      onChange(e.target.value);
+    }, 500);
+  }
+
   return (
     <>
     <InputGroup>
       <Input 
-        type='text' 
-        value={barcode} 
-        onChange={() => onChange(barcode)}
+        type='number' 
+        onChange={handleChange}
         placeholder='Enter barcode' />
       <InputRightAddon onClick={handleOpen}>
         <FontAwesomeIcon 

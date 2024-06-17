@@ -1,5 +1,6 @@
 import FooterNav from "@/components/FooterNav";
 import Navbar from "@/components/Navbar";
+import Viewport from "@/components/Viewport";
 import { Box, Button, Card, CardBody, Container, FormControl, FormLabel, Grid, GridItem, Input, InputGroup, InputLeftAddon, InputLeftElement, InputRightAddon, InputRightElement, Text, VStack } from "@chakra-ui/react";
 import { faBarcode, faMinus, faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -49,11 +50,7 @@ export default function StockRequest() {
     <>
       <VStack>
         <Navbar>Stock Request</Navbar>
-        <Container 
-          height='calc(100vh - 114px)' 
-          paddingY='30px'
-          overflow='scroll'
-        >
+        <Viewport>
           <VStack 
             spacing='20px'  
           >
@@ -87,7 +84,7 @@ export default function StockRequest() {
             <ProductCard></ProductCard>
             
           </VStack>
-        </Container>
+        </Viewport>
         <FooterNav active='stock-request'></FooterNav>
       </VStack>   
     </>

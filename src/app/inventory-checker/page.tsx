@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBarcode } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "@/components/Navbar"
 import FooterNav from "@/components/FooterNav";
+import Viewport from "@/components/Viewport";
 
 export default function InventoryChecker() {
   return (
@@ -10,12 +11,7 @@ export default function InventoryChecker() {
       <Navbar>
         Price Checker
       </Navbar>
-      <VStack 
-        width='100%' 
-        height='calc(100vh - 114px)' 
-        spacing='30px'
-        paddingY='30px'
-      >
+      <Viewport>
         <Container>
           <InputGroup>
             <Input type='text' placeholder='Enter barcode' />
@@ -52,7 +48,7 @@ export default function InventoryChecker() {
             </CardBody>
           </Card>
         </Container>
-      </VStack>
+      </Viewport>
       
       <FooterNav active='inventory-checker'></FooterNav>
     </VStack>

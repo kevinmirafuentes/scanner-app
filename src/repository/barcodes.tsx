@@ -15,3 +15,19 @@ export async function getBarcode(code: string) {
 
   return {};
 }
+
+export async function getProductByBarcode(code: string) {
+  let clean = parseInt(code);
+  
+  // get product detail 
+  let prodSql = `
+    select top 1 
+      p.product_id,
+      p.long_descript as name
+    from imasterprofiles.dbo.Product p
+    inner join imasterprofiles.dbo.BarcodeH h on (h.product_id = p.product_id)
+    where h.barcode = '${clean}'
+  `
+  let result = await query(prodSql);
+  return result?.recordset[0];
+};

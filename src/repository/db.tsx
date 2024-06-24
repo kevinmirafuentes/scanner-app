@@ -1,4 +1,5 @@
 import sql from 'mssql';
+import { Connection } from 'tedious';
 
 // connection configs
 var config = {
@@ -11,7 +12,7 @@ var config = {
   }
 };
 
-export async function query(queryString: string) {
+export async function query(queryString: string, ) {
   let pool = await sql.connect(config);
   return await pool.request().query(queryString);
 }

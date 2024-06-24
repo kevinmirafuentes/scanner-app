@@ -52,6 +52,8 @@ export default function PriceChecker() {
     })   
   };
 
+  const formatNum = (x) => Number.parseFloat(x).toFixed(2);
+
   return (
     <>
       <VStack>
@@ -113,11 +115,11 @@ export default function PriceChecker() {
                                 <Text fontSize='xs'>{price.barcode}</Text>
                               </HStack>
                               <Text fontSize='xl'>{price?.name}</Text>
-                              <Text fontSize='3xl' fontWeight='bold'>Php {price.retail_unit_price}</Text>
+                              <Text fontSize='3xl' fontWeight='bold'>Php {formatNum(price.retail_unit_price)}</Text>
                               <Box>
-                                {price.retail_markup2 > 0 && (<Text fontSize='xl'>[ {`${price.retail_qty2}@${price.retail_markup2}`} ]</Text>)}
-                                {price.retail_markup3 > 0 && (<Text fontSize='xl'>[ {`${price.retail_qty3}@${price.retail_markup3}`} ]</Text>)}
-                                {price.retail_markup4 > 0 && (<Text fontSize='xl'>[ {`${price.retail_qty4}@${price.retail_markup4}`} ]</Text>)}
+                                {price.retail_markup2 > 0 && (<Text align='center' fontSize='xl'>[ {`${price.retail_qty2}@${formatNum(price.retail_markup2)}`} ]</Text>)}
+                                {price.retail_markup3 > 0 && (<Text align='center' fontSize='xl'>[ {`${price.retail_qty3}@${formatNum(price.retail_markup3)}`} ]</Text>)}
+                                {price.retail_markup4 > 0 && (<Text align='center' fontSize='xl'>[ {`${price.retail_qty4}@${formatNum(price.retail_markup4)}`} ]</Text>)}
                               </Box>
                             </VStack>
                           </CardBody>

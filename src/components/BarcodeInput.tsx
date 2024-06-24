@@ -71,7 +71,7 @@ export default function BarcodeInput({ onChange }: BarcodeInputProps) {
         </ModalBody>
       </ModalContent>
     </Modal>
-    <audio ref={audioRef} src='/beep.mp3' />
+    <audio ref={audioRef} src='/assets/beep.mp3' />
   </>
   )
 }

@@ -2,6 +2,8 @@ import { Box, Center, Container, Grid, GridItem, Icon, Image, LinkBox, LinkOverl
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition, faBarcode, faBoxOpen, faBoxesPacking, faTag } from "@fortawesome/free-solid-svg-icons";
+import { getSession } from "@/auth";
+import { redirect } from "next/navigation";
 
 type DashboardButtonProps = {
   icon: IconDefinition, 
@@ -38,7 +40,14 @@ export function DashboardButton({
   )
 }
 
-export default function Home() {
+export default async function Home() {
+  
+  const auth = getSession();
+
+  if (!auth) {
+    redirect('/login');
+  }
+
   return (
     <VStack>
       <Container 
@@ -46,15 +55,15 @@ export default function Home() {
         marginBottom='20px;'
       >
         <Center>
-          <Image src="/cart.png" width="150px" alt="Logo"></Image>
+          <Image src="/assets/cart.png" width="150px" alt="Logo"></Image>
         </Center>
       </Container>
       <Container
         marginBottom="20px"
       >
-        <Text fontSize='sm'>
+        <Box fontSize='sm'>
           You are connected to <Text display='inline' color='teal.300'>Branch Name</Text>.
-        </Text>
+        </Box>
       </Container>
       <Container>
         <Grid

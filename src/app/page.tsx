@@ -48,8 +48,6 @@ export default async function Home() {
     redirect('/login');
   }
 
-  console.log(auth)
-
   return (
     <VStack>
       <Container

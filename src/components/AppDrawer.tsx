@@ -59,7 +59,12 @@ export function AppDrawer() {
           <DrawerFooter>
             <Stack width='100%'>
               <Divider orientation='horizontal' />
-              <NavItem href="/">Logout</NavItem>
+              <form action={async (formData) => {
+                "use server";
+                await signOut()
+              }}>
+              <Button type='submit'>Logout</Button>
+              </form>
             </Stack>
           </DrawerFooter>
         </DrawerContent>

@@ -1,3 +1,5 @@
+import { ISqlTypeFactory } from "mssql"
+
 export interface PriceInfo {
   oum: string,
   barcode: string,
@@ -16,4 +18,18 @@ export interface PriceInfo {
 export interface PriceCheck {
   name: string,
   prices: PriceInfo[]
+}
+
+export interface QueryInput {
+  name: string,
+  type: ISqlTypeFactory,
+  value: string|number|null
+}
+
+export interface AuthUser {
+  user_id: number,
+  branch_id: string,
+  branch_name: string,
+  full_name: string,
+  mobile_login_pwd: string,
 }

@@ -2,15 +2,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt, encrypt } from "./lib/utils";
+import { AuthUser } from "./types/types";
 
-export function signIn(formData: FormData) {
-  // todo: get user from db and validate password
-  const user = { username: formData.get('username'), name: 'Sample User'}
-
+export async function signIn(user: AuthUser) {
   const expires = new Date(Date.now() + 10 * 1000);
   const session = JSON.stringify(user);
   cookies().set('auth', encrypt(session), {expires, httpOnly: true});
-  redirect('/');
 }
 
 export function signOut() {

@@ -3,7 +3,6 @@ import { signIn, signOut } from "@/auth"
 
 export default function Login() {
 
-
   return (
     <Center h="calc(100vh)">
       <VStack spacing="32px" w="100%" maxW="390px">
@@ -28,7 +27,7 @@ export default function Login() {
               <Button type='submit' backgroundColor='teal.300' color="#ffffff" width="100%" fontWeight="normal">Login</Button>
             </VStack>
           </form>
-          
+
           <form action={async (formData) => {
             "use server";
             await signOut()

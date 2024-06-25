@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
+import { decrypt, encrypt } from "./lib/utils";
 
 export function signIn(formData: FormData) {
   // todo: get user from db and validate password
@@ -8,7 +9,7 @@ export function signIn(formData: FormData) {
 
   const expires = new Date(Date.now() + 10 * 1000);
   const session = JSON.stringify(user);
-  cookies().set('auth', session, {expires, httpOnly: true});
+  cookies().set('auth', encrypt(session), {expires, httpOnly: true});
   redirect('/');
 }
 
@@ -19,7 +20,7 @@ export function signOut() {
 export function getSession() {
   let session = cookies().get('auth')?.value;
   if (!session) return null;
-  return JSON.parse(session);
+  return JSON.parse(decrypt(session));
 }
 
 export function refreshSession(request: NextRequest) {
@@ -29,7 +30,7 @@ export function refreshSession(request: NextRequest) {
   const response = NextResponse.next();
   response.cookies.set({
     name: 'auth',
-    value: session, 
+    value: session,
     httpOnly: true,
     expires: new Date(Date.now() + 10 * 1000)
   })

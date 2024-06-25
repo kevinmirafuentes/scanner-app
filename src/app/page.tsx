@@ -6,28 +6,28 @@ import { getSession } from "@/auth";
 import { redirect } from "next/navigation";
 
 type DashboardButtonProps = {
-  icon: IconDefinition, 
+  icon: IconDefinition,
   href: string,
   label: string
 }
 
 export function DashboardButton({
-  icon, 
-  href, 
+  icon,
+  href,
   label
 }: DashboardButtonProps) {
   return (
     <LinkBox>
-      <Center 
-        rounded='md' 
+      <Center
+        rounded='md'
         boxShadow='md'
-        borderWidth={1} 
+        borderWidth={1}
         borderColor='gray.100'
         height='131px'
       >
         <VStack>
-          <FontAwesomeIcon 
-            icon={icon} 
+          <FontAwesomeIcon
+            icon={icon}
             fontSize='50px'
             color='#4FD1C5'
           ></FontAwesomeIcon>
@@ -41,16 +41,18 @@ export function DashboardButton({
 }
 
 export default async function Home() {
-  
+
   const auth = getSession();
 
   if (!auth) {
     redirect('/login');
   }
 
+  console.log(auth)
+
   return (
     <VStack>
-      <Container 
+      <Container
         marginTop='60px'
         marginBottom='20px;'
       >

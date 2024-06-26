@@ -33,3 +33,10 @@ export interface AuthUser {
   full_name: string,
   mobile_login_pwd: string,
 }
+
+export interface InventoryDetails {
+  name: string,
+  barcode: string,
+  inventory: number,
+  order_unit: number,
+}

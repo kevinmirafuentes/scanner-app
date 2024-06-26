@@ -1,6 +1,6 @@
 import { query } from "@/repository/db"
 
-export async function getProductPrices(productId: number) {
+export async function getProductPrices(productId: number, branchId?: number) {
   
   // get product detail 
   let sql = `
@@ -22,12 +22,16 @@ export async function getProductPrices(productId: number) {
       s.supp_id
     from imasterprofiles.dbo.BarcodeH h
     inner join imasterprofiles.dbo.BarcodeD d on (d.barcode_id = h.barcode_id)
-    left join imasterprofiles.dbo.BarcodeR r on (r.barcode_id = h.barcode_id)
+    left join imasterprofiles.dbo.BarcodeR r on (r.barcode_id = h.barcode_id and d.branch_id = r.branch_id)
     inner join imasterprofiles.dbo.Product p on (p.product_id = h.product_id)
     inner join imasterprofiles.dbo.unit u on h.unit_id = u.unit_id
     inner join imasterprofiles.dbo.Supplier s on s.supp_id = p.supp_id
     where p.product_id = '${productId}'
   `;
+
+  if (branchId) {
+    sql += ` and d.branch_id = '${branchId}'`;
+  }
 
   let result = await query(sql);
   return result?.recordset;

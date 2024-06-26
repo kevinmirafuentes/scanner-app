@@ -1,32 +1,28 @@
-import { NextResponse } from "next/server";
-import { getProducts } from "@/repository/products";
-import { getBarcode, getProductByBarcode } from "@/repository/barcodes";
-import { m } from "framer-motion";
-import { SSG_FALLBACK_EXPORT_ERROR } from "next/dist/lib/constants";
+import { getProductByBarcode } from "@/repository/barcodes";
 import { getProductPrices } from "@/repository/prices";
-import { apiResponse } from "@/lib/utils";
-
-const formatBarcode = (code: string): string =>  {
-  if (code.length == 13) {
-    return code.substr(0, 12);
-  }
-  return code;
-}
+import { apiResponse, formatBarcode } from "@/lib/utils";
+import { getSession } from "@/auth";
 
 export async function GET(
   request: Request, 
   { params: { barcode } }: { params: { barcode: string} }  
 ) {
-  
+
+  let auth = getSession();
   let result = {};
-
   let status = 200;
-
+  let branchId = auth ? auth.branch_id : null;
+  
   try {
     let product = await getProductByBarcode(formatBarcode(barcode));
-    let prices = await getProductPrices(product?.product_id);
+    let prices = [];
+
+    if (product?.product_id) {
+      prices = await getProductPrices(product?.product_id, branchId);
+    }
+    
     result = {
-      name: product.name,
+      name: product?.name,
       prices: prices,
     };
   } catch (err) {

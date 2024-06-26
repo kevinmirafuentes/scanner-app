@@ -9,6 +9,7 @@ import Viewport from "@/components/Viewport";
 import { PriceCheck } from "@/types/types";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
+import NoResultsFound from "@/components/NoResultsFound";
 
 const getPriceDetails = async (barcode: string) => {
   let res = await fetch(`/api/products/${barcode}/price`);
@@ -33,14 +34,6 @@ function SkeletonLoader() {
       </Stack>
     </Container>
   );
-}
-
-function NoResultsFound() {
-  return (
-    <Box>
-      <Text fontSize='md'>No results found.</Text>
-    </Box>
-  )
 }
 
 export default function PriceChecker() {
@@ -79,9 +72,9 @@ export default function PriceChecker() {
 
       {isLoading && (<SkeletonLoader />)}
 
-      {barcode && !priceDetails && !isLoading && (<NoResultsFound />)} 
+      {barcode && priceDetails?.prices.length < 1 && !isLoading && (<NoResultsFound />)} 
 
-      {priceDetails && !isLoading && (
+      {priceDetails?.prices.length > 0 && !isLoading && (
         <>
           <Container>
             <Menu width='100%' matchWidth={true}>

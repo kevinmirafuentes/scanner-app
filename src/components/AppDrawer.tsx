@@ -2,7 +2,8 @@ import { signOut } from "@/auth"
 import { HamburgerIcon } from "@chakra-ui/icons"
 import { Box, Button, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, FlexProps, HStack, LinkBox, LinkOverlay, Stack, Text, useDisclosure } from "@chakra-ui/react"
 import Link from "next/link"
-import React, { ReactText } from "react"
+import { redirect, useRouter } from "next/navigation"
+import React, { FormEvent, ReactText } from "react"
 
 interface NavItemProps extends FlexProps {
   href: string,
@@ -24,8 +25,26 @@ const NavItem = ({ href, children, ...rest }: NavItemProps) => {
 }
 
 export function AppDrawer() {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const btnRef = React.useRef()
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = React.useRef();
+  const router = useRouter();
+
+  async function handleLogout(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const response = await fetch('/api/auth/logout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    })
+
+    if (!response.ok) {
+      let data = await response.json();
+      alert('Something went wrong');
+      return;
+    } 
+
+    router.push('/login');
+  }
 
   return (
     <>
@@ -41,13 +60,11 @@ export function AppDrawer() {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>
-
-          </DrawerHeader>
+          
+          <DrawerHeader></DrawerHeader>
 
           <DrawerBody>
             <Stack>
-
               <NavItem href="/">Home</NavItem>
               <NavItem href="/">Price Checker</NavItem>
               <NavItem href="/">Inventory Checker</NavItem>
@@ -59,11 +76,8 @@ export function AppDrawer() {
           <DrawerFooter>
             <Stack width='100%'>
               <Divider orientation='horizontal' />
-              <form action={async (formData) => {
-                "use server";
-                await signOut()
-              }}>
-              <Button type='submit'>Logout</Button>
+              <form onSubmit={handleLogout}>
+              <Button type='submit' width='100%'>Logout</Button>
               </form>
             </Stack>
           </DrawerFooter>

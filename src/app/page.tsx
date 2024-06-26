@@ -1,9 +1,8 @@
 import { Box, Center, Container, Grid, GridItem, Icon, Image, LinkBox, LinkOverlay, Text, VStack } from "@chakra-ui/react";
-import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition, faBarcode, faBoxOpen, faBoxesPacking, faTag } from "@fortawesome/free-solid-svg-icons";
 import { getSession } from "@/auth";
-import { redirect } from "next/navigation";
+import Navbar from "@/components/Navbar";
 
 type DashboardButtonProps = {
   icon: IconDefinition,
@@ -44,12 +43,9 @@ export default async function Home() {
 
   const auth = getSession();
 
-  if (!auth) {
-    redirect('/login');
-  }
-
   return (
     <VStack>
+      <Navbar title='Home' />
       <Container
         marginTop='60px'
         marginBottom='20px;'
@@ -61,9 +57,11 @@ export default async function Home() {
       <Container
         marginBottom="20px"
       >
-        <Box fontSize='sm'>
-          You are connected to <Text display='inline' color='teal.300'>Branch Name</Text>.
-        </Box>
+        {auth && auth.branch_name && (
+          <Box fontSize='sm'>
+            You are connected to <Text display='inline' color='teal.300'>{auth.branch_name}</Text>.
+          </Box>
+        )}
       </Container>
       <Container>
         <Grid

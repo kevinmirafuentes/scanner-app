@@ -7,11 +7,13 @@ import ErrorContainer from "@/components/ErrorContainer";
 export default function Login() {
 
   const [loginError, setLoginError] = useState<string|null>(null);
-  const router = useRouter()
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+    event.preventDefault();
     setLoginError(null);
+    setIsLoading(true);
 
     const formData = new FormData(event.currentTarget)
     const username = formData.get('username')
@@ -26,6 +28,7 @@ export default function Login() {
     if (!response.ok) {
       let data = await response.json();
       setLoginError(data.message);
+      setIsLoading(false);
       return;
     } 
     
@@ -50,7 +53,16 @@ export default function Login() {
             <VStack spacing="20px"> 
               <Input placeholder='Username' name='username' borderColor='gray.300' />
               <Input placeholder='Password' name='password' borderColor='gray.300' type='password' />
-              <Button type='submit' backgroundColor='teal.300' color="#ffffff" width="100%" fontWeight="normal">Login</Button>
+              <Button 
+                type='submit' 
+                backgroundColor='teal.300' 
+                color="white" 
+                width="100%" 
+                fontWeight="normal"
+                isLoading={isLoading}
+              >
+                Login
+              </Button>
             </VStack>
           </form>
         </Container>

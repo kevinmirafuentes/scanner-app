@@ -4,6 +4,7 @@ import { getBarcode, getProductByBarcode } from "@/repository/barcodes";
 import { m } from "framer-motion";
 import { SSG_FALLBACK_EXPORT_ERROR } from "next/dist/lib/constants";
 import { getProductPrices } from "@/repository/prices";
+import { apiResponse } from "@/lib/utils";
 
 const formatBarcode = (code: string): string =>  {
   if (code.length == 13) {
@@ -29,12 +30,11 @@ export async function GET(
       prices: prices,
     };
   } catch (err) {
-    console.log(err);
     result = {
       'message': 'Something went wrong'
     };
     status = 500;
   }
   
-  return NextResponse.json(result, { status: status });
+  return apiResponse(result, status);
 }

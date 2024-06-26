@@ -32,3 +32,11 @@ export function refreshSession(request: NextRequest) {
     expires: new Date(Date.now() + 10 * 1000)
   })
 }
+
+export function isAuthenticated() {
+  let session = cookies().get('auth')?.value;
+  if (session) {
+    return true;
+  };
+  return false;
+}

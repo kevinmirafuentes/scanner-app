@@ -13,7 +13,7 @@ export const config = {
   matcher: [
     '/',
     '/price-checker',
-    '/inventory-checker',
+    // '/inventory-checker',
     // '/stock-request',
     '/tag-request',
   ],

@@ -37,8 +37,8 @@ export interface AuthUser {
 export interface InventoryDetails {
   name: string,
   barcode: string,
-  inventory: number,
-  order_unit: number,
+  qty_on_hand: number,
+  stock_qty_converted_to_order_unit: number,
 }
 
 export interface StockRequestProduct {

@@ -93,8 +93,8 @@ export default function InventoryChecker() {
                 </HStack>
                 <Text fontSize='xl'>{inventoryDetails?.name}</Text>
                 <VStack spacing='0'>  
-                  { isOrderUnit && (<Text fontSize='3xl' fontWeight='bold'>{inventoryDetails?.inventory}</Text>)}
-                  { !isOrderUnit && (<Text fontSize='3xl' fontWeight='bold'>{inventoryDetails?.order_unit}</Text>)}
+                  { isOrderUnit && (<Text fontSize='3xl' fontWeight='bold'>{inventoryDetails?.qty_on_hand}</Text>)}
+                  { !isOrderUnit && (<Text fontSize='3xl' fontWeight='bold'>{inventoryDetails?.stock_qty_converted_to_order_unit}</Text>)}
                   <Text fontSize='md' fontWeight='bold'>Total Inventory</Text>
                 </VStack>
               </VStack>

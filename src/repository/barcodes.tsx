@@ -17,7 +17,7 @@ export async function getBarcode(code: string) {
 }
 
 export async function getProductByBarcode(code: string) {
-  let clean = parseInt(code);
+  let clean = code.replace(';', '');
   
   // get product detail 
   let prodSql = `

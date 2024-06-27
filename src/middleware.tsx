@@ -12,9 +12,9 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/',
-    // '/price-checker',
-    // '/inventory-checker',
-    '/stock-request',
+    '/price-checker',
+    '/inventory-checker',
+    // '/stock-request',
     '/tag-request',
   ],
 }

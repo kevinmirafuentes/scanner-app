@@ -40,3 +40,9 @@ export interface InventoryDetails {
   inventory: number,
   order_unit: number,
 }
+
+export interface StockRequestProduct {
+  barcode: string,
+  name: string,
+  quantity: number,
+}

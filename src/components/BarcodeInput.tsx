@@ -5,15 +5,16 @@ import { useRef, useState } from "react";
 import Scanner from "@/lib/scanner/Scanner";
 
 interface BarcodeInputProps {
-  onChange: CallableFunction
+  onChange: CallableFunction,
+  clearOnChange?: boolean|null
 };
 
 let scannerObject = new Scanner;
 let debounce: any;
 
-export default function BarcodeInput({ onChange }: BarcodeInputProps) {
+export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  let [barcode, setBarcode] = useState<string|null>();
+  let [barcode, setBarcode] = useState<string>('');
   const audioRef = useRef();
   
   const playBeepSound = () => {
@@ -26,6 +27,7 @@ export default function BarcodeInput({ onChange }: BarcodeInputProps) {
     playBeepSound();
     setBarcode(text);
     onChange(text);
+    clearOnChange && setBarcode('');
     scannerObject.stop(onClose);
   }
 
@@ -39,12 +41,14 @@ export default function BarcodeInput({ onChange }: BarcodeInputProps) {
   }
 
   const handleChange = (e: any) => {
+    setBarcode(e.target.value);
+    
     if (debounce) {
       clearTimeout(debounce);
     }
     debounce = setTimeout(() => {
-      // setBarcode(e.target.value);
       onChange(e.target.value);
+      clearOnChange && setBarcode('');
     }, 500);
   }
 
@@ -53,6 +57,7 @@ export default function BarcodeInput({ onChange }: BarcodeInputProps) {
     <InputGroup>
       <Input 
         type='number' 
+        value={barcode}
         onChange={handleChange}
         placeholder='Enter barcode' />
       <InputRightAddon onClick={handleOpen}>

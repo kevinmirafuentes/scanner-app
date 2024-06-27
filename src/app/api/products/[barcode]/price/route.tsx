@@ -19,6 +19,14 @@ export async function GET(
 
     if (product?.product_id) {
       prices = await getProductPrices(product?.product_id, branchId);
+
+      // if (auth?.user_group_id != 1) { 
+      //   prices.map(p => {
+      //     delete p.supp_name; 
+      //     delete p.supp_id;
+      //     return p;
+      //   });
+      // }
     }
     
     result = {

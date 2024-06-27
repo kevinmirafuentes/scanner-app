@@ -8,7 +8,8 @@ export async function getUserByUsername(username: string) {
     u.branch_id,
     b.branch_name,
     u.full_name,
-    u.mobile_login_pwd 
+    u.mobile_login_pwd,
+    u.user_group_id
     from imasterprofiles.dbo.MyUsers u 
     left join imasterprofiles.dbo.Branch b on u.branch_id = u.branch_id
     where u.user_name = @uname

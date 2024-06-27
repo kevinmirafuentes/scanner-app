@@ -10,6 +10,7 @@ import { PriceCheck } from "@/types/types";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
 import NoResultsFound from "@/components/NoResultsFound";
+import { getSession } from "@/auth";
 
 const getPriceDetails = async (barcode: string) => {
   let res = await fetch(`/api/products/${barcode}/price`);
@@ -133,13 +134,16 @@ export default function PriceChecker() {
                     </Card>
 
                     {/* Admin only view */}
-                    <HStack justify='space-between'>
-                      <Text>Supplier</Text>
-                      <HStack borderWidth='1px' border-color='gray.200'>
-                        <Text padding='10px 15px'>{price?.supp_id}</Text>
-                        <Text padding='10px 15px' borderLeft='1px' borderColor='gray.200'>{price?.supp_name}</Text>
+                    {price?.supp_id && (
+                      <HStack justify='space-between'>
+                        <Text>Supplier</Text>
+                        <HStack borderWidth='1px' border-color='gray.200'>
+                          <Text padding='10px 15px'>{price?.supp_id}</Text>
+                          <Text padding='10px 15px' borderLeft='1px' borderColor='gray.200'>{price?.supp_name}</Text>
+                        </HStack>
                       </HStack>
-                    </HStack>
+                    )}
+                    
                   </TabPanel>
                 ))}
               </TabPanels>

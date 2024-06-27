@@ -58,9 +58,9 @@ export default function PriceChecker() {
       setIsLoading(0);
       if (!res.ok) {
         return;
-      } 
+      }
       setPriceDetails(details);
-    })   
+    })
   };
 
   const formatNum = (x: number) => Number.parseFloat(x).toFixed(2);
@@ -69,11 +69,11 @@ export default function PriceChecker() {
     <NavFooterLayout title='Price Checker' activeFooter='price-checker'>
       <Container>
         <BarcodeInput onChange={onBarcodeChange} />
-      </Container>  
+      </Container>
 
       {isLoading && (<SkeletonLoader />)}
 
-      {barcode && priceDetails?.prices.length < 1 && !isLoading && (<NoResultsFound />)} 
+      {barcode && priceDetails?.prices.length < 1 && !isLoading && (<NoResultsFound />)}
 
       {priceDetails?.prices.length > 0 && !isLoading && (
         <>
@@ -96,8 +96,8 @@ export default function PriceChecker() {
               </MenuButton>
               <MenuList width='100%'>
                 {priceDetails?.prices.map((price, key) => (
-                  <MenuItem 
-                    width='100%' 
+                  <MenuItem
+                    width='100%'
                     key={key}
                     onClick={() => setTabIndex(key)}
                   >
@@ -143,14 +143,16 @@ export default function PriceChecker() {
                         </HStack>
                       </HStack>
                     )}
-                    
+
+                    {/* TODO: show inventory per uom */}
+
                   </TabPanel>
                 ))}
               </TabPanels>
             </Tabs>
           </Container>
         </>
-      )}     
+      )}
     </NavFooterLayout>
   );
 }

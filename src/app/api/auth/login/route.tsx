@@ -13,11 +13,15 @@ export async function POST(req: NextRequest) {
       throw new Error('Invalid username or password');
     }
 
-    // todo: 
-    // get branch where user is connected to via query and save to session for use in queries: 
-    //   select var_value from imasterprofiles..settings where var_name = 'DEFAULT_BRANCH'
+    // todo:
+    //  - get branch where user is connected to via query and save to session for use in queries:
+    //      select var_value from imasterprofiles..settings where var_name = 'DEFAULT_BRANCH'
+    let branch = {
+      branch_id: 0,
+      branch_name: 'Test branch',
+    };
 
-    await signIn(user);
+    await signIn(user, branch);
     return apiResponse({success: true}, 200);
 
   } catch (error: any) {

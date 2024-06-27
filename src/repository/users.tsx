@@ -5,13 +5,10 @@ export async function getUserByUsername(username: string) {
   let userSql = `
     select top 1
     u.user_id,
-    u.branch_id,
-    b.branch_name,
     u.full_name,
     u.mobile_login_pwd,
     u.user_group_id
-    from imasterprofiles.dbo.MyUsers u 
-    left join imasterprofiles.dbo.Branch b on u.branch_id = u.branch_id
+    from imasterprofiles.dbo.MyUsers u
     where u.user_name = @uname
   `;
   let result = await query(userSql, [{name: 'uname', type: sql.VarChar, value: username}]);
@@ -20,10 +17,10 @@ export async function getUserByUsername(username: string) {
 
 export async function getProductByBarcode(code: string) {
   let clean = parseInt(code);
-  
-  // get product detail 
+
+  // get product detail
   let prodSql = `
-    select top 1 
+    select top 1
       p.product_id,
       p.long_descript as name
     from imasterprofiles.dbo.Product p

@@ -1,7 +1,7 @@
 import { Box, Center, Container, Grid, GridItem, Icon, Image, LinkBox, LinkOverlay, Text, VStack } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition, faBarcode, faBoxOpen, faBoxesPacking, faTag } from "@fortawesome/free-solid-svg-icons";
-import { getSession } from "@/auth";
+import { getCurrentBranch, getSession } from "@/auth";
 import Navbar from "@/components/Navbar";
 
 type DashboardButtonProps = {
@@ -41,7 +41,7 @@ export function DashboardButton({
 
 export default async function Home() {
 
-  const auth = getSession();
+  const branch = await getCurrentBranch();
 
   return (
     <VStack>
@@ -57,9 +57,9 @@ export default async function Home() {
       <Container
         marginBottom="20px"
       >
-        {auth && auth.branch_name && (
+        {branch && branch.branch_code && (
           <Box fontSize='sm'>
-            You are connected to <Text display='inline' color='teal.300'>{auth.branch_name}</Text>.
+            You are connected to <Text display='inline' color='teal.300'>{branch.branch_name}</Text>.
           </Box>
         )}
       </Container>

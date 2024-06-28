@@ -2,6 +2,7 @@ import { getProductByBarcode } from "@/repository/barcodes";
 import { getProductPrices } from "@/repository/prices";
 import { apiResponse, formatBarcode } from "@/lib/utils";
 import { getSession } from "@/auth";
+import { getDefaultBranch } from "@/repository/branch";
 
 // todo:
 //  - when admin user; then do not include supplier details
@@ -12,10 +13,11 @@ export async function GET(
   { params: { barcode } }: { params: { barcode: string} }
 ) {
 
-  let auth = getSession();
+  let auth = await getSession();
+  let branch = await getDefaultBranch();
   let result = {};
   let status = 200;
-  let branchId = auth ? auth.branch_id : null;
+  let branchId = branch?.branch_id;
 
   try {
     let product = await getProductByBarcode(formatBarcode(barcode));
@@ -24,13 +26,15 @@ export async function GET(
     if (product?.product_id) {
       prices = await getProductPrices(product?.product_id, branchId);
 
-      // if (auth?.user_group_id != 1) {
-      //   prices.map(p => {
-      //     delete p.supp_name;
-      //     delete p.supp_id;
-      //     return p;
-      //   });
-      // }
+      // todo: return inventory per price
+
+      if (auth?.user_group_id && auth?.user_group_id != 1) {
+        prices.map((p: any) => {
+          delete p.supp_name;
+          delete p.supp_id;
+          return p;
+        });
+      }
     }
 
     result = {

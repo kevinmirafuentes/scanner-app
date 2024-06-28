@@ -3,9 +3,10 @@ import { isAuthenticated, refreshSession } from "./auth";
 import { redirect } from "next/navigation";
 
 export async function middleware(request: NextRequest) {
-  if (!isAuthenticated()) {
+  if (!await isAuthenticated()) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
+  NextResponse.redirect(new URL('/login', request.url));
   return await refreshSession(request);
 }
 

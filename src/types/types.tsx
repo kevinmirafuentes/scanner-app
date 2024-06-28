@@ -46,3 +46,9 @@ export interface StockRequestProduct {
   name: string,
   quantity: number,
 }
+
+export interface Branch {
+  branch_id: number,
+  branch_code: string,
+  branch_name: string
+}

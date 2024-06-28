@@ -2,24 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { signIn } from '@/auth'
 import { getUserByUsername } from '@/repository/users';
 import { apiResponse } from "@/lib/utils";
+import { getDefaultBranch } from "@/repository/branch";
 
 export async function POST(req: NextRequest) {
   try {
     const { username, password } = await req.json();
 
     const user = await getUserByUsername(username);
-
+    const branch = await getDefaultBranch();
+    
     if (!user || !user.mobile_login_pwd || user.mobile_login_pwd != password) {
       throw new Error('Invalid username or password');
     }
-
-    // todo:
-    //  - get branch where user is connected to via query and save to session for use in queries:
-    //      select var_value from imasterprofiles..settings where var_name = 'DEFAULT_BRANCH'
-    let branch = {
-      branch_id: 0,
-      branch_name: 'Test branch',
-    };
 
     await signIn(user, branch);
     return apiResponse({success: true}, 200);

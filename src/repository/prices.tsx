@@ -27,11 +27,8 @@ export async function getProductPrices(productId: number, branchId?: number) {
     inner join imasterprofiles.dbo.unit u on h.unit_id = u.unit_id
     inner join imasterprofiles.dbo.Supplier s on s.supp_id = p.supp_id
     where p.product_id = '${productId}'
+    and d.branch_id = '${branchId}'
   `;
-
-  if (branchId) {
-    sql += ` and d.branch_id = '${branchId}'`;
-  }
 
   let result = await query(sql);
   return result?.recordset;

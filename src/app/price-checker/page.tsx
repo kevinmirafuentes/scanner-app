@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, Text, VStack, Select, HStack, Box, Card, CardBody, Menu, MenuButton, MenuList, MenuItem, Tabs, TabPanels, TabPanel, Stack, Skeleton } from "@chakra-ui/react";
+import { Container, Text, VStack, Select, HStack, Box, Card, CardBody, Menu, MenuButton, MenuList, MenuItem, Tabs, TabPanels, TabPanel, Stack, Skeleton, Thead, Table, Tbody, Tr, Td } from "@chakra-ui/react";
 import Navbar from "@/components/Navbar"
 import FooterNav from "@/components/FooterNav";
 import BarcodeInput from "@/components/BarcodeInput";
@@ -135,16 +135,24 @@ export default function PriceChecker() {
 
                     {/* Admin only view */}
                     {price?.supp_id && (
-                      <HStack justify='space-between'>
-                        <Text>Supplier</Text>
-                        <HStack borderWidth='1px' border-color='gray.200'>
-                          <Text padding='10px 15px'>{price?.supp_id}</Text>
-                          <Text padding='10px 15px' borderLeft='1px' borderColor='gray.200'>{price?.supp_name}</Text>
-                        </HStack>
-                      </HStack>
+                      <Table variant='simple' width='100%'>
+                        <Tbody>
+                          <Tr>
+                            <Td>Supplier:</Td>
+                            <Td>
+                              <Text align='right' fontSize='sm'>#{price?.supp_id}</Text>
+                              <Text align='right'>{price?.supp_name}</Text>
+                            </Td>
+                          </Tr>
+                          <Tr>
+                            <Td>Inventory:</Td>
+                            <Td>
+                              <Text align='right'>{price?.qty_on_hand}</Text>
+                            </Td>
+                          </Tr>
+                        </Tbody>
+                      </Table>
                     )}
-
-                    {/* TODO: show inventory per uom */}
 
                   </TabPanel>
                 ))}

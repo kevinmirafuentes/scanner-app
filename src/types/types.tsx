@@ -12,7 +12,9 @@ export interface PriceInfo {
   retail_qty4: number,
   retail_markup4: number,
   supp_name: string,
-  supp_id: number
+  supp_id: number,
+  qty_on_hand: number, 
+  stock_qty_converted_to_order_unit: number
 }
 
 export interface PriceCheck {

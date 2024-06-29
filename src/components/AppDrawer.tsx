@@ -66,10 +66,10 @@ export function AppDrawer() {
           <DrawerBody>
             <Stack>
               <NavItem href="/">Home</NavItem>
-              <NavItem href="/">Price Checker</NavItem>
-              <NavItem href="/">Inventory Checker</NavItem>
-              <NavItem href="/">Stock Request</NavItem>
-              <NavItem href="/">Tag Request</NavItem>
+              <NavItem href="/price-checker">Price Checker</NavItem>
+              <NavItem href="/inventory-checker">Inventory Checker</NavItem>
+              <NavItem href="/stock-request">Stock Request</NavItem>
+              <NavItem href="/tag-request">Tag Request</NavItem>
             </Stack>
           </DrawerBody>
 

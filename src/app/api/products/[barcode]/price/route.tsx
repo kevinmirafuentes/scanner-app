@@ -3,6 +3,7 @@ import { getProductPrices } from "@/repository/prices";
 import { apiResponse, formatBarcode } from "@/lib/utils";
 import { getSession } from "@/auth";
 import { getDefaultBranch } from "@/repository/branch";
+import { getProductStocks } from "@/repository/products";
 
 // todo:
 //  - when admin user; then do not include supplier details
@@ -24,9 +25,7 @@ export async function GET(
     let prices = [];
 
     if (product?.product_id) {
-      prices = await getProductPrices(product?.product_id, branchId);
-
-      // todo: return inventory per price
+      prices = await getProductPrices(product.product_id, branchId);
 
       if (auth?.user_group_id && auth?.user_group_id != 1) {
         prices.map((p: any) => {
@@ -42,6 +41,7 @@ export async function GET(
       prices: prices,
     };
   } catch (err) {
+    console.log(err);
     result = {
       'message': 'Something went wrong'
     };

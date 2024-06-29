@@ -5,8 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { decrypt, encrypt } from "./lib/utils";
 import { AuthUser, Branch } from "./types/types";
 
+const expires = new Date(Date.now() + 2592000 * 1000);
+
 export async function signIn(user: AuthUser, branch: Branch) {
-  const expires = new Date(Date.now() + 10 * 1000);
   const session = JSON.stringify(user);
   const branchJson =  JSON.stringify(branch);
   cookies().set('auth', encrypt(session), {expires, httpOnly: true});
@@ -32,7 +33,6 @@ export async function getCurrentBranch() {
 export async function refreshSession(request: NextRequest) {
   let session = cookies().get('auth')?.value;
   let currentBranch = cookies().get('current_branch')?.value;
-  let expires = new Date(Date.now() + 10 * 1000);
   
   if (!session) return null;
 
@@ -43,9 +43,12 @@ export async function refreshSession(request: NextRequest) {
     httpOnly: true,
     expires: expires
   })
-
-  
-  // cookies().set('current_branch', currentBranch, {expires, httpOnly: true});
+  response.cookies.set({
+    name: 'current_branch',
+    value: currentBranch,
+    httpOnly: true,
+    expires: expires
+  })
 }
 
 export async function isAuthenticated() {

@@ -6,16 +6,15 @@ export async function middleware(request: NextRequest) {
   if (!await isAuthenticated()) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
-  NextResponse.redirect(new URL('/login', request.url));
-  return await refreshSession(request);
+  // return await refreshSession(request);
 }
 
 export const config = {
   matcher: [
     '/',
     '/price-checker',
-    // '/inventory-checker',
-    // '/stock-request',
+    '/inventory-checker',
+    '/stock-request',
     '/tag-request',
   ],
 }

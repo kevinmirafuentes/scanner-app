@@ -74,7 +74,7 @@ export default async function Home() {
             <DashboardButton icon={faBarcode} href='/price-checker' label='Price Checker'></DashboardButton>
           </GridItem>
           <GridItem>
-            <DashboardButton icon={faBoxOpen} href='/check-inventory' label='Check Inventory'></DashboardButton>
+            <DashboardButton icon={faBoxOpen} href='/inventory-checker' label='Check Inventory'></DashboardButton>
           </GridItem>
           <GridItem>
             <DashboardButton icon={faBoxesPacking} href='/stock-request' label='Stock Request'></DashboardButton>

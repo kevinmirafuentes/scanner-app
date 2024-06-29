@@ -1,4 +1,6 @@
 import { query } from "@/repository/db"
+import sql from 'mssql';
+
 interface Product {
   product_id: number;
   product_code: string;
@@ -23,9 +25,13 @@ export async function getProductStocks(productId: number, branchId?: number) {
 	  from imasterprofiles..stocks s
 	  left join imasterprofiles..product p on s.product_id = p.product_id
 	  left join imasterprofiles..unit u on p.order_unit_id = u.unit_id
-    where p.product_id = '${productId}'
+    where p.product_id = @prodid
+    and s.branch_id = @branchid
   `;
 
-  let result = await query(queryString);
+  let result = await query(queryString,  [
+    {name: 'prodid', type: sql.BigInt, value: productId},
+    {name: 'branchid', type: sql.BigInt, value: branchId || 0}
+  ]);
   return result?.recordset[0];
 }

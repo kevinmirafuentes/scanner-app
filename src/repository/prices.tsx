@@ -19,13 +19,16 @@ export async function getProductPrices(productId: number, branchId?: number) {
       r.retail_markup_per4 as retail_markup4,
       u.unit_code as uom,
       s.supp_name, 
-      s.supp_id
+      s.supp_id,
+      st.qty_on_hand, 
+      st.qty_on_hand / u.content_qty as stock_qty_converted_to_order_unit
     from imasterprofiles.dbo.BarcodeH h
     inner join imasterprofiles.dbo.BarcodeD d on (d.barcode_id = h.barcode_id)
     left join imasterprofiles.dbo.BarcodeR r on (r.barcode_id = h.barcode_id and d.branch_id = r.branch_id)
     inner join imasterprofiles.dbo.Product p on (p.product_id = h.product_id)
     inner join imasterprofiles.dbo.unit u on h.unit_id = u.unit_id
     inner join imasterprofiles.dbo.Supplier s on s.supp_id = p.supp_id
+    left join stocks st on (st.product_id = p.product_id and st.branch_id = d.branch_id)
     where p.product_id = '${productId}'
     and d.branch_id = '${branchId}'
   `;

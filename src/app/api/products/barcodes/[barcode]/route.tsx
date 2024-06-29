@@ -1,5 +1,4 @@
-import { NextResponse } from "next/server";
-import { getProducts } from "@/repository/products";
+import { NextResponse } from "next/server";";
 import { getBarcode } from "@/repository/barcodes";
 
 const formatBarcode = (code: string): string =>  {

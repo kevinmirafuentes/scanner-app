@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
   if (!await isAuthenticated()) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
-  // return await refreshSession(request);
+  return await refreshSession(request);
 }
 
 export const config = {

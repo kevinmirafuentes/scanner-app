@@ -25,15 +25,18 @@ export interface PriceCheck {
 export interface QueryInput {
   name: string,
   type: ISqlTypeFactory,
-  value: string|number|null
+  value: any
 }
 
 export interface AuthUser {
   user_id: number,
-  branch_id: string,
-  branch_name: string,
   full_name: string,
   mobile_login_pwd: string,
+}
+
+export interface User {
+  user_id: number|null,
+  full_name?: string|null,
 }
 
 export interface InventoryDetails {
@@ -53,4 +56,22 @@ export interface Branch {
   branch_id: number,
   branch_code: string,
   branch_name: string
+}
+
+export interface StoreRequestItem {
+  ref_id?: number|null,
+  barcode_id: number,
+  qty: number,
+  auto_id?: number|null,
+}
+
+export interface StoreStockRequest {
+  ref_no: string, 
+  ref_id?: number|null,
+  trans_date: Date, 
+  remarks: string, 
+  request_status: string, 
+  user: User,  
+  date_created?: Date,
+  items: StoreRequestItem[]
 }

@@ -1,6 +1,18 @@
 import { query } from "./db";
 import sql from 'mssql';
 
+export async function getUserById(id: number) {
+  let userSql = `
+    select top 1
+    u.user_id,
+    u.full_name
+    from imasterprofiles.dbo.MyUsers u
+    where u.user_id = @id
+  `;
+  let result = await query(userSql, [{name: 'id', type: sql.BigInt, value: id}]);
+  return result?.recordset[0];
+} 
+
 export async function getUserByUsername(username: string) {
   let userSql = `
     select top 1

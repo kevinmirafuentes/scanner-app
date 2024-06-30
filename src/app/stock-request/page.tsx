@@ -2,9 +2,11 @@
 import BarcodeInput from "@/components/BarcodeInput";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductQuantityCard from "@/components/ProductQuantityCard";
+import { StockRequestPrint } from "@/components/StockRequestPrint";
 import { StoreRequestItem } from "@/types/types";
-import { Button, Card, CardBody, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { Button, Card, CardBody, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, VStack, VisuallyHidden } from "@chakra-ui/react";
+import { useRef, useState } from "react";
+import ReactToPrint, { useReactToPrint } from "react-to-print";
 
 function SkeletonLoader() {
   return (
@@ -34,6 +36,8 @@ export default function StockRequest() {
   const [products, setProducts] = useState<StoreRequestItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+
+  let stockRequestPrintRef = useRef();
 
   const save = () => {
     if (!isValidForm()) {
@@ -162,21 +166,29 @@ export default function StockRequest() {
             >
               Save
             </Button>
-            <Button 
-              type='submit' 
-              backgroundColor='teal.300' 
-              color="white" 
-              width="100%" 
-              fontWeight="normal"
-              fontSize='sm'
-              onClick={saveAndPrint}
-              isLoading={isSaving}
-            >
-              Print
-            </Button>
+
+            <ReactToPrint
+              trigger={() => <Button 
+                type='submit' 
+                backgroundColor='teal.300' 
+                color="white" 
+                width="100%" 
+                fontWeight="normal"
+                fontSize='sm'
+                isLoading={isSaving}
+              >
+                Print
+              </Button>}
+              content={() => stockRequestPrintRef}
+            />
+            
           </HStack>
   
         </VStack>
+
+        <VisuallyHidden>
+          <StockRequestPrint ref={(el) => (stockRequestPrintRef = el)} />
+        </VisuallyHidden>
       </Container>
     </NavFooterLayout>  
   )

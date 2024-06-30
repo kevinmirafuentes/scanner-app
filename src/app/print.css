@@ -1,0 +1,16 @@
+@media print {
+  html, body {
+    width: 210mm;
+    height: 297mm;
+  }
+}
+#stockRequestForm {
+  padding: 20px;
+}
+#stockRequestFormHeading {
+  margin-bottom: 15px;
+}
+#stockRequestFormBody td {
+  border: 1px solid gray;
+  padding: 5px;
+}

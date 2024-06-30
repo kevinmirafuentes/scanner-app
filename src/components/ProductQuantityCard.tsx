@@ -1,4 +1,4 @@
-import { StockRequestProduct } from "@/types/types";
+import { StoreRequestItem } from "@/types/types";
 import { Button, Card, CardBody, Grid, GridItem, Input, InputGroup, InputLeftAddon, InputRightAddon, Text } from "@chakra-ui/react";
 import { faMinus, faPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,13 +10,13 @@ export default function ProductQuantityCard({
   onQuantityChange,
   onClose
 }: { 
-  product: StockRequestProduct, 
+  product: StoreRequestItem, 
   index: number,
   onQuantityChange?: Function, 
   onClose?: Function
 }) {
 
-  const [quantity, setQuantity] = useState<number>(product.quantity || 1);
+  const [quantity, setQuantity] = useState<number>(product.qty || 1);
   
   useEffect(() => {
     onQuantityChange && onQuantityChange(quantity);

@@ -2,8 +2,7 @@
 import BarcodeInput from "@/components/BarcodeInput";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductQuantityCard from "@/components/ProductQuantityCard";
-import { getProductByBarcode } from "@/repository/users";
-import { StockRequestProduct } from "@/types/types";
+import { StoreRequestItem } from "@/types/types";
 import { Button, Card, CardBody, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -32,12 +31,49 @@ export default function StockRequest() {
   const [referenceNumber, setReferenceNumber] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');1
   const [date, setDate] = useState<string>('');
-  const [products, setProducts] = useState<StockRequestProduct[]>([]);
+  const [products, setProducts] = useState<StoreRequestItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const save = () => {
-    console.log({referenceNumber, remarks, date, products})
+    if (!isValidForm()) {
+      alert('Please fill out all fields on stock request form.');
+      return;
+    }
+
+    setIsSaving(true);
+    fetch("/api/stock-request", {
+      method: "POST",
+      body: JSON.stringify({
+        ref_no: referenceNumber, 
+        trans_date: date, 
+        remarks, 
+        items: products, 
+      }),
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+    .then((e) => resetForm())
+    .finally(() =>setIsSaving(false))
+    .catch((e) => console.log(e));
   };
+
+  const resetForm = () => {
+    setProducts([]);
+    setReferenceNumber('');
+    setRemarks('');
+    setDate('');
+  };
+
+  const isValidForm = () => {
+    if (referenceNumber.length == 0) return false;
+    if (remarks.length == 0) return false;
+    if (date.length == 0) return false; 
+    if (products.length == 0) return false;
+    return true;
+  };
+
   const saveAndPrint = () => {
     console.log({referenceNumber, remarks, date, products})
   };
@@ -56,12 +92,12 @@ export default function StockRequest() {
       let product = {
         product_id: productData?.product_id,
         barcode: productData?.barcode, 
+        barcode_id: productData.barcode_id,
         name: productData?.name,
-        quantity: 1,
+        qty: 1,
       }
       setProducts([...products, product]);
     });
-
   };
 
   const removeProduct = (index: number) => {
@@ -107,6 +143,7 @@ export default function StockRequest() {
               product={product} 
               index={index} 
               onClose={() => removeProduct(index)}
+              onQuantityChange={(qty: number) => product.qty = qty}
             />  
           ))}
 
@@ -121,6 +158,7 @@ export default function StockRequest() {
               fontWeight="normal"
               fontSize='sm'
               onClick={save}
+              isLoading={isSaving}
             >
               Save
             </Button>
@@ -132,6 +170,7 @@ export default function StockRequest() {
               fontWeight="normal"
               fontSize='sm'
               onClick={saveAndPrint}
+              isLoading={isSaving}
             >
               Print
             </Button>

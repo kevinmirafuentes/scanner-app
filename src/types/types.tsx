@@ -46,12 +46,6 @@ export interface InventoryDetails {
   stock_qty_converted_to_order_unit: number,
 }
 
-export interface StockRequestProduct {
-  barcode: string,
-  name: string,
-  quantity: number,
-}
-
 export interface Branch {
   branch_id: number,
   branch_code: string,
@@ -63,6 +57,8 @@ export interface StoreRequestItem {
   barcode_id: number,
   qty: number,
   auto_id?: number|null,
+  barcode?: string, 
+  name?: string, 
 }
 
 export interface StoreStockRequest {

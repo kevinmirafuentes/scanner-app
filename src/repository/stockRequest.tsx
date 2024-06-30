@@ -45,7 +45,7 @@ export async function saveStockRequest(stockRequest: StoreStockRequest) {
 
     for (let a = 0; a < stockRequest.items.length; a++) {
       itemsQueryParams.push({name: 'barcodeId'+a, type: sql.BigInt, value: stockRequest.items[a].barcode_id});
-      itemsQueryParams.push({name: 'qty'+a, type: sql.BigInt, value: stockRequest.items[a].barcode_id});
+      itemsQueryParams.push({name: 'qty'+a, type: sql.BigInt, value: stockRequest.items[a].qty});
     }
 
     await query(stockRequestItemSql, itemsQueryParams);
@@ -84,6 +84,5 @@ export async function getStockRequestItems(refId: number) {
     where ref_id = '${refId}'
   `;
   let resultSet = await query(queryString);
-  console.log(resultSet)
   return resultSet?.recordsets;
 }

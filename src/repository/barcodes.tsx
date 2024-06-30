@@ -22,6 +22,7 @@ export async function getProductByBarcode(code: string) {
   // get product detail 
   let prodSql = `
     select top 1 
+      h.barcode_id,
       h.barcode,
       p.product_id,
       p.long_descript as name

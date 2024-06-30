@@ -1,33 +1,18 @@
 import { getSession } from "@/auth";
 import { apiResponse } from "@/lib/utils";
 import { saveStockRequest } from "@/repository/stockRequest";
+import { StoreStockRequest } from "@/types/types";
 
-export async function GET(
-  request: Request, 
-  // data: StoreStockRequest 
+export async function POST(
+  request: Request
 ) {
 
   let auth = await getSession();
-  
-  let stockRequest = {
-    ref_no: 'test',
-    trans_date: new Date, 
-    remarks: 'Sample remarks',
-    user: {
-      user_id: auth?.user_id
-    },
-    request_status: 'A',
-    items: [
-      {
-        barcode_id: 1,
-        qty: 2
-      },
-      {
-        barcode_id: 2,
-        qty: 3
-      }
-    ]
-  }
+  let stockRequest = await request.json();
+
+  stockRequest.user = {user_id: auth?.user_id};
+  stockRequest.trans_date = new Date(stockRequest.trans_date);
+  stockRequest.request_status = '';
 
   let res = await saveStockRequest(stockRequest);
   return apiResponse(res, 200);

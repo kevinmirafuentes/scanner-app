@@ -6,7 +6,8 @@ import ProductQuantityCard from "@/components/ProductQuantityCard";
 import { StockRequestPrint } from "@/components/StockRequestPrint";
 import { AuthUser, StoreRequestItem } from "@/types/types";
 import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, Text, VStack, VisuallyHidden } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 
 function SkeletonLoader() {
@@ -38,15 +39,16 @@ export default function StockRequest() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   let stockRequestPrintRef = useRef();
+  const router = useRouter();
 
-  const save = () => {
+  const save = async () => {
     if (!isValidForm()) {
       alert('Please fill out all fields on stock request form.');
       return;
     }
 
     setIsSaving(true);
-    fetch("/api/stock-request", {
+    return fetch("/api/stock-request", {
       method: "POST",
       body: JSON.stringify({
         ref_no: referenceNumber, 
@@ -58,7 +60,7 @@ export default function StockRequest() {
         "content-type": "application/json",
       },
     })
-    .then((e) => resetForm())
+    .then((e) => { resetForm(); return e;})
     .finally(() =>setIsSaving(false))
     .catch((e) => console.log(e));
   };
@@ -78,8 +80,10 @@ export default function StockRequest() {
     return true;
   };
 
-  const saveAndPrint = () => {
-    console.log({referenceNumber, remarks, date, products})
+  const saveAndPrint = async () => {
+    let res = await save()
+    let data = await res.json();
+    router.push(`/stock-request/${data.ref_id}/print`)
   };
 
   const onBarcodeChange = (barcode: string) => {
@@ -172,8 +176,20 @@ export default function StockRequest() {
             >
               Save
             </Button>
+            <Button 
+              type='submit' 
+              backgroundColor='teal.300' 
+              color="white" 
+              width="100%" 
+              fontWeight="normal"
+              fontSize='sm'
+              isLoading={isSaving}
+              onClick={saveAndPrint}
+            >
+              Print
+            </Button>
 
-            <ReactToPrint
+            {/* <ReactToPrint
               trigger={() => <Button 
                 type='submit' 
                 backgroundColor='teal.300' 
@@ -187,7 +203,7 @@ export default function StockRequest() {
               </Button>}
               content={() => stockRequestPrintRef}
               pageStyle='print'
-            />
+            /> */}
             
           </HStack>
   

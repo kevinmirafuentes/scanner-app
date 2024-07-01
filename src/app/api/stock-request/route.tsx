@@ -1,6 +1,6 @@
 import { getSession } from "@/auth";
 import { apiResponse } from "@/lib/utils";
-import { saveStockRequest } from "@/repository/stockRequest";
+import { getStockRequestsByDate, saveStockRequest } from "@/repository/stockRequest";
 import { StoreStockRequest } from "@/types/types";
 
 export async function POST(
@@ -16,4 +16,13 @@ export async function POST(
 
   let res = await saveStockRequest(stockRequest);
   return apiResponse(res, 200);
+}
+
+export async function GET(
+  request: Request
+) {
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+  const results = await getStockRequestsByDate(new Date(searchParams.get('date')));
+  return apiResponse(results, 200);
 }

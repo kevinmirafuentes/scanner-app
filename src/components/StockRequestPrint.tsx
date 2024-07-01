@@ -31,6 +31,7 @@ function PrintTable(props: any, ref: ForwardedRef<unknown>) {
             <td>ITEM DESCRIPTION</td>
             <td>QTY</td>
             <td>UOM</td>
+            <td>INV</td>
             <td>REMARKS</td>
           </tr>
           <tr>
@@ -40,6 +41,7 @@ function PrintTable(props: any, ref: ForwardedRef<unknown>) {
             <td>4</td>
             <td>5</td>
             <td>6</td>
+            <td>7</td>
           </tr>
         </tbody>
       </table>

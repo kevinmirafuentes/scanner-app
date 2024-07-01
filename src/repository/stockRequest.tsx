@@ -86,3 +86,21 @@ export async function getStockRequestItems(refId: number) {
   let resultSet = await query(queryString);
   return resultSet?.recordsets;
 }
+
+export async function getStockRequestsByDate(date: Date) {
+  let queryString = `
+    select 
+      ref_id, 
+      ref_no, 
+      trans_date, 
+      remarks, 
+      request_status,
+      date_created
+    from imasterdocuments..StoreStockRequestH
+    where datediff(day, date_created, @date) = 0
+  `;
+  let resultSet = await query(queryString, [
+    {name: 'date', type: sql.DateTime, value: date}
+  ]);
+  return resultSet?.recordset; 
+}

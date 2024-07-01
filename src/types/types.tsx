@@ -67,7 +67,7 @@ export interface StoreStockRequest {
   trans_date: Date, 
   remarks: string, 
   request_status: string, 
-  user: User,  
+  user?: User,  
   date_created?: Date,
-  items: StoreRequestItem[]
+  items?: StoreRequestItem[]
 }

@@ -1,11 +1,12 @@
 "use client";
+import { getSession } from "@/auth";
 import BarcodeInput from "@/components/BarcodeInput";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductQuantityCard from "@/components/ProductQuantityCard";
 import { StockRequestPrint } from "@/components/StockRequestPrint";
-import { StoreRequestItem } from "@/types/types";
-import { Button, Card, CardBody, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, VStack, VisuallyHidden } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { AuthUser, StoreRequestItem } from "@/types/types";
+import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, Text, VStack, VisuallyHidden } from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 
 function SkeletonLoader() {
@@ -36,7 +37,6 @@ export default function StockRequest() {
   const [products, setProducts] = useState<StoreRequestItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-
   let stockRequestPrintRef = useRef();
 
   const save = () => {
@@ -153,6 +153,12 @@ export default function StockRequest() {
 
           {isLoading && (<SkeletonLoader />)}
 
+          <VStack spacing={5} mt='20px' alignItems='start' width='100%'>
+            <Text fontWeight='bold'>Print Options</Text>
+            <Checkbox defaultChecked>Document Layout</Checkbox>
+            <Checkbox>Small Layout</Checkbox>
+          </VStack>
+
           <HStack width='100%' marginTop='20px'>
             <Button 
               type='submit' 
@@ -180,6 +186,7 @@ export default function StockRequest() {
                 Print
               </Button>}
               content={() => stockRequestPrintRef}
+              pageStyle='print'
             />
             
           </HStack>

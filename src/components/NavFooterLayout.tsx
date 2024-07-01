@@ -12,7 +12,7 @@ export function NavFooterLayout({
 }: { 
   children: React.ReactNode, 
   title: string,
-  activeFooter: string
+  activeFooter?: string
 }) {
   return (
     <>

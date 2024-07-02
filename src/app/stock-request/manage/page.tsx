@@ -1,7 +1,7 @@
 'use client';
 import { NavFooterLayout } from "@/components/NavFooterLayout";
-import { StoreStockRequest } from "@/types/types";
-import { Container, FormControl, FormLabel, Input, Skeleton, Switch, Table, TableContainer, Tbody, Td, Th, Thead, Tr, VStack } from "@chakra-ui/react";
+import { StoreRequestItem, StoreStockRequest } from "@/types/types";
+import { Container, FormControl, FormLabel, Input, Skeleton, Switch, Table, TableContainer, Tbody, Td, Th, Thead, Tr, VStack, useToast } from "@chakra-ui/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
@@ -12,7 +12,32 @@ export default function StockRequestList() {
 
   const onChangeDate = (date: string) => {
     setDate(date);
-  }
+  };
+
+  const updateStockRequestItemStatus = async (id: number, status: string) => {
+    return await fetch(`/api/stock-request/${id}/status`, {
+      method: "POST",
+      body: JSON.stringify({status}),
+      headers: {
+        "content-type": "application/json",
+      },
+    }) 
+  };
+
+  const toast = useToast();
+
+  const onChangeStatus = (item: StoreRequestItem, isChecked: boolean) => {
+    if (!item?.ref_id) {
+      return;
+    }
+    item.request_status = isChecked ? 'R' : 'P';
+
+    toast.promise(updateStockRequestItemStatus(item.ref_id, item.request_status), {
+      success: { title: 'Success', description: 'Item status changed.' },
+      error: { title: 'Error', description: 'Something went wrong.' },
+      loading: { title: 'Loading', description: 'Please wait.' },
+    })
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -53,7 +78,7 @@ export default function StockRequestList() {
               <Tr key={key}>
                 <Td>{res.ref_id}</Td>
                 <Td>{res.ref_no}</Td>
-                <Td><Switch /></Td>
+                <Td><Switch defaultChecked={res.request_status == 'R'} onChange={e => onChangeStatus(res, e.target.checked)}/></Td>
               </Tr>
             ))}
             {!isLoading && results.length == 0 && (

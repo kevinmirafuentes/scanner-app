@@ -59,6 +59,7 @@ export interface StoreRequestItem {
   auto_id?: number|null,
   barcode?: string, 
   name?: string, 
+  request_status?: string, 
 }
 
 export interface StoreStockRequest {
@@ -66,7 +67,7 @@ export interface StoreStockRequest {
   ref_id?: number|null,
   trans_date: Date, 
   remarks: string, 
-  request_status: string, 
+  request_status?: string, 
   user?: User,  
   date_created?: Date,
   items?: StoreRequestItem[]

@@ -15,18 +15,19 @@ export async function saveStockRequest(stockRequest: StoreStockRequest) {
     {name: 'transDate', type: sql.DateTime, value: stockRequest.trans_date},
     {name: 'remarks', type: sql.VarChar(100), value: stockRequest.remarks},
     {name: 'requestStatus', type: sql.Char(1), value: stockRequest.request_status},
-    {name: 'userId', type: sql.Int, value: stockRequest.user.user_id},
+    {name: 'userId', type: sql.Int, value: stockRequest.user?.user_id},
   ]);
 
   let stockRequestId = stockRequestInsertResult?.recordset[0].IDENTITY_ID;
   if (stockRequestId) {
     let itemsValueParts = [];
 
-    for (let i = 0; i < stockRequest.items.length; i++) {
+    for (let i = 0; i < stockRequest?.items.length; i++) {
       itemsValueParts.push(`(
         @refId, 
         @barcodeId${i},
-        @qty${i} 
+        @qty${i},
+        @requestStatus${i} 
       )`);
     }
 
@@ -34,7 +35,8 @@ export async function saveStockRequest(stockRequest: StoreStockRequest) {
       insert into imasterdocuments..StoreStockRequestD (
         ref_id, 
         barcode_id, 
-        qty
+        qty,
+        request_status
       )
       values ${itemsValueParts.join(',')}
     `;
@@ -43,9 +45,10 @@ export async function saveStockRequest(stockRequest: StoreStockRequest) {
       {name: 'refId', type: sql.BigInt, value: stockRequestId}
     ];
 
-    for (let a = 0; a < stockRequest.items.length; a++) {
+    for (let a = 0; a < stockRequest?.items.length; a++) {
       itemsQueryParams.push({name: 'barcodeId'+a, type: sql.BigInt, value: stockRequest.items[a].barcode_id});
       itemsQueryParams.push({name: 'qty'+a, type: sql.BigInt, value: stockRequest.items[a].qty});
+      itemsQueryParams.push({name: 'requestStatus'+a, type: sql.Char(1), value: 'P'});
     }
 
     await query(stockRequestItemSql, itemsQueryParams);
@@ -103,4 +106,14 @@ export async function getStockRequestsByDate(date: Date) {
     {name: 'date', type: sql.DateTime, value: date}
   ]);
   return resultSet?.recordset; 
+}
+
+export async function updateStockRequestItemStatus(id: number, status: string) {
+  let updateSql = `
+    update imasterdocuments..StoreStockRequestH set request_status=@status where ref_id=@id
+  `;
+  await query(updateSql, [
+    {name: 'status', type: sql.Char(1), value: status},
+    {name: 'id', type: sql.BigInt, value: id}
+  ]);
 }

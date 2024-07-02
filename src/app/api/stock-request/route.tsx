@@ -23,6 +23,6 @@ export async function GET(
 ) {
   const url = new URL(request.url);
   const searchParams = new URLSearchParams(url.search);
-  const results = await getStockRequestsByDate(new Date(searchParams.get('date')));
+  const results = await getStockRequestsByDate(new Date(searchParams.get('date') || ''));
   return apiResponse(results, 200);
 }

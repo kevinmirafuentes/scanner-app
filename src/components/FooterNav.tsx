@@ -34,7 +34,7 @@ export default function FooterNav({ active }: FooterNavProps) {
       <FooterNavLink isActive={active == 'price-checker'} href="/price-checker" icon={faBarcode}></FooterNavLink>
       <FooterNavLink isActive={active == 'inventory-checker'} href="/inventory-checker" icon={faBoxOpen}></FooterNavLink>
       <FooterNavLink isActive={active == 'stock-request'} href="/stock-request" icon={faBoxesPacking}></FooterNavLink>
-      <FooterNavLink isActive={active == 'request-tag'} href="/request-tag" icon={faTag}></FooterNavLink>
+      <FooterNavLink isActive={active == 'tag-request'} href="/tag-request" icon={faTag}></FooterNavLink>
     </HStack>
   )
 }

@@ -80,7 +80,7 @@ export default async function Home() {
             <DashboardButton icon={faBoxesPacking} href='/stock-request' label='Stock Request'></DashboardButton>
           </GridItem>
           <GridItem>
-            <DashboardButton icon={faTag} href='/request-tag' label='Request Tag'></DashboardButton>
+            <DashboardButton icon={faTag} href='/tag-request' label='Request Tag'></DashboardButton>
           </GridItem>
         </Grid>
       </Container>

@@ -1,19 +1,17 @@
 "use client";
-import { getSession } from "@/auth";
 import BarcodeInput from "@/components/BarcodeInput";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductQuantityCard from "@/components/ProductQuantityCard";
 import { StockRequestPrint } from "@/components/StockRequestPrint";
-import { AuthUser, StoreRequestItem } from "@/types/types";
+import { getBarcodeDetails } from "@/lib/utils";
+import { StoreRequestItem } from "@/types/types";
 import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, Text, VStack, VisuallyHidden } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import ReactToPrint, { useReactToPrint } from "react-to-print";
 
 function SkeletonLoader() {
   return (
-    <Container> 
-      <Card width='100%'>
+    <Card width='100%'>
         <CardBody>
           <Stack spacing='13px'>
             <Skeleton height='20px' />
@@ -22,14 +20,8 @@ function SkeletonLoader() {
           </Stack>
         </CardBody>
       </Card>
-    </Container>
   );
 } 
-
-const getBarcodeDetails = async (barcode: string) => {
-  let res = await fetch(`/api/products/${barcode}/data`);
-  return res;
-}
 
 export default function StockRequest() {
   const [referenceNumber, setReferenceNumber] = useState<string>('');
@@ -188,30 +180,9 @@ export default function StockRequest() {
             >
               Print
             </Button>
-
-            {/* <ReactToPrint
-              trigger={() => <Button 
-                type='submit' 
-                backgroundColor='teal.300' 
-                color="white" 
-                width="100%" 
-                fontWeight="normal"
-                fontSize='sm'
-                isLoading={isSaving}
-              >
-                Print
-              </Button>}
-              content={() => stockRequestPrintRef}
-              pageStyle='print'
-            /> */}
-            
           </HStack>
   
         </VStack>
-
-        <VisuallyHidden>
-          <StockRequestPrint ref={(el) => (stockRequestPrintRef = el)} />
-        </VisuallyHidden>
       </Container>
     </NavFooterLayout>  
   )

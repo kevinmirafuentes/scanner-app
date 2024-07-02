@@ -21,3 +21,8 @@ export function formatBarcode(code: string): string  {
   }
   return code;
 }
+
+export async function getBarcodeDetails(barcode: string) {
+  let res = await fetch(`/api/products/${barcode}/data`);
+  return res;
+}

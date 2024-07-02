@@ -8,12 +8,14 @@ export default function ProductQuantityCard({
   product, 
   index, 
   onQuantityChange,
-  onClose
+  onClose,
+  hideQty
 }: { 
   product: StoreRequestItem, 
   index: number,
   onQuantityChange?: Function, 
   onClose?: Function
+  hideQty?: boolean
 }) {
 
   const [quantity, setQuantity] = useState<number>(product.qty || 1);
@@ -40,7 +42,7 @@ export default function ProductQuantityCard({
       <CardBody>
         <Grid 
           width='100%' 
-          templateRows='24px 1fr 1fr' 
+          templateRows={ hideQty ? '24px 1fr' : '24px 1fr 1fr'} 
           templateColumns='50px 1fr 50px'
         >
           <GridItem rowSpan={3} width='50px'>
@@ -50,32 +52,39 @@ export default function ProductQuantityCard({
             <Text fontSize="xs">{product.barcode}</Text>
           </GridItem>
           <GridItem textAlign='right'>
-            <Button type='button' onClick={e => onClose && onClose(e)}>
+            <Button 
+              type='button' 
+              size='xs' 
+              marginTop='-20px'
+              marginRight='-15px' 
+              onClick={e => onClose && onClose(e)}>
               <FontAwesomeIcon size="xs" icon={faTimes}></FontAwesomeIcon>
             </Button>
           </GridItem>
           <GridItem paddingY='5px' colSpan={2}>{product.name}</GridItem>
-          <GridItem>
-            <InputGroup width='200px'>
-              <InputLeftAddon padding='0'>
-                <Button size='sm' onClick={decrement}>
-                  <FontAwesomeIcon icon={faMinus} />
-                </Button>
-              </InputLeftAddon>
-              <Input 
-                type='number' 
-                textAlign='center' 
-                width='70px'
-                value={quantity} 
-                onChange={e => { setQuantity(parseInt(e.target.value))}} 
-              />
-              <InputRightAddon padding='0'>
-                <Button size='sm' onClick={increment}>
-                  <FontAwesomeIcon icon={faPlus} />
-                </Button>
-              </InputRightAddon>
-            </InputGroup>
-          </GridItem>
+          {!hideQty && (
+            <GridItem>
+              <InputGroup width='200px'>
+                <InputLeftAddon padding='0'>
+                  <Button size='sm' onClick={decrement}>
+                    <FontAwesomeIcon icon={faMinus} />
+                  </Button>
+                </InputLeftAddon>
+                <Input 
+                  type='number' 
+                  textAlign='center' 
+                  width='70px'
+                  value={quantity} 
+                  onChange={e => { setQuantity(parseInt(e.target.value))}} 
+                />
+                <InputRightAddon padding='0'>
+                  <Button size='sm' onClick={increment}>
+                    <FontAwesomeIcon icon={faPlus} />
+                  </Button>
+                </InputRightAddon>
+              </InputGroup>
+            </GridItem>
+           )}
         </Grid>
       </CardBody>
     </Card>

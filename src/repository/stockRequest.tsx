@@ -79,15 +79,18 @@ export async function getStockRequestById(id: number) {
 export async function getStockRequestItems(refId: number) {
   let queryString = `
     select 
-      ref_id, 
-      barcode_id, 
-      qty, 
-      auto_id 
-    from imasterdocuments..StoreStockRequestD 
+      s.ref_id, 
+      s.barcode_id, 
+      s.qty, 
+      s.auto_id,
+      p.long_descript as name 
+    from imasterdocuments..StoreStockRequestD s 
+    inner join imasterprofiles..BarcodeH b on b.barcode_id = s.barcode_id 
+    inner join imasterprofiles..Product p on p.product_id = b.product_id
     where ref_id = '${refId}'
   `;
   let resultSet = await query(queryString);
-  return resultSet?.recordsets;
+  return resultSet?.recordset;
 }
 
 export async function getStockRequestsByDate(date: Date) {
@@ -105,7 +108,15 @@ export async function getStockRequestsByDate(date: Date) {
   let resultSet = await query(queryString, [
     {name: 'date', type: sql.DateTime, value: date}
   ]);
-  return resultSet?.recordset; 
+
+  let results = [];
+  for (let i=0; i<resultSet?.recordset.length; i++) {
+    let res: any = resultSet?.recordset[i];
+    let itemResultSet = await getStockRequestItems(res.ref_id);
+    results.push({...res, items: itemResultSet});
+  }
+
+  return results; 
 }
 
 export async function updateStockRequestItemStatus(id: number, status: string) {

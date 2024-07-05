@@ -1,9 +1,17 @@
 'use client';
-import { useParams } from "next/navigation";
+import React, { useEffect } from 'react';
+import StockRequestPdf from '@/components/StockRequestPdf';
+import { Box } from '@chakra-ui/react';
+
+
 
 export default function Print() {
-  const params = useParams<{ id: string }>();
+
+  useEffect(() => {
+    setTimeout(() => window.print(), 100)
+  }, []);
+
   return (
-    <>Print this {params.id}</>
+    <StockRequestPdf />
   )
 }

@@ -83,6 +83,7 @@ export async function getStockRequestItems(refId: number) {
       s.barcode_id, 
       s.qty, 
       s.auto_id,
+      s.request_status,
       p.long_descript as name 
     from imasterdocuments..StoreStockRequestD s 
     inner join imasterprofiles..BarcodeH b on b.barcode_id = s.barcode_id 
@@ -121,7 +122,7 @@ export async function getStockRequestsByDate(date: Date) {
 
 export async function updateStockRequestItemStatus(id: number, status: string) {
   let updateSql = `
-    update imasterdocuments..StoreStockRequestH set request_status=@status where ref_id=@id
+    update imasterdocuments..StoreStockRequestD set request_status=@status where auto_id=@id
   `;
   await query(updateSql, [
     {name: 'status', type: sql.Char(1), value: status},

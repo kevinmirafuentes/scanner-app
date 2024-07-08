@@ -38,18 +38,14 @@ body {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.644);
 }
-
-#stockRequestDoc td {
-  border: 0;
-  padding: 5px;
-  font-size: 12px;
+.line-behind {
+  position: relative;
 }
-
-#stockRequestDocItems {
-  border-left: 1px solid black; 
-  border-top: 1px solid black;
-}
-#stockRequestDocItems td {
+.line-behind::after {
+  display: block;
+  content: '';
   border-bottom: 1px solid black;
-  border-right: 1px solid black;
+  height: 1px;
+  position: absolute;
+  width: 100%;
 }

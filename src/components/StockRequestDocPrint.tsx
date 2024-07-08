@@ -1,31 +1,40 @@
 'use client';
+import { getCurrentBranch } from "@/auth";
 import { StoreRequestItem } from "@/types/types";
 import { Box, Table, Tbody, Td, Text, Tr } from "@chakra-ui/react";
+import moment from "moment";
 import { useEffect, useState } from "react";
 
 async function getStockRequestById(id: string) {
   return await fetch(`/api/stock-request/${id}`);
 }
 
-export default function StockRequestPdf({id}: {id:string}) {
+export default function StockRequestDocPrint({id}: {id:string}) {
   const [items, setItems] = useState<StoreRequestItem[]>([]);
+  const [employeeName, setEmployeeName] = useState<string>('');
+  const [datetime, setDatetime] = useState<any>();
   
   useEffect(() => {
     getStockRequestById(id).then(async res => {
       let data = await res.json();
       setItems(data.items);
+      setEmployeeName(data.user?.full_name);
+      setDatetime(moment(data.date_created).format('MM/DD/YYYY hh:mm:ssA'))
+      
+      setTimeout(() => {
+        window.print();
+      }, 100);
     })
     .catch(err => {
       console.log(err)
     }); 
-    
-    // TODO: pring when data is loaded
   }, [id]);
+  
   return (
     <Table id='stockRequestDoc'>
         <Tbody>
           <Tr>
-            <Td colSpan={6}>
+            <Td colSpan={7}>
               <Text fontWeight='bold' textAlign='center'>STOCK REQUEST FORM</Text>
             </Td>
           </Tr>
@@ -39,25 +48,29 @@ export default function StockRequestPdf({id}: {id:string}) {
                 <Tbody>
                   <Tr>
                     <Td>REQUESTED BY:</Td>
-                    <Td>John doe</Td>
+                    <Td>{employeeName}</Td>
                   </Tr>
                   <Tr>
                     <Td>REQUEST TIME:</Td>
-                    <Td>2024-07-31 00:00:00</Td>
+                    <Td>{datetime}</Td>
                   </Tr>
                 </Tbody>
               </Table>
             </Td>
-            <Td colSpan={3}>
+            <Td colSpan={4}>
               <Table>
                 <Tbody>
                   <Tr>
                     <Td>PREPARED BY:</Td>
-                    <Td>John doe</Td>
+                    <Td>
+                      <Text textDecoration={'underline'}></Text>
+                    </Td>
                   </Tr>
                   <Tr>
                     <Td>PREPARED TIME:</Td>
-                    <Td>2024-07-31 00:00:00</Td>  
+                    <Td>
+                      <Text textDecoration={'underline'}></Text>
+                    </Td>  
                   </Tr>
                 </Tbody>
               </Table>

@@ -5,7 +5,7 @@ import ProductQuantityCard from "@/components/ProductQuantityCard";
 import { StockRequestPrint } from "@/components/StockRequestPrint";
 import { getBarcodeDetails } from "@/lib/utils";
 import { StoreRequestItem } from "@/types/types";
-import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, Text, VStack, VisuallyHidden } from "@chakra-ui/react";
+import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Radio, Skeleton, Stack, Text, VStack, VisuallyHidden } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
@@ -30,7 +30,7 @@ export default function StockRequest() {
   const [products, setProducts] = useState<StoreRequestItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  let stockRequestPrintRef = useRef();
+  const [printLayout, setPrintLayout] = useState<number>(1);
   const router = useRouter();
 
   const save = async () => {
@@ -75,7 +75,11 @@ export default function StockRequest() {
   const saveAndPrint = async () => {
     let res = await save()
     let data = await res.json();
-    router.push(`/stock-request/${data.ref_id}/print`)
+    
+    if (printLayout == 2) {
+      return router.push(`/stock-request/${data.ref_id}/print-pos`);
+    }
+    return router.push(`/stock-request/${data.ref_id}/print`);
   };
 
   const onBarcodeChange = (barcode: string) => {
@@ -151,10 +155,10 @@ export default function StockRequest() {
 
           <VStack spacing={5} mt='20px' alignItems='start' width='100%'>
             <Text fontWeight='bold'>Print Options</Text>
-            <Checkbox defaultChecked>Document Layout</Checkbox>
-            <Checkbox>Small Layout</Checkbox>
+            <Radio name='printLayout' defaultChecked isChecked={printLayout == 1} onChange={e => setPrintLayout(1)}>Document Layout</Radio>
+            <Radio name='printLayout' isChecked={printLayout == 2} onChange={e => setPrintLayout(2)}>Small Layout</Radio>
           </VStack>
-
+          
           <HStack width='100%' marginTop='20px'>
             <Button 
               type='submit' 

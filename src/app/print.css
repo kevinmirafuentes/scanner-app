@@ -1,0 +1,25 @@
+@media print {
+  html, body {
+  }
+}
+
+#stockRequestPos td,
+#stockRequestDoc td {
+  border: 0;
+  padding: 5px;
+  font-size: 10px;
+}
+
+#stockRequestPos td {
+  padding: 3px;
+}
+
+#stockRequestDocItems {
+  border-left: 1px solid black; 
+  border-top: 1px solid black;
+}
+
+#stockRequestDocItems td {
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+}

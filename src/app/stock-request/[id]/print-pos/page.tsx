@@ -13,7 +13,7 @@ export default function Print() {
   const {id} = useParams<{id:string}>();
   return (
     <>
-      <StockRequestDocPrint id={id} />
+      <StockRequestPOSPrint id={id} />
     </>
   )
 }

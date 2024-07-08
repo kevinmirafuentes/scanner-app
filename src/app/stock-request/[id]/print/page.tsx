@@ -1,17 +1,18 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { StoreRequestItem } from '@/types/types';
 import StockRequestPdf from '@/components/StockRequestPdf';
-import { Box } from '@chakra-ui/react';
 
-
+async function getStockRequestById(id: string) {
+  return await fetch(`/api/stock-request/${id}`);
+}
 
 export default function Print() {
-
-  useEffect(() => {
-    setTimeout(() => window.print(), 100)
-  }, []);
-
+  const {id} = useParams<{id:string}>();
   return (
-    <StockRequestPdf />
+    <>
+      <StockRequestPdf id={id} />
+    </>
   )
 }

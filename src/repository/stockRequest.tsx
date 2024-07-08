@@ -58,7 +58,7 @@ export async function saveStockRequest(stockRequest: StoreStockRequest) {
   return null;
 };
 
-export async function getStockRequestById(id: number) {
+export async function getStockRequestById(id: string) {
   let queryString = `
     select top 1 
       ref_id, 
@@ -81,14 +81,21 @@ export async function getStockRequestItems(refId: number) {
     select 
       s.ref_id, 
       s.barcode_id, 
+      b.barcode,
       s.qty, 
       s.auto_id,
       s.request_status,
-      p.long_descript as name 
+      p.long_descript as name,
+      st.qty_on_hand as inv,
+      u.unit_code as uom,
+      h.remarks
     from imasterdocuments..StoreStockRequestD s 
+    inner join imasterdocuments..StoreStockRequestH h on h.ref_id = s.ref_id
     inner join imasterprofiles..BarcodeH b on b.barcode_id = s.barcode_id 
     inner join imasterprofiles..Product p on p.product_id = b.product_id
-    where ref_id = '${refId}'
+    left join imasterprofiles..Unit u on u.unit_id = b.unit_id 
+    left join imasterprofiles..Stocks st on st.product_id = p.product_id
+    where s.ref_id = '${refId}'
   `;
   let resultSet = await query(queryString);
   return resultSet?.recordset;

@@ -60,6 +60,9 @@ export interface StoreRequestItem {
   barcode?: string, 
   name?: string, 
   request_status?: string, 
+  inv?: number, 
+  uom?: string,
+  remarks?: string
 }
 
 export interface StoreStockRequest {

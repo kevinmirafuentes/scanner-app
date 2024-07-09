@@ -1,8 +1,3 @@
-@media print {
-  html, body {
-  }
-}
-
 #stockRequestPos td,
 #stockRequestDoc td {
   border: 0;

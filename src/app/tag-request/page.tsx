@@ -2,11 +2,12 @@
 import BarcodeInput from "@/components/BarcodeInput";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductQuantityCard from "@/components/ProductQuantityCard";
-import { StockRequestPrint } from "@/components/StockRequestPrint";
+import RequestTagPrint from "@/components/RequestTagPrint";
+import ReactToPrint, { useReactToPrint } from 'react-to-print';
 import { getBarcodeDetails } from "@/lib/utils";
 import { StoreRequestItem } from "@/types/types";
 import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, Text, VStack, VisuallyHidden } from "@chakra-ui/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 function SkeletonLoader() {
   return (
@@ -51,6 +52,11 @@ export default function TagRequest() {
     setProducts(products.filter((p, i) => i != index));
   };
 
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
+
   return (
     <NavFooterLayout title='Request Tag' activeFooter='tag-request'>
       <Container>
@@ -81,6 +87,7 @@ export default function TagRequest() {
               width={['100%', 'auto']} 
               fontWeight="normal"
               fontSize='sm'
+              onClick={handlePrint}
             >
               Print
             </Button>
@@ -88,6 +95,10 @@ export default function TagRequest() {
   
         </VStack>
 
+
+        {/* <VisuallyHidden> */}
+          <RequestTagPrint ref={componentRef} items={products} />
+        {/* </VisuallyHidden> */}
       </Container>
     </NavFooterLayout> 
   ) 

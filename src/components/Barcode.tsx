@@ -5,9 +5,10 @@ export default function Barcode({ value, ...rest }: { value?: string, width?: nu
   const { inputRef } = useBarcode({
     value: value || '',
     options: {
-      width: 3,
+      format: 'EAN13',
       flat: true,
-      fontSize: 40, 
+      margin: 0,
+      height: 50
     }
   });
   

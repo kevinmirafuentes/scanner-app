@@ -95,10 +95,9 @@ export default function TagRequest() {
   
         </VStack>
 
-
-        {/* <VisuallyHidden> */}
+        <VisuallyHidden>
           <RequestTagPrint ref={componentRef} items={products} />
-        {/* </VisuallyHidden> */}
+        </VisuallyHidden>
       </Container>
     </NavFooterLayout> 
   ) 

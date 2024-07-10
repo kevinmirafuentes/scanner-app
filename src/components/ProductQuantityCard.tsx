@@ -20,13 +20,11 @@ export default function ProductQuantityCard({
 
   const [quantity, setQuantity] = useState<number>(product.qty || 1);
   
-  useEffect(() => {
-    onQuantityChange && onQuantityChange(quantity);
-  }, [onQuantityChange, quantity])
-
   const increment = () => {
     let newQuantity = quantity + 1;
     setQuantity(newQuantity);
+
+    onQuantityChange && onQuantityChange(newQuantity);
   } 
 
   const decrement = () => {
@@ -35,6 +33,8 @@ export default function ProductQuantityCard({
     }
     let newQuantity = quantity - 1;
     setQuantity(newQuantity);
+
+    onQuantityChange && onQuantityChange(newQuantity);
   }
 
   return (

@@ -7,13 +7,14 @@ import ReactToPrint, { useReactToPrint } from 'react-to-print';
 import { getBarcodeDetails } from "@/lib/utils";
 import { StoreRequestItem } from "@/types/types";
 import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, Text, VStack, VisuallyHidden } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function SkeletonLoader() {
   return (
     <Card width='100%'>
       <CardBody>
-        <Stack spacing='13px'>
+        <Stack spacing='10px'>
+          <Skeleton height='20px' />
           <Skeleton height='20px' />
           <Skeleton height='20px' />
         </Stack>
@@ -25,6 +26,7 @@ function SkeletonLoader() {
 export default function TagRequest() {
   const [products, setProducts] = useState<StoreRequestItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [test, setTest] = useState<boolean>();
 
   const onBarcodeChange = (barcode: string) => {
     setIsLoading(true);
@@ -72,8 +74,11 @@ export default function TagRequest() {
               product={product} 
               index={index} 
               onClose={() => removeProduct(index)}
-              onQuantityChange={(qty: number) => product.qty = qty}
-              hideQty={true}
+              onQuantityChange={(qty: number) => {
+                product.qty = qty;
+                // force rerender for print component
+                setTest(!test);
+              }}
             />  
           ))}
 
@@ -92,7 +97,7 @@ export default function TagRequest() {
               Print
             </Button>
           </HStack>
-  
+
         </VStack>
 
         <VisuallyHidden>

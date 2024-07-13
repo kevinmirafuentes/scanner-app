@@ -1,2 +1,2 @@
-cd "C:\appdev\lotte-web-pos"
+cd "C:\Program Files\lotte-web-pos"
 npm -- start

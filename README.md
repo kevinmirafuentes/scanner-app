@@ -1,12 +1,13 @@
 ## Installation 
 
-1. Install Nodejs, at least version 10
-2. Save app directory to C:\Program Files
-3. Edit C:\Windows\System32\drivers\etc\hosts file, and add `<virtual machine ip> vm.host`
-4. Copy .\startup.bat to `%ProgramData%\Microsoft\Windows\Start Menu\Programs\Startup`
-  - This will auto start the server on window startup
+1. Install Nodejs, at least version 10.
+2. Save app directory to `C:\Program Files`.
+3. Edit `C:\Windows\System32\drivers\etc\hosts` file, and add `<virtual machine ip> vm.host`.
+4. Go to `C:\Program Files\<folder name>` and run `npm run build`.
+4. Copy .\startup.bat to `%ProgramData%\Microsoft\Windows\Start Menu\Programs\Startup`.
+  - This will auto start the server on window startup.
   - When the PC was rebooted, this will automatically open the terminal and start up the server.
-5. Run .\startup.bat to start the server
+5. Run .\startup.bat to start the server.
 
 ## Getting Started
 

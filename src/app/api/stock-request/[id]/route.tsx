@@ -3,7 +3,7 @@ import { getStockRequestById } from "@/repository/stockRequest";
 
 export async function GET(
   request: Request,
-  { params: { id } }: { params: { id: number} }
+  { params: { id } }: { params: { id: string} }
 ) {
   let res = await getStockRequestById(id);
   return apiResponse(res, 200);

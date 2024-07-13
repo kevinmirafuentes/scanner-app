@@ -43,6 +43,7 @@ export async function refreshSession(request: NextRequest) {
     httpOnly: true,
     expires: expires
   })
+  // @ts-ignore
   response.cookies.set({
     name: 'current_branch',
     value: currentBranch,

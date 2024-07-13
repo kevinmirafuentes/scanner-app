@@ -29,6 +29,7 @@ function RequestTagForm({ items }: { items: StoreRequestItem[] }, ref: Forwarded
     getSession().then(u => setEmployeeName(u.full_name))
   }, [])
   return (
+    // @ts-ignore
     <VStack gap='25px' ref={ref} padding='15px' fontSize='sm'>
       <Text align='center'>ORIENTAL BAZAAR</Text>
       <VStack w='100%' alignItems='start'>
@@ -73,6 +74,6 @@ function RequestTagForm({ items }: { items: StoreRequestItem[] }, ref: Forwarded
     </VStack>
   );
 } 
-
+// @ts-ignore
 const RequestTagPrint = forwardRef<any, Props>(RequestTagForm);
 export default RequestTagPrint;

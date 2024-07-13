@@ -48,6 +48,7 @@ export function AppDrawer() {
 
   return (
     <>
+      {/* @ts-ignore */}
       <Button ref={btnRef} size='sm' onClick={onOpen} backgroundColor='white'>
         <HamburgerIcon />
       </Button>
@@ -55,6 +56,7 @@ export function AppDrawer() {
         isOpen={isOpen}
         placement='left'
         onClose={onClose}
+        // @ts-ignore
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />

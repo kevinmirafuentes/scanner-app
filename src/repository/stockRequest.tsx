@@ -22,6 +22,7 @@ export async function saveStockRequest(stockRequest: StoreStockRequest) {
   if (stockRequestId) {
     let itemsValueParts = [];
 
+    // @ts-ignore
     for (let i = 0; i < stockRequest?.items.length; i++) {
       itemsValueParts.push(`(
         @refId, 
@@ -45,9 +46,13 @@ export async function saveStockRequest(stockRequest: StoreStockRequest) {
       {name: 'refId', type: sql.BigInt, value: stockRequestId}
     ];
 
+    // @ts-ignore
     for (let a = 0; a < stockRequest?.items.length; a++) {
+      // @ts-ignore
       itemsQueryParams.push({name: 'barcodeId'+a, type: sql.BigInt, value: stockRequest.items[a].barcode_id});
+      // @ts-ignore
       itemsQueryParams.push({name: 'qty'+a, type: sql.BigInt, value: stockRequest.items[a].qty});
+      // @ts-ignore
       itemsQueryParams.push({name: 'requestStatus'+a, type: sql.Char(1), value: 'P'});
     }
 

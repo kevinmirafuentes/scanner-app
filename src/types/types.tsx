@@ -1,20 +1,21 @@
 import { ISqlTypeFactory } from "mssql"
 
 export interface PriceInfo {
-  oum: string,
+  uom: string,
   barcode: string,
-  retail_markup: number,
-  retail_unit_price: number,
+  retail_markup: string,
+  retail_unit_price: string,
   retail_qty2: number,
-  retail_markup2: number,
+  retail_markup2: string,
   retail_qty3: number,
-  retail_markup3: number,
+  retail_markup3: string,
   retail_qty4: number,
-  retail_markup4: number,
+  retail_markup4: string,
   supp_name: string,
   supp_id: number,
   qty_on_hand: number, 
-  stock_qty_converted_to_order_unit: number
+  stock_qty_converted_to_order_unit: number,
+  name?: string
 }
 
 export interface PriceCheck {

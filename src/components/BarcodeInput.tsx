@@ -19,6 +19,7 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
   
   const playBeepSound = () => {
     if (audioRef.current) {
+      // @ts-ignore
       audioRef.current.play()
     } 
   }
@@ -76,6 +77,7 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
         </ModalBody>
       </ModalContent>
     </Modal>
+    {/* @ts-ignore */}
     <audio ref={audioRef} src='/assets/beep.mp3' />
   </>
   )

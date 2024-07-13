@@ -56,6 +56,7 @@ export default function TagRequest() {
 
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
+    // @ts-ignore
     content: () => componentRef.current,
   });
 

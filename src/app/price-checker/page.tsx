@@ -63,7 +63,7 @@ export default function PriceChecker() {
     })
   };
 
-  const formatNum = (x: number) => Number.parseFloat(x).toFixed(2);
+  const formatNum = (x: string) => Number.parseFloat(x).toFixed(2);
 
   return (
     <NavFooterLayout title='Price Checker' activeFooter='price-checker'>
@@ -73,12 +73,12 @@ export default function PriceChecker() {
 
       {isLoading && (<SkeletonLoader />)}
 
-      {barcode && priceDetails?.prices.length < 1 && !isLoading && (<NoResultsFound />)}
+      {barcode && priceDetails && priceDetails?.prices.length < 1 && !isLoading && (<NoResultsFound />)}
 
-      {priceDetails?.prices.length > 0 && !isLoading && (
+      {priceDetails && priceDetails?.prices.length > 0 && !isLoading && (
         <>
           <Container>
-            <Menu width='100%' matchWidth={true}>
+            <Menu matchWidth={true}>
               <MenuButton
                 width='100%'
                 px={4}
@@ -125,9 +125,9 @@ export default function PriceChecker() {
                           <Text fontSize='xl'>{price?.name}</Text>
                           <Text fontSize='3xl' fontWeight='bold'>Php {formatNum(price.retail_unit_price)}</Text>
                           <Box>
-                            {price.retail_markup2 > 0 && (<Text align='center' fontSize='xl'>[ {`${price.retail_qty2}@${formatNum(price.retail_markup2)}`} ]</Text>)}
-                            {price.retail_markup3 > 0 && (<Text align='center' fontSize='xl'>[ {`${price.retail_qty3}@${formatNum(price.retail_markup3)}`} ]</Text>)}
-                            {price.retail_markup4 > 0 && (<Text align='center' fontSize='xl'>[ {`${price.retail_qty4}@${formatNum(price.retail_markup4)}`} ]</Text>)}
+                            {Number.parseFloat(price.retail_markup2) > 0 && (<Text align='center' fontSize='xl'>[ {`${price.retail_qty2}@${formatNum(price.retail_markup2)}`} ]</Text>)}
+                            {Number.parseFloat(price.retail_markup3) > 0 && (<Text align='center' fontSize='xl'>[ {`${price.retail_qty3}@${formatNum(price.retail_markup3)}`} ]</Text>)}
+                            {Number.parseFloat(price.retail_markup4) > 0 && (<Text align='center' fontSize='xl'>[ {`${price.retail_qty4}@${formatNum(price.retail_markup4)}`} ]</Text>)}
                           </Box>
                         </VStack>
                       </CardBody>

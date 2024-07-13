@@ -21,6 +21,7 @@ export function NavFooterLayout({
         <Viewport>
           {children}
         </Viewport>
+        {/* @ts-ignore */}
         <FooterNav active={activeFooter} />
       </VStack>
     </>

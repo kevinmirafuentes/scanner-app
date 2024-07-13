@@ -2,7 +2,6 @@
 import BarcodeInput from "@/components/BarcodeInput";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductQuantityCard from "@/components/ProductQuantityCard";
-import { StockRequestPrint } from "@/components/StockRequestPrint";
 import { getBarcodeDetails } from "@/lib/utils";
 import { StoreRequestItem } from "@/types/types";
 import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Radio, Skeleton, Stack, Text, VStack, VisuallyHidden } from "@chakra-ui/react";
@@ -74,7 +73,7 @@ export default function StockRequest() {
 
   const saveAndPrint = async () => {
     let res = await save()
-    let data = await res.json();
+    let data = await res?.json();
     
     if (printLayout == 2) {
       return router.push(`/stock-request/${data.ref_id}/print-pos`);

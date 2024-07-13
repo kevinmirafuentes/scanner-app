@@ -3,18 +3,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition, faBarcode, faBoxOpen, faBoxesPacking, faTag } from "@fortawesome/free-solid-svg-icons";
 import { getCurrentBranch, getSession } from "@/auth";
 import Navbar from "@/components/Navbar";
+import React from "react";
 
 type DashboardButtonProps = {
   icon: IconDefinition,
   href: string,
   label: string
-}
+} 
 
-export function DashboardButton({
+const DashboardButton = ({
   icon,
   href,
   label
-}: DashboardButtonProps) {
+}: DashboardButtonProps) => {
   return (
     <LinkBox>
       <Center

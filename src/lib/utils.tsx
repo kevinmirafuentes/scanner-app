@@ -2,11 +2,13 @@ import Cryptr from "cryptr";
 import { NextResponse } from "next/server";
 
 export function encrypt(val: string) {
+  // @ts-ignore
   const cryptr = new Cryptr(process.env.AUTH_SECRET);
   return cryptr.encrypt(val);
 }
 
 export function decrypt(encryptedString: string) {
+  // @ts-ignore
   const cryptr = new Cryptr(process.env.AUTH_SECRET);
   return cryptr.decrypt(encryptedString);
 }

@@ -3,25 +3,23 @@ import { useEffect, useState } from "react"
 
 export default function ProductDetails(props: { code: string|null}) {
 
-  let emptyBarcode = {product_id: null, barcode: null};
-  let [barcode, setBarcode] = useState(emptyBarcode);
-
-  const fetchBarcode = async (code: string|null) => {
-    let bcode;
-
-    if (code) {
-      let res = await fetch('/api/products/barcodes/' + code);
-      bcode = await res.json();
-    }
-
-    if (bcode) {
-      setBarcode(bcode);
-      return;
-    } 
-    setBarcode(emptyBarcode);
-  };
+  let [barcode, setBarcode] = useState({product_id: null, barcode: null});
 
   useEffect(() => {
+    const fetchBarcode = async (code: string|null) => {
+      let bcode;
+  
+      if (code) {
+        let res = await fetch('/api/products/barcodes/' + code);
+        bcode = await res.json();
+      }
+  
+      if (bcode) {
+        setBarcode(bcode);
+        return;
+      } 
+      setBarcode({product_id: null, barcode: null});
+    };  
     fetchBarcode(props.code)
   }, [props]);
   

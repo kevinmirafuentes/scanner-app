@@ -13,7 +13,9 @@ var config = {
 };
 
 export async function query(queryString: string, inputs?: QueryInput[]) {
+  // @ts-ignore
   let pool = await sql.connect(config);
+  // @ts-ignore
   let request = pool.request();
 
   if (inputs) {

@@ -73,7 +73,7 @@ export default function StockRequest() {
     setProducts([]);
     setReferenceNumber('');
     setRemarks('');
-    setDate('');
+    setDate(moment().format('YYYY-MM-DD'));
     getMaxReferenceNumber();
   };
 

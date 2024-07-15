@@ -20,17 +20,27 @@ export async function saveStockRequest(stockRequest: StoreStockRequest) {
 
   let stockRequestId = stockRequestInsertResult?.recordset[0].IDENTITY_ID;
   if (stockRequestId) {
-    let itemsValueParts = [];
+    let itemsValueParts: string[] = [];
+    let itemsQueryParams = [];
+
+    itemsQueryParams.push({name: 'refId', type: sql.BigInt, value: stockRequestId});
 
     // @ts-ignore
-    for (let i = 0; i < stockRequest?.items.length; i++) {
+    stockRequest.items.map((value: StoreStockRequest, index: number) => {
       itemsValueParts.push(`(
         @refId, 
-        @barcodeId${i},
-        @qty${i},
-        @requestStatus${i} 
+        @barcodeId${index},
+        @qty${index},
+        @requestStatus${index} 
       )`);
-    }
+      
+      // @ts-ignore
+      itemsQueryParams.push({name: `barcodeId${index}`, type: sql.BigInt, value: value.barcode_id});
+      // @ts-ignore
+      itemsQueryParams.push({name: `qty${index}`, type: sql.BigInt, value: value.qty});
+      // @ts-ignore
+      itemsQueryParams.push({name: `requestStatus${index}`, type: sql.Char(1), value: 'P'});
+    })
 
     let stockRequestItemSql = `
       insert into imasterdocuments..StoreStockRequestD (
@@ -41,20 +51,6 @@ export async function saveStockRequest(stockRequest: StoreStockRequest) {
       )
       values ${itemsValueParts.join(',')}
     `;
-
-    let itemsQueryParams = [
-      {name: 'refId', type: sql.BigInt, value: stockRequestId}
-    ];
-
-    // @ts-ignore
-    for (let a = 0; a < stockRequest?.items.length; a++) {
-      // @ts-ignore
-      itemsQueryParams.push({name: 'barcodeId'+a, type: sql.BigInt, value: stockRequest.items[a].barcode_id});
-      // @ts-ignore
-      itemsQueryParams.push({name: 'qty'+a, type: sql.BigInt, value: stockRequest.items[a].qty});
-      // @ts-ignore
-      itemsQueryParams.push({name: 'requestStatus'+a, type: sql.Char(1), value: 'P'});
-    }
 
     await query(stockRequestItemSql, itemsQueryParams);
 
@@ -117,6 +113,7 @@ export async function getStockRequestsByDate(date: Date) {
       date_created
     from imasterdocuments..StoreStockRequestH
     where datediff(day, date_created, @date) = 0
+    order by cast(ref_no as integer) asc
   `;
   let resultSet = await query(queryString, [
     {name: 'date', type: sql.DateTime, value: date}

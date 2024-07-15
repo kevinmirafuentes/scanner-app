@@ -4,7 +4,8 @@ import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductQuantityCard from "@/components/ProductQuantityCard";
 import { getBarcodeDetails } from "@/lib/utils";
 import { StoreRequestItem } from "@/types/types";
-import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Radio, Skeleton, Stack, Text, VStack, VisuallyHidden } from "@chakra-ui/react";
+import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Radio, Skeleton, Stack, Text, VStack, VisuallyHidden, useToast } from "@chakra-ui/react";
+import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -25,12 +26,13 @@ function SkeletonLoader() {
 export default function StockRequest() {
   const [referenceNumber, setReferenceNumber] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');1
-  const [date, setDate] = useState<string>('');
+  const [date, setDate] = useState<string>(moment().format('YYYY-MM-DD'));
   const [products, setProducts] = useState<StoreRequestItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [printLayout, setPrintLayout] = useState<number>(1);
   const router = useRouter();
+  const toast = useToast();
 
   const save = async () => {
     if (!isValidForm()) {
@@ -51,7 +53,18 @@ export default function StockRequest() {
         "content-type": "application/json",
       },
     })
-    .then((e) => { resetForm(); return e;})
+    .then((e) => { 
+      
+      toast({
+        title: 'Stock request created.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+
+      resetForm(); 
+      return e;
+    })
     .finally(() =>setIsSaving(false))
     .catch((e) => console.log(e));
   };

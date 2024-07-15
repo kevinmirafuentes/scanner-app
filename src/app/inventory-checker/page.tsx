@@ -1,7 +1,5 @@
 "use client";
-import { Container, Input, InputGroup, InputRightElement, Text, VStack, Select, HStack, Box, Card, CardBody, Checkbox, Flex, Stack, Skeleton } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBarcode } from "@fortawesome/free-solid-svg-icons";
+import { Container, Text, VStack, Card, CardBody, Checkbox, Stack, Skeleton, HStack } from "@chakra-ui/react";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
 import { InventoryDetails } from "@/types/types";
 import { useState } from "react";

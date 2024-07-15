@@ -20,7 +20,7 @@ export async function getProductStocks(productId: number, branchId?: number) {
       p.product_code, 
       p.long_descript as name,
       s.qty_on_hand, 
-      s.qty_on_hand / u.content_qty as stock_qty_converted_to_order_unit, 
+      cast((s.qty_on_hand / u.content_qty) as decimal(18, 2)) as stock_qty_converted_to_order_unit, 
       u.unit_code as uom
 	  from imasterprofiles..stocks s
 	  left join imasterprofiles..product p on s.product_id = p.product_id

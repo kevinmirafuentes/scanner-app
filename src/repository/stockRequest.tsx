@@ -11,7 +11,7 @@ export async function saveStockRequest(stockRequest: StoreStockRequest) {
     (@refNo, @transDate, @remarks, @requestStatus, @userId, CURRENT_TIMESTAMP)
   `
   let stockRequestInsertResult = await query(stockRequestSql, [
-    {name: 'refNo', type: sql.Char(10), value: stockRequest.ref_no},
+    {name: 'refNo', type: sql.Char(10), value: stockRequest.ref_no+''},
     {name: 'transDate', type: sql.DateTime, value: stockRequest.trans_date},
     {name: 'remarks', type: sql.VarChar(100), value: stockRequest.remarks},
     {name: 'requestStatus', type: sql.Char(1), value: stockRequest.request_status},
@@ -140,4 +140,18 @@ export async function updateStockRequestItemStatus(id: number, status: string) {
     {name: 'status', type: sql.Char(1), value: status},
     {name: 'id', type: sql.BigInt, value: id}
   ]);
+}
+
+export async function getNextReferenceNumber()
+{
+  let querySql = `select MAX(convert(int, ref_no))+1 as maxrefnum from IMASTERDOCUMENTS..StoreStockRequestH`;
+  let resultSet = await query(querySql);
+  return resultSet?.recordset[0];
+}
+
+export async function getMaxReferenceNumber()
+{
+  let querySql = `select MAX(convert(int, ref_no)) as maxrefnum from IMASTERDOCUMENTS..StoreStockRequestH`;
+  let resultSet = await query(querySql);
+  return resultSet?.recordset[0];
 }

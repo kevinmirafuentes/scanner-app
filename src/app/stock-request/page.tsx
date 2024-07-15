@@ -6,7 +6,7 @@ import { getBarcodeDetails } from "@/lib/utils";
 import { StoreRequestItem } from "@/types/types";
 import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Radio, Skeleton, Stack, Text, VStack, VisuallyHidden } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 function SkeletonLoader() {
   return (
@@ -61,11 +61,11 @@ export default function StockRequest() {
     setReferenceNumber('');
     setRemarks('');
     setDate('');
+    getMaxReferenceNumber();
   };
 
   const isValidForm = () => {
     if (referenceNumber.length == 0) return false;
-    if (remarks.length == 0) return false;
     if (date.length == 0) return false; 
     if (products.length == 0) return false;
     return true;
@@ -75,10 +75,18 @@ export default function StockRequest() {
     let res = await save()
     let data = await res?.json();
     
-    if (printLayout == 2) {
-      return router.push(`/stock-request/${data.ref_id}/print-pos`);
+    if (referenceNumber != data.ref_no) {
+      alert(`Reference number ${referenceNumber} is already taken. Generated a new number: ${data.ref_no}`)
     }
-    return router.push(`/stock-request/${data.ref_id}/print`);
+
+    let url = `/stock-request/${data.ref_id}/print`;
+    if (printLayout == 2) {
+      url = `/stock-request/${data.ref_id}/print-pos`;
+    }
+    let win = window.open('', '_blank');
+    if (win) {
+      win.location = url;
+    }
   };
 
   const onBarcodeChange = (barcode: string) => {
@@ -107,6 +115,16 @@ export default function StockRequest() {
     setProducts(products.filter((p, i) => i != index));
   };
 
+  const getMaxReferenceNumber = async () => {
+    let res = await fetch("/api/stock-request/maxrefnum");
+    let resJson = await res.json();
+    setReferenceNumber(resJson.maxrefnum);
+  }
+
+  useEffect(() => {
+    getMaxReferenceNumber();
+  }, []);
+
   return (
     <NavFooterLayout title='Stock Request' activeFooter='stock-request'>
       <Container>
@@ -115,6 +133,7 @@ export default function StockRequest() {
             <FormLabel>Reference No.</FormLabel>
             <Input 
               type='text' 
+              readOnly={true}
               value={referenceNumber} 
               onChange={e =>setReferenceNumber(e.target.value)} 
             />
@@ -160,19 +179,7 @@ export default function StockRequest() {
           
           <HStack width='100%' marginTop='20px'>
             <Button 
-              type='submit' 
-              backgroundColor='gray.300' 
-              color="black" 
-              width="100%" 
-              fontWeight="normal"
-              fontSize='sm'
-              onClick={save}
-              isLoading={isSaving}
-            >
-              Save
-            </Button>
-            <Button 
-              type='submit' 
+              type='button' 
               backgroundColor='teal.300' 
               color="white" 
               width="100%" 

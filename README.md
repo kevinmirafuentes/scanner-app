@@ -12,7 +12,7 @@
 ## Multi server installation 
 1. Create a new copy of app folder; ec. cp `C:\Program Files\lotte-web-pos` `lotte-web-pos2`
 2. Go to folder; `cd lotte-web-pos2`
-3. Create `.env.local` file in root folder, and change `DB_SERVER` variable with IP of db server to connect to. 
+3. Create `.env.local` file in root folder, and change `DB_SERVER` variable with IP of db server to connect to. And edit `APP_PREFIX` with unique value for server.
 4. Build command: `npm run build`
 5. Edit `startup.bat`, add different port to eg: `npm -- start --port 3001`
 6. Copy .\startup.bat to `%ProgramData%\Microsoft\Windows\Start Menu\Programs\Startup`.

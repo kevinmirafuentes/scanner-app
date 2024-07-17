@@ -58,6 +58,9 @@ export default function TagRequest() {
   const handlePrint = useReactToPrint({
     // @ts-ignore
     content: () => componentRef.current,
+    onAfterPrint: () => {
+      setProducts([])
+    }
   });
 
   return (

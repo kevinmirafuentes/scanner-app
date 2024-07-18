@@ -129,7 +129,7 @@ export default function StockRequest() {
   };
 
   const getMaxReferenceNumber = async () => {
-    let res = await fetch("/api/stock-request/maxrefnum");
+    let res = await fetch("/api/stock-request/maxrefnum", { method: "POST" });
     let resJson = await res.json();
     setReferenceNumber(resJson.maxrefnum);
   }

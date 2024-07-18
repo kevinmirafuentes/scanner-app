@@ -141,14 +141,14 @@ export async function updateStockRequestItemStatus(id: number, status: string) {
 
 export async function getNextReferenceNumber()
 {
-  let querySql = `select MAX(convert(int, ref_no))+1 as maxrefnum from IMASTERDOCUMENTS..StoreStockRequestH`;
+  let querySql = `select case when MAX(convert(int, ref_no)) is not null then MAX(convert(int, ref_no))+1 else 1 end as maxrefnum from IMASTERDOCUMENTS..StoreStockRequestH`;
   let resultSet = await query(querySql);
   return resultSet?.recordset[0];
 }
 
 export async function getMaxReferenceNumber()
 {
-  let querySql = `select MAX(convert(int, ref_no)) as maxrefnum from IMASTERDOCUMENTS..StoreStockRequestH`;
+  let querySql = `select case when MAX(convert(int, ref_no)) is not null then MAX(convert(int, ref_no)) else 0 end as maxrefnum from IMASTERDOCUMENTS..StoreStockRequestH`;
   let resultSet = await query(querySql);
   return resultSet?.recordset[0];
 }

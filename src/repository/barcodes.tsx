@@ -1,3 +1,4 @@
+import { getCurrentBranch } from "@/auth";
 import { query } from "@/repository/db"
 
 export interface Barcode {
@@ -16,7 +17,7 @@ export async function getBarcode(code: string) {
   return {};
 }
 
-export async function getProductByBarcode(code: string) {
+export async function getProductByBarcode(code: string, branchId: number) {
   let clean = code.replace(';', '');
   
   // get product detail 
@@ -25,10 +26,13 @@ export async function getProductByBarcode(code: string) {
       h.barcode_id,
       h.barcode,
       p.product_id,
-      p.long_descript as name
+      p.long_descript as name,
+      d.retail_selling_price as retail_unit_price
     from imasterprofiles.dbo.Product p
     inner join imasterprofiles.dbo.BarcodeH h on (h.product_id = p.product_id)
+    inner join imasterprofiles.dbo.BarcodeD d on (d.barcode_id = h.barcode_id)
     where h.barcode = '${clean}'
+    and d.branch_id = '${branchId}'
   `
   let result = await query(prodSql);
   return result?.recordset[0];

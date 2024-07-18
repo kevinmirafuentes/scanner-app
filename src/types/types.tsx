@@ -63,7 +63,8 @@ export interface StoreRequestItem {
   request_status?: string, 
   inv?: number, 
   uom?: string,
-  remarks?: string
+  remarks?: string,
+  retail_unit_price?: number, 
 }
 
 export interface StoreStockRequest {

@@ -43,6 +43,7 @@ function RequestTagForm({ items }: { items: StoreRequestItem[] }, ref: Forwarded
             <Td padding={1} border={0}>QTY</Td>
             <Td padding={1} border={0}></Td>
             <Td padding={1} border={0}>BARCODE/DESCRIPTIONS</Td>
+            <Td padding={1} border={0}>SP</Td>
           </Tr>
           {items?.map((i, k) => (
             <Tr key={k}>
@@ -52,6 +53,7 @@ function RequestTagForm({ items }: { items: StoreRequestItem[] }, ref: Forwarded
                 <Text>{i.barcode}</Text>
                 <Text>{i.name}</Text>
               </Td>
+              <Td padding={1} border={0}>{(i?.retail_unit_price||0).toFixed(2)}</Td>
             </Tr>
           ))}
           

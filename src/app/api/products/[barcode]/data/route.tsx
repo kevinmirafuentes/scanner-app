@@ -1,7 +1,7 @@
 import { getProductByBarcode } from "@/repository/barcodes";
 import { getProductPrices } from "@/repository/prices";
 import { apiResponse, formatBarcode } from "@/lib/utils";
-import { getSession } from "@/auth";
+import { getCurrentBranch, getSession } from "@/auth";
 import { getDefaultBranch } from "@/repository/branch";
 import { getProductStocks } from "@/repository/products";
 
@@ -15,9 +15,9 @@ export async function GET(
 ) {
   let result = {};
   let status = 200;
-
+  let { branch_id } = await getCurrentBranch();
   try {
-    result = await getProductByBarcode(formatBarcode(barcode)) || {};
+    result = await getProductByBarcode(formatBarcode(barcode), branch_id) || {};
   } catch (err) {
     console.log(err);
     result = {'message': 'Something went wrong'};

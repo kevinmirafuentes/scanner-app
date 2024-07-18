@@ -15,7 +15,7 @@ export default function StockRequestPOSPrint({id}: {id:string}) {
   const [refNo, setRefNo] = useState<number>(0);
   const [employeeName, setEmployeeName] = useState<string>('');
   const [datetime, setDatetime] = useState<any>();
-  
+
   useEffect(() => {
     getStockRequestById(id).then(async res => {
       let data = await res.json();
@@ -32,8 +32,8 @@ export default function StockRequestPOSPrint({id}: {id:string}) {
     })
     .catch(err => {
       console.log(err)
-    }); 
-    
+    });
+
   }, [id]);
   return (
     <Table id='stockRequestPos'>
@@ -102,7 +102,7 @@ export default function StockRequestPOSPrint({id}: {id:string}) {
         </Tr>
         <Tr>
           <Td colSpan={4}>
-          
+
             <Table>
               <Tbody>
                 <Tr>

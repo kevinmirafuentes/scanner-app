@@ -13,23 +13,23 @@ export default function StockRequestDocPrint({id}: {id:string}) {
   const [items, setItems] = useState<StoreRequestItem[]>([]);
   const [employeeName, setEmployeeName] = useState<string>('');
   const [datetime, setDatetime] = useState<any>();
-  
+
   useEffect(() => {
     getStockRequestById(id).then(async res => {
       let data = await res.json();
       setItems(data.items);
       setEmployeeName(data.user?.full_name);
       setDatetime(moment(data.date_created).format('MM/DD/YYYY hh:mm:ssA'))
-      
+
       setTimeout(() => {
         window.print();
       }, 100);
     })
     .catch(err => {
       console.log(err)
-    }); 
+    });
   }, [id]);
-  
+
   return (
     <Table id='stockRequestDoc'>
         <Tbody>
@@ -70,7 +70,7 @@ export default function StockRequestDocPrint({id}: {id:string}) {
                     <Td>PREPARED TIME:</Td>
                     <Td>
                       <Text textDecoration={'underline'}></Text>
-                    </Td>  
+                    </Td>
                   </Tr>
                 </Tbody>
               </Table>
@@ -85,8 +85,8 @@ export default function StockRequestDocPrint({id}: {id:string}) {
             <Td>ITEM BARCODE</Td>
             <Td>ITEM DESCRIPTION</Td>
             <Td>QTY</Td>
-            <Td>INV</Td>
             <Td>UOM</Td>
+            <Td>INV</Td>
             <Td>REMARKS</Td>
           </Tr>
           {items.map((i, k) => (
@@ -95,8 +95,8 @@ export default function StockRequestDocPrint({id}: {id:string}) {
             <Td>{i.barcode}</Td>
             <Td>{i.name}</Td>
             <Td>{i.qty}</Td>
-            <Td>{i.inv}</Td>
             <Td>{i.uom}</Td>
+            <Td>{i.inv}</Td>
             <Td>{i.remarks}</Td>
           </Tr>
           ))}

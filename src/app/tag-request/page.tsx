@@ -59,10 +59,11 @@ export default function TagRequest() {
   const handlePrint = useReactToPrint({
     // @ts-ignore
     content: () => componentRef.current,
-    onAfterPrint: () => {
-      setProducts([])
-    }
   });
+
+  const handleReset = () => {
+    setProducts([]);
+  }
 
   return (
     <NavFooterLayout title='Request Tag' activeFooter='tag-request'>
@@ -90,6 +91,17 @@ export default function TagRequest() {
           {isLoading && (<SkeletonLoader />)}
           
           <HStack width='100%' justifyContent='center'>
+            <Button 
+              type='button' 
+              backgroundColor='gray.300' 
+              colorScheme="gray" 
+              width={['100%', 'auto']} 
+              fontWeight="normal"
+              fontSize='sm'
+              onClick={handleReset}
+            >
+              Reset
+            </Button>
             <Button 
               type='button' 
               backgroundColor='teal.300' 

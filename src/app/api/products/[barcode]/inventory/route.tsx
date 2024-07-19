@@ -17,7 +17,7 @@ export async function GET(
   let branchId = branch ? branch.branch_id : 0;
 
   try {
-    let product = await getProductByBarcode(formatBarcode(barcode));
+    let product = await getProductByBarcode(formatBarcode(barcode), branchId);
     let stocks;
 
     if (product?.product_id) {

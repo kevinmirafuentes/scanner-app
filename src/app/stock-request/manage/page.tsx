@@ -1,7 +1,10 @@
 'use client';
 import { NavFooterLayout } from "@/components/NavFooterLayout";
+import StockRequestPrintMenu from "@/components/StockRequestPrintMenu";
 import { StoreRequestItem, StoreStockRequest } from "@/types/types";
-import { Text, Box, Card, CardBody, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, Switch, Table, Tbody, Td, Th, Thead, Tr, useToast } from "@chakra-ui/react";
+import { Text, Box, Card, CardBody, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, Switch, Table, Tbody, Td, Th, Thead, Tr, useToast, Button } from "@chakra-ui/react";
+import { faPrint } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
@@ -74,7 +77,7 @@ export default function StockRequestList() {
           <Thead>
             <Tr>
               <Th>#</Th>
-              <Th>Reference Number</Th>
+              <Th colSpan={2}>Reference Number</Th>
             </Tr>
           </Thead>
           
@@ -82,7 +85,7 @@ export default function StockRequestList() {
               <Tbody>
                 <Tr>
                   <Td><Skeleton height='20px' /></Td>
-                  <Td><Skeleton height='20px' /></Td>
+                  <Td colSpan={2}><Skeleton height='20px' /></Td>
                 </Tr>
               </Tbody>
             )}
@@ -91,6 +94,9 @@ export default function StockRequestList() {
                 <Tr>
                   <Td onClick={e => toggleItems(res.ref_id)}>{key+1}</Td>
                   <Td onClick={e => toggleItems(res.ref_id)}>{res.ref_no}</Td>
+                  <Td width={100}>
+                    <StockRequestPrintMenu refId={res.ref_id || 0} />
+                  </Td>
                 </Tr>
                 {collapsedItems.includes(res.ref_id || 0) && (
                   <Tr>
@@ -135,7 +141,7 @@ export default function StockRequestList() {
             {!isLoading && results.length == 0 && (
               <Tbody>
                 <Tr>
-                  <Td colSpan={2} textAlign={'center'}>No Results Found.</Td>
+                  <Td colSpan={3} textAlign={'center'}>No Results Found.</Td>
                 </Tr>
               </Tbody>
             )}

@@ -16,7 +16,7 @@ export async function GET(
   let branchId = branch?.branch_id;
 
   try {
-    let product = await getProductByBarcode(formatBarcode(barcode));
+    let product = await getProductByBarcode(formatBarcode(barcode), branchId);
     let prices = [];
 
     if (product?.product_id) {

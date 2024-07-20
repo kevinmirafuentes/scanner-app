@@ -151,11 +151,11 @@ export default function PriceChecker() {
                                 <Tbody>
                                   <Tr>
                                     <Td padding={0}>Case:</Td>
-                                    <Td padding={0}><Text align='right'>{price?.qty_on_hand}</Text></Td>
+                                    <Td padding={0}><Text align='right'>{price?.stock_qty_converted_to_order_unit}</Text></Td>
                                   </Tr>
                                   <Tr>
                                     <Td padding={0}>Pcs:</Td>
-                                    <Td padding={0}><Text align='right'>{price?.stock_qty_converted_to_order_unit}</Text></Td>
+                                    <Td padding={0}><Text align='right'>{price?.qty_on_hand}</Text></Td>
                                   </Tr>
                                 </Tbody>
                               </Table>

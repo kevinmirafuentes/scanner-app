@@ -28,3 +28,10 @@ export async function getBarcodeDetails(barcode: string) {
   let res = await fetch(`/api/products/${barcode}/data`);
   return res;
 }
+
+export function printInNewTab(url: string) {
+  let win = window.open('', '_blank');
+  if (win) {
+    win.location = url;
+  }
+}

@@ -4,9 +4,9 @@ import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductQuantityCard from "@/components/ProductQuantityCard";
 import RequestTagPrint from "@/components/RequestTagPrint";
 import ReactToPrint, { useReactToPrint } from 'react-to-print';
-import { getBarcodeDetails } from "@/lib/utils";
+import { getBarcodeDetails, printInNewTab } from "@/lib/utils";
 import { StoreRequestItem } from "@/types/types";
-import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, Text, VStack, VisuallyHidden } from "@chakra-ui/react";
+import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, Text, VStack, VisuallyHidden, useToast } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 
 function SkeletonLoader() {
@@ -27,6 +27,8 @@ export default function TagRequest() {
   const [products, setProducts] = useState<StoreRequestItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [test, setTest] = useState<boolean>();
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const toast = useToast();
 
   const onBarcodeChange = (barcode: string) => {
     setIsLoading(true);
@@ -55,15 +57,44 @@ export default function TagRequest() {
     setProducts(products.filter((p, i) => i != index));
   };
 
-  const componentRef = useRef();
-  const handlePrint = useReactToPrint({
-    // @ts-ignore
-    content: () => componentRef.current,
-  });
-
-  const handleReset = () => {
+  const resetForm = () => {
     setProducts([]);
   }
+
+  const handleSave = async () => {
+    let res = await save()
+    let data = await res?.json();
+    printInNewTab( `/tag-request/${data.ref_id}/print`);
+  }
+
+  const save = async () => {
+    if (products.length == 0) {
+      return;
+    }
+
+    setIsSaving(true);
+    return fetch('/api/tag-request', {
+      method: "POST",
+      body: JSON.stringify({
+        items: products, 
+      }),
+    })
+    .then(e => {
+      
+      toast({
+        title: 'Stock request created.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+
+      resetForm(); 
+      return e;
+    
+    })
+    .finally(() =>setIsSaving(false))
+    .catch((e) => console.log(e));
+  };
 
   return (
     <NavFooterLayout title='Request Tag' activeFooter='tag-request'>
@@ -93,33 +124,19 @@ export default function TagRequest() {
           <HStack width='100%' justifyContent='center'>
             <Button 
               type='button' 
-              backgroundColor='gray.300' 
-              colorScheme="gray" 
-              width={['100%', 'auto']} 
-              fontWeight="normal"
-              fontSize='sm'
-              onClick={handleReset}
-            >
-              Reset
-            </Button>
-            <Button 
-              type='button' 
               backgroundColor='teal.300' 
               color="white" 
               width={['100%', 'auto']} 
               fontWeight="normal"
               fontSize='sm'
-              onClick={handlePrint}
+              onClick={handleSave}
+              isLoading={isSaving}
             >
               Print
             </Button>
           </HStack>
 
         </VStack>
-
-        <VisuallyHidden>
-          <RequestTagPrint ref={componentRef} items={products} />
-        </VisuallyHidden>
       </Container>
     </NavFooterLayout> 
   ) 

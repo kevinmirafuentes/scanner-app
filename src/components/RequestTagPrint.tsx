@@ -2,9 +2,13 @@
 import { Box, Container, HStack, Stack, Table, TableContainer, Tbody, Td, Text, Tr, VStack, Wrap, WrapItem } from "@chakra-ui/react";
 import React, { ForwardedRef, forwardRef, useEffect, useState }  from "react";
 import Barcode from "./Barcode";
-import { StoreRequestItem } from "@/types/types";
+import { StoreRequestItem, TagRequestItem } from "@/types/types";
 import moment from "moment";
 import { getSession } from "@/auth";
+
+async function getTagRequestById(id: string) {
+  return await fetch(`/api/tag-request/${id}`);
+}
 
 export const RequestTag = ({ data }: { data: StoreRequestItem}) => {
   return (
@@ -21,16 +25,30 @@ export const RequestTag = ({ data }: { data: StoreRequestItem}) => {
   )
 }
 
-function RequestTagForm({ items }: { items: StoreRequestItem[] }, ref: ForwardedRef<HTMLButtonElement>) {
+function RequestTagForm({ id }: { id: string }) {
   const [employeeName, setEmployeeName] = useState<string>('');
   const [datetime, setDateTime] = useState<string>();
+  const [items, setItems] = useState<TagRequestItem[]>();
+
   useEffect(() => {
-    setDateTime(moment().format('MM/DD/YYYY hh:mm:ssA'));
-    getSession().then(u => setEmployeeName(u.full_name))
-  }, [])
+    getTagRequestById(id).then(async res => {
+      let data = await res.json();
+      setItems(data.items);
+      setEmployeeName(data.user?.full_name);
+      setDateTime(moment(data.date_created).format('MM/DD/YYYY hh:mm:ssA'))
+
+      setTimeout(() => {
+        window.print();
+      }, 100);
+    })
+    .catch(err => {
+      console.log(err)
+    });
+  }, [id]);
+
   return (
     // @ts-ignore
-    <VStack gap='25px' ref={ref} padding='15px' fontSize='sm'>
+    <VStack gap='25px' padding='15px' fontSize='sm'>
       <Text align='center'>ORIENTAL BAZAAR</Text>
       <VStack w='100%' alignItems='start'>
         <Text align='left'>EMPLOYEE NAME: {employeeName}</Text>

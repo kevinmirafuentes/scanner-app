@@ -77,3 +77,17 @@ export interface StoreStockRequest {
   date_created?: Date,
   items?: StoreRequestItem[]
 }
+
+export interface TagRequest {
+  ref_id?: number|null,
+  user?: User, 
+  date_created?: Date,
+  items?: TagRequestItem[]
+}
+
+export interface TagRequestItem {
+  ref_id?: number|null,
+  barcode_id: number,
+  qty: number,
+  auto_id?: number|null,
+}

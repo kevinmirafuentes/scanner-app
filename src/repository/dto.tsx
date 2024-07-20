@@ -1,4 +1,5 @@
 import { getStockRequestItems } from "./stockRequest";
+import { getTagRequestItems } from "./tagRequest";
 import { getUserById } from "./users";
 
 export async function stockRequestDTO(data: any) {
@@ -9,5 +10,14 @@ export async function stockRequestDTO(data: any) {
     date_created: new Date(data.date_created), 
     user: await getUserById(data.user_id),
     items: await getStockRequestItems(data.ref_id)
+  }
+}
+
+export async function tagRequestDTO(data: any, branchId?: number) {
+  return {
+    ref_id: data.ref_id,  
+    date_created: new Date(data.date_created), 
+    user: await getUserById(data.user_id),
+    items: await getTagRequestItems(data.ref_id, branchId)
   }
 }

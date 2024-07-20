@@ -73,6 +73,7 @@ export function AppDrawer() {
               <NavItem href="/stock-request">Stock Request</NavItem>
               <NavItem href="/stock-request/manage">Manage Stock Requests</NavItem>
               <NavItem href="/tag-request">Tag Request</NavItem>
+              <NavItem href="/tag-request/manage">Manage Tag Requests</NavItem>
             </Stack>
           </DrawerBody>
 

@@ -17,7 +17,7 @@ export async function getProducts() {
 export async function getProductStocks(productId: number, branchId?: number) {
   let queryString = `
     select top 1
-      p.product_code, 
+      p.product_code as barcode, 
       p.long_descript as name,
       s.qty_on_hand, 
       cast((s.qty_on_hand / u.content_qty) as decimal(18, 2)) as stock_qty_converted_to_order_unit, 

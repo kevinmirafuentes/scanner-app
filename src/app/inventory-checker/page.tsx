@@ -65,12 +65,6 @@ export default function InventoryChecker() {
     <NavFooterLayout title='Inventory Checker' activeFooter='inventory-checker'>
       <Container>
         <BarcodeInput onChange={onBarcodeChange} />
-      </Container>         
-      <Container >
-        <HStack justify='end'>
-          <Text>Convert to Order Unit</Text>
-          <Checkbox isChecked={isOrderUnit} onChange={e => setIsOrderUnit(e.target.checked)}></Checkbox>
-        </HStack>
       </Container>
 
       {isLoading && (<SkeletonLoader />)}
@@ -90,11 +84,17 @@ export default function InventoryChecker() {
                   <Text fontSize='xs'>{inventoryDetails?.barcode}</Text>
                 </HStack>
                 <Text fontSize='xl'>{inventoryDetails?.name}</Text>
-                <VStack spacing='0'>  
-                  { isOrderUnit && (<Text fontSize='3xl' fontWeight='bold'>{inventoryDetails?.qty_on_hand}</Text>)}
-                  { !isOrderUnit && (<Text fontSize='3xl' fontWeight='bold'>{inventoryDetails?.stock_qty_converted_to_order_unit}</Text>)}
-                  <Text fontSize='md' fontWeight='bold'>Total Inventory</Text>
-                </VStack>
+                <HStack width='100%'>
+                  <VStack width='100%' spacing='0'>  
+                    <Text fontSize='3xl' fontWeight='bold'>{inventoryDetails?.qty_on_hand}</Text>
+                    <Text fontSize='md' fontWeight='bold'>Pcs</Text>
+                  </VStack>
+                  <VStack width='100%' spacing='0'>  
+                    <Text fontSize='3xl' fontWeight='bold'>{inventoryDetails?.stock_qty_converted_to_order_unit}</Text>
+                    <Text fontSize='md' fontWeight='bold'>Case</Text>
+                  </VStack>
+                </HStack>
+                
               </VStack>
             </CardBody>
           </Card>

@@ -28,6 +28,7 @@ export default function TagRequest() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [test, setTest] = useState<boolean>();
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [referenceNumber, setReferenceNumber] = useState<string>('');
   const toast = useToast();
 
   const onBarcodeChange = (barcode: string) => {
@@ -59,11 +60,17 @@ export default function TagRequest() {
 
   const resetForm = () => {
     setProducts([]);
+    getMaxReferenceNumber();
   }
 
-  const handleSave = async () => {
+  const handleSaveAndPrint = async () => {
     let res = await save()
     let data = await res?.json();
+
+    if (referenceNumber != data.ref_id) {
+      alert(`Reference number ${referenceNumber} is already taken. Generated a new number: ${data.ref_id}`)
+    }
+
     printInNewTab( `/tag-request/${data.ref_id}/print`);
   }
 
@@ -80,7 +87,7 @@ export default function TagRequest() {
       }),
     })
     .then(e => {
-      
+
       toast({
         title: 'Stock request created.',
         status: 'success',
@@ -96,10 +103,29 @@ export default function TagRequest() {
     .catch((e) => console.log(e));
   };
 
+  const getMaxReferenceNumber = async () => {
+    let res = await fetch("/api/tag-request/nextrefid", { method: "POST" });
+    let resJson = await res.json();
+    setReferenceNumber(resJson.maxrefnum);
+  }
+
+  useEffect(() => {
+    getMaxReferenceNumber();
+  }, []);
+
   return (
     <NavFooterLayout title='Request Tag' activeFooter='tag-request'>
       <Container>
         <VStack spacing='20px'>
+        <FormControl>
+            <FormLabel>Reference No.</FormLabel>
+            <Input 
+              type='text' 
+              readOnly={true}
+              value={referenceNumber} 
+              onChange={e =>setReferenceNumber(e.target.value)} 
+            />
+          </FormControl>
           <FormControl>
             <FormLabel>Type of Scan Barcode</FormLabel>
             <BarcodeInput clearOnChange={true} onChange={onBarcodeChange} />
@@ -129,7 +155,7 @@ export default function TagRequest() {
               width={['100%', 'auto']} 
               fontWeight="normal"
               fontSize='sm'
-              onClick={handleSave}
+              onClick={handleSaveAndPrint}
               isLoading={isSaving}
             >
               Print

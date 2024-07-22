@@ -31,7 +31,6 @@ export default function StockRequest() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [printLayout, setPrintLayout] = useState<number>(1);
-  const router = useRouter();
   const toast = useToast();
 
   const save = async () => {

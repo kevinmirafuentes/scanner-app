@@ -112,3 +112,16 @@ export async function getTagRequestsByDate(date: Date, branchId: number) {
 
   return results; 
 }
+
+export async function getNextReferenceId() {
+  let querySql = `select case when MAX(convert(int, ref_id)) is not null then MAX(convert(int, ref_id))+1 else 1 end as maxrefnum from IMASTERDOCUMENTS..StoreTagRequestH`;
+  let resultSet = await query(querySql);
+  return resultSet?.recordset[0];
+}
+
+export async function getMaxReferenceNumber()
+{
+  let querySql = `select case when MAX(convert(int, ref_id)) is not null then MAX(convert(int, ref_id)) else 0 end as maxrefnum from IMASTERDOCUMENTS..StoreTagRequestH`;
+  let resultSet = await query(querySql);
+  return resultSet?.recordset[0];
+}

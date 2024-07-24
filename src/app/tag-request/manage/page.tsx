@@ -30,7 +30,7 @@ export default function TagRequestList() {
     setCollapsedItems([...collapsedItems, id]);
   };
 
-  const handlePrint = (id: number) => {
+  const handlePrint = (id: number|null|undefined) => {
     printInNewTab(`/tag-request/${id}/print`);
   }
 

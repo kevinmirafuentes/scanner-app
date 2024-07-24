@@ -88,6 +88,9 @@ export interface TagRequest {
 export interface TagRequestItem {
   ref_id?: number|null,
   barcode_id: number,
+  barcode?: number,
+  name?: string,
   qty: number,
   auto_id?: number|null,
+  retail_unit_price?: number,
 }

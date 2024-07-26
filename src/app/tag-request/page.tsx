@@ -49,8 +49,10 @@ export default function TagRequest() {
         name: productData?.name,
         retail_unit_price: productData.retail_unit_price,
         qty: 1,
-      }
-      setProducts([...products, product]);
+      } 
+
+      products.push(product);
+      setProducts(products);
     });
   };
 

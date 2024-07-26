@@ -48,15 +48,15 @@ export default function StockRequestPOSPrint({id}: {id:string}) {
       {/* REQUEST INFO */}
       <Tbody>
         <Tr>
-          <Td colSpan={4}>REF#: {refNo}</Td>
+          <Td colSpan={4} lineHeight={1}>REF#: {refNo}</Td>
         </Tr>
         <Tr>
-          <Td colSpan={4}>
+          <Td colSpan={4} lineHeight={1}>
             <Text textTransform='uppercase'>EMPLOYEE NAME: {employeeName}</Text>
           </Td>
         </Tr>
         <Tr>
-          <Td colSpan={4}>DATE/TIME: {datetime}</Td>
+          <Td colSpan={4} lineHeight={1}>DATE/TIME: {datetime}</Td>
         </Tr>
 
         <Tr>
@@ -75,17 +75,17 @@ export default function StockRequestPOSPrint({id}: {id:string}) {
       {/* ITEMS */}
       <Tbody id='stockRequestPosItems'>
         <Tr>
-          <Td>QTY</Td>
-          <Td>UOM</Td>
-          <Td>DESCRIPTION</Td>
-          <Td>INV</Td>
+          <Td lineHeight={1}>QTY</Td>
+          <Td lineHeight={1}>UOM</Td>
+          <Td lineHeight={1}>DESCRIPTION</Td>
+          <Td lineHeight={1}>INV</Td>
         </Tr>
         {items.map((i, k) => (
         <Tr key={k}>
-          <Td>{i.qty}</Td>
-          <Td>{i.uom}</Td>
-          <Td>{i.name}</Td>
-          <Td>{i.inv}</Td>
+          <Td lineHeight={1}>{i.qty}</Td>
+          <Td lineHeight={1}>{i.uom}</Td>
+          <Td lineHeight={1}>{i.name}</Td>
+          <Td lineHeight={1}>{i.inv}</Td>
         </Tr>
         ))}
       </Tbody>

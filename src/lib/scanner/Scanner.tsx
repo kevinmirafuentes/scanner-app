@@ -23,19 +23,21 @@ export default class Scanner {
   init() {
     this._scanner = new Html5Qrcode(this._elemId);
   }
-  
+
   start(onSuccessCallback: QrcodeSuccessCallback) {
     if (!this._scanner) {
       this.init();
     }
 
+    let isMobile = window.navigator.userAgent.includes('Mobile');
+
     let scannerConfig = {
       fps: 8,
-      aspectRatio: 1.0,
+      aspectRatio: isMobile ? 0.5 : 1.5,
       qrbox: {
         width: 300,
-        height: 150,
-      }
+        height: 70,
+      },
     };
 
     let onErrorCallback: QrcodeErrorCallback = (e) => {
@@ -63,4 +65,12 @@ export default class Scanner {
       });
     }
   }
-} 
+
+  pause() {
+    this._scanner?.pause(true);
+  }
+
+  resume() {
+    this._scanner?.resume();
+  }
+}

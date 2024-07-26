@@ -1,7 +1,7 @@
-import { Input, InputGroup, InputRightAddon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Skeleton, Text, useDisclosure } from "@chakra-ui/react"
+import { Box, Input, InputGroup, InputRightAddon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Skeleton, Text, useDisclosure } from "@chakra-ui/react"
 import { faBarcode } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Scanner from "@/lib/scanner/Scanner";
 
 interface BarcodeInputProps {
@@ -16,20 +16,24 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
   const { isOpen, onOpen, onClose } = useDisclosure();
   let [barcode, setBarcode] = useState<string>('');
   const audioRef = useRef();
-  
+
   const playBeepSound = () => {
     if (audioRef.current) {
       // @ts-ignore
       audioRef.current.play()
-    } 
+    }
   }
 
   const successCallback = (text: string) => {
     playBeepSound();
     setBarcode(text);
     onChange(text);
-    clearOnChange && setBarcode('');
-    scannerObject.stop(onClose);
+    // clearOnChange && setBarcode('');
+
+    scannerObject.pause();
+    setTimeout(() => scannerObject.resume(), 1000);
+
+    // scannerObject.stop(onClose);
   }
 
   const handleClose = () => {
@@ -43,7 +47,7 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
 
   const handleChange = (e: any) => {
     setBarcode(e.target.value);
-    
+
     if (debounce) {
       clearTimeout(debounce);
     }
@@ -53,30 +57,27 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
     }, 500);
   }
 
+  useEffect(() => {
+    handleOpen();
+  }, [])
+
   return (
     <>
+    <Box marginBottom={10}>
+      <div id={scannerObject._elemId} style={{ position: "relative" }} />
+    </Box>
     <InputGroup>
-      <Input 
-        type='number' 
+      <Input
+        type='number'
         value={barcode}
         onChange={handleChange}
         placeholder='Enter barcode' />
-      <InputRightAddon onClick={handleOpen}>
-        <FontAwesomeIcon 
+      <InputRightAddon>
+        <FontAwesomeIcon
           icon={faBarcode}
         ></FontAwesomeIcon>
       </InputRightAddon>
     </InputGroup>
-    <Modal isOpen={isOpen} onClose={handleClose} size='sm'>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader fontSize='lg'>Barcode Scanner</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody> 
-          <div id={scannerObject._elemId} style={{ position: "relative", width: '100%', height: '100%' }} />
-        </ModalBody>
-      </ModalContent>
-    </Modal>
     {/* @ts-ignore */}
     <audio ref={audioRef} src='/assets/beep.mp3' />
   </>

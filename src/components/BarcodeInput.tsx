@@ -28,7 +28,7 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
     playBeepSound();
     setBarcode(text);
     onChange(text);
-    // clearOnChange && setBarcode('');
+    clearOnChange && setBarcode('');
 
     scannerObject.pause();
     setTimeout(() => scannerObject.resume(), 1000);

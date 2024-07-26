@@ -21,7 +21,7 @@ export async function getProductPrices(productId: number, branchId?: number) {
       u.unit_code as uom,
       s.supp_name, 
       s.supp_id,
-      st.qty_on_hand, 
+      st.qty_on_hand,
       st.qty_on_hand / u.content_qty as stock_qty_converted_to_order_unit
     from imasterprofiles.dbo.BarcodeH h
     inner join imasterprofiles.dbo.BarcodeD d on (d.barcode_id = h.barcode_id)

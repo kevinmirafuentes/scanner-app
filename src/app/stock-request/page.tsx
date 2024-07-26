@@ -119,7 +119,9 @@ export default function StockRequest() {
         name: productData?.name,
         qty: 1,
       }
-      setProducts([...products, product]);
+      products.push(product);
+      setProducts(products);
+      // setProducts([...products, product]);
     });
   };
 

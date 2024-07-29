@@ -9,6 +9,10 @@
   padding: 3px;
 }
 
+#tagRequestDoc {
+  font-size: 10px;
+}
+
 #stockRequestDocItems {
   border-left: 1px solid black; 
   border-top: 1px solid black;

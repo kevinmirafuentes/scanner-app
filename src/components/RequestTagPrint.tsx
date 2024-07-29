@@ -48,30 +48,30 @@ function RequestTagForm({ id }: { id: string }) {
 
   return (
     // @ts-ignore
-    <VStack gap='25px' padding='15px' fontSize='sm'>
+    <VStack id="tagRequestDoc" gap='25px' padding='15px' fontSize='sm'>
       <Text align='center'>ORIENTAL BAZAAR</Text>
       <VStack w='100%' alignItems='start'>
         <Text align='left'>EMPLOYEE NAME: {employeeName}</Text>
         <Text align='left'>DATE/TIME: {datetime}</Text>
       </VStack>
       <Text>TAG REQUEST</Text>
-      <Table>
+      <Table id='stockRequestPos'>
         <Tbody>
           <Tr>
-            <Td padding={1} border={0}>QTY</Td>
-            <Td padding={1} border={0}></Td>
-            <Td padding={1} border={0}>BARCODE/DESCRIPTIONS</Td>
-            <Td padding={1} border={0}>SP</Td>
+            <Td lineHeight={1} padding={1} border={0}>QTY</Td>
+            <Td lineHeight={1} padding={1} border={0}></Td>
+            <Td lineHeight={1} padding={1} border={0}>BARCODE/DESCRIPTIONS</Td>
+            <Td lineHeight={1} padding={1} border={0}>SP</Td>
           </Tr>
           {items?.map((i, k) => (
             <Tr key={k}>
-              <Td padding={1} border={0} valign='top'>{i.qty}</Td>
-              <Td padding={1} border={0} valign='top'>PCS</Td>
-              <Td padding={1} border={0}>
+              <Td lineHeight={1} padding={1} border={0} valign='top'>{i.qty}</Td>
+              <Td lineHeight={1} padding={1} border={0} valign='top'>PCS</Td>
+              <Td lineHeight={1} padding={1} border={0}>
                 <Text>{i.barcode}</Text>
                 <Text>{i.name}</Text>
               </Td>
-              <Td padding={1} border={0}>{(i?.retail_unit_price||0).toFixed(2)}</Td>
+              <Td lineHeight={1} padding={1} border={0}>{(i?.retail_unit_price||0).toFixed(2)}</Td>
             </Tr>
           ))}
           

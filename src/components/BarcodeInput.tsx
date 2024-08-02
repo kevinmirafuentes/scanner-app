@@ -1,3 +1,4 @@
+"use client"
 import { Box, Input, InputGroup, InputRightAddon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Skeleton, Text, useDisclosure } from "@chakra-ui/react"
 import { faBarcode } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -13,7 +14,6 @@ let scannerObject = new Scanner;
 let debounce: any;
 
 export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputProps) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   let [barcode, setBarcode] = useState<string>('');
   const audioRef = useRef();
 
@@ -26,23 +26,10 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
 
   const successCallback = (text: string) => {
     playBeepSound();
-    setBarcode(text);
+    setBarcode('')
     onChange(text);
-    clearOnChange && setBarcode('');
-
     scannerObject.pause();
     setTimeout(() => scannerObject.resume(), 1000);
-
-    // scannerObject.stop(onClose);
-  }
-
-  const handleClose = () => {
-    scannerObject.stop(onClose);
-  }
-
-  const handleOpen = () => {
-    onOpen();
-    setTimeout(() => scannerObject.start(successCallback), 100);
   }
 
   const handleChange = (e: any) => {
@@ -58,8 +45,8 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
   }
 
   useEffect(() => {
-    handleOpen();
-  }, [])
+    setTimeout(() => scannerObject.start(successCallback), 100);
+  })
 
   return (
     <>

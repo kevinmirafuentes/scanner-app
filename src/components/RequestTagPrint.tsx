@@ -4,7 +4,7 @@ import React, { ForwardedRef, forwardRef, useEffect, useState }  from "react";
 import Barcode from "./Barcode";
 import { StoreRequestItem, TagRequestItem } from "@/types/types";
 import moment from "moment";
-import { getSession } from "@/auth";
+import { getCurrentBranch, getSession } from "@/auth";
 
 async function getTagRequestById(id: string) {
   return await fetch(`/api/tag-request/${id}`);
@@ -29,6 +29,7 @@ function RequestTagForm({ id }: { id: string }) {
   const [employeeName, setEmployeeName] = useState<string>('');
   const [datetime, setDateTime] = useState<string>();
   const [items, setItems] = useState<TagRequestItem[]>();
+  const [branchName, setBranchName] = useState<string>('');
 
   useEffect(() => {
     getTagRequestById(id).then(async res => {
@@ -36,6 +37,8 @@ function RequestTagForm({ id }: { id: string }) {
       setItems(data.items);
       setEmployeeName(data.user?.full_name);
       setDateTime(moment(data.date_created).format('MM/DD/YYYY hh:mm:ssA'))
+      const branch = await getCurrentBranch();
+      setBranchName(branch.branch_name);
 
       setTimeout(() => {
         window.print();
@@ -49,7 +52,7 @@ function RequestTagForm({ id }: { id: string }) {
   return (
     // @ts-ignore
     <VStack id="tagRequestDoc" gap='25px' padding='15px' fontSize='sm'>
-      <Text align='center'>ORIENTAL BAZAAR</Text>
+      <Text textTransform='uppercase' textAlign='center'>{branchName}</Text>
       <VStack w='100%' alignItems='start'>
         <Text align='left'>EMPLOYEE NAME: {employeeName}</Text>
         <Text align='left'>DATE/TIME: {datetime}</Text>

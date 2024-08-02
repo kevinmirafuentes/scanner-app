@@ -4,10 +4,10 @@ import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductQuantityCard from "@/components/ProductQuantityCard";
 import { getBarcodeDetails } from "@/lib/utils";
 import { StoreRequestItem } from "@/types/types";
-import { Button, Card, CardBody, Checkbox, Container, FormControl, FormLabel, HStack, Input, Radio, Skeleton, Stack, Text, VStack, VisuallyHidden, useToast } from "@chakra-ui/react";
+import { Button, Card, CardBody, Checkbox, Collapse, Container, FormControl, FormLabel, HStack, Input, Radio, Skeleton, Stack, Text, VStack, VisuallyHidden, useToast } from "@chakra-ui/react";
 import moment from "moment";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 function SkeletonLoader() {
   return (
@@ -31,8 +31,9 @@ export default function StockRequest() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [printLayout, setPrintLayout] = useState<number>(1);
+  const [barcode, setBarcode] = useState<string>('');
   const toast = useToast();
-
+  
   const save = async () => {
     if (!isValidForm()) {
       alert('Please fill out all fields on stock request form.');
@@ -101,28 +102,28 @@ export default function StockRequest() {
     }
   };
 
-  const onBarcodeChange = (barcode: string) => {
+  const onBarcodeChange = async (barcode: string) => {
+    setBarcode('');
     setIsLoading(true);
-    getBarcodeDetails(barcode).then(async (res: Response) => {
-      let productData = await res.json();
-      setIsLoading(false);
+    let res = await getBarcodeDetails(barcode);
 
-      if (!res.ok || !productData?.barcode) {
-        alert(`Barcode '${barcode}' not found`)
-        return;
-      }
+    let productData = await res.json();
+    setIsLoading(false);
 
-      let product = {
+    if (!res.ok || !productData?.barcode) {
+      alert(`Barcode '${barcode}' not found`)
+      return;
+    }
+    setProducts([
+      ...products, 
+      {
         product_id: productData?.product_id,
         barcode: productData?.barcode, 
         barcode_id: productData.barcode_id,
         name: productData?.name,
         qty: 1,
       }
-      products.push(product);
-      setProducts(products);
-      // setProducts([...products, product]);
-    });
+    ]);
   };
 
   const removeProduct = (index: number) => {
@@ -138,6 +139,12 @@ export default function StockRequest() {
   useEffect(() => {
     getMaxReferenceNumber();
   }, []);
+
+  useEffect(() => {
+    if (barcode)  {
+      onBarcodeChange(barcode);
+    }
+  }, [barcode]);
 
   return (
     <NavFooterLayout title='Stock Request' activeFooter='stock-request'>
@@ -170,9 +177,9 @@ export default function StockRequest() {
           </FormControl>
           <FormControl>
             <FormLabel>Type of Scan Barcode</FormLabel>
-            <BarcodeInput clearOnChange={true} onChange={onBarcodeChange} />
+            <BarcodeInput clearOnChange={true} onChange={(text: string) => setBarcode(text)} />
           </FormControl>
-
+          
           { products.map((product, index) => (
             <ProductQuantityCard 
               key={index} 

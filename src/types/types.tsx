@@ -55,6 +55,7 @@ export interface Branch {
 
 export interface StoreRequestItem {
   ref_id?: number|null,
+  product_id?: number|null,
   barcode_id: number,
   qty: number,
   auto_id?: number|null,
@@ -65,6 +66,7 @@ export interface StoreRequestItem {
   uom?: string,
   remarks?: string,
   retail_unit_price?: number, 
+  _?: number|null
 }
 
 export interface StoreStockRequest {

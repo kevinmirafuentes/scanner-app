@@ -30,8 +30,10 @@ export default function TagRequest() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [referenceNumber, setReferenceNumber] = useState<string>('');
   const toast = useToast();
+  const [barcode, setBarcode] = useState<string>('');
 
   const onBarcodeChange = (barcode: string) => {
+    setBarcode('');
     setIsLoading(true);
     getBarcodeDetails(barcode).then(async (res: Response) => {
       let productData = await res.json();
@@ -115,6 +117,12 @@ export default function TagRequest() {
     getMaxReferenceNumber();
   }, []);
 
+  useEffect(() => {
+    if (barcode)  {
+      onBarcodeChange(barcode);
+    }
+  }, [barcode]);
+
   return (
     <NavFooterLayout title='Request Tag' activeFooter='tag-request'>
       <Container>
@@ -130,7 +138,7 @@ export default function TagRequest() {
           </FormControl>
           <FormControl>
             <FormLabel>Type of Scan Barcode</FormLabel>
-            <BarcodeInput clearOnChange={true} onChange={onBarcodeChange} />
+            <BarcodeInput clearOnChange={true} onChange={text => setBarcode(text)} />
           </FormControl>
 
           { products.map((product, index) => (

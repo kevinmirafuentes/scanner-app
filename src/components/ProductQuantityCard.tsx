@@ -37,6 +37,11 @@ export default function ProductQuantityCard({
     onQuantityChange && onQuantityChange(newQuantity);
   }
 
+  const handleQuantityInput = (qty: number) => {
+    setQuantity(qty);
+    onQuantityChange && onQuantityChange(qty);
+  }
+
   return (
     <Card width='100%'>
       <CardBody>
@@ -75,7 +80,7 @@ export default function ProductQuantityCard({
                   textAlign='center' 
                   width='70px'
                   value={quantity} 
-                  onChange={e => { setQuantity(parseInt(e.target.value))}} 
+                  onChange={e => {handleQuantityInput(parseInt(e.target.value))}} 
                 />
                 <InputRightAddon padding='0'>
                   <Button size='sm' onClick={increment}>

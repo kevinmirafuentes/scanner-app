@@ -41,7 +41,15 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
     debounce = setTimeout(() => {
       onChange(e.target.value);
       clearOnChange && setBarcode('');
-    }, 500);
+    }, 2000);
+  }
+
+  const handleManualSubmit = () => {
+    if (debounce) {
+      clearTimeout(debounce);
+    }
+    onChange(barcode);
+    clearOnChange && setBarcode('');
   }
 
   useEffect(() => {
@@ -59,7 +67,7 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
         value={barcode}
         onChange={handleChange}
         placeholder='Enter barcode' />
-      <InputRightAddon>
+      <InputRightAddon onClick={handleManualSubmit}>
         <FontAwesomeIcon
           icon={faBarcode}
         ></FontAwesomeIcon>

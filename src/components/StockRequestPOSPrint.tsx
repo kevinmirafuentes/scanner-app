@@ -22,7 +22,7 @@ export default function StockRequestPOSPrint({id}: {id:string}) {
       setItems(data.items);
       setRefNo(data.ref_no);
       setEmployeeName(data.user?.full_name);
-      setDatetime(moment(data.date_created).format('MM/DD/YYYY hh:mm:ssA'))
+      setDatetime(moment(data.date_created).utc(false).format('MM/DD/YYYY hh:mm:ssA'))
       const branch = await getCurrentBranch();
       setBranchName(branch.branch_name);
 

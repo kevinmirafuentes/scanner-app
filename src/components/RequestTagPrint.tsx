@@ -36,7 +36,7 @@ function RequestTagForm({ id }: { id: string }) {
       let data = await res.json();
       setItems(data.items);
       setEmployeeName(data.user?.full_name);
-      setDateTime(moment(data.date_created).format('MM/DD/YYYY hh:mm:ssA'))
+      setDateTime(moment(data.date_created).utc(false).format('MM/DD/YYYY hh:mm:ssA'))
       const branch = await getCurrentBranch();
       setBranchName(branch.branch_name);
 

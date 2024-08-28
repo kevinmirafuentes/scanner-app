@@ -19,7 +19,7 @@ export default function StockRequestDocPrint({id}: {id:string}) {
       let data = await res.json();
       setItems(data.items);
       setEmployeeName(data.user?.full_name);
-      setDatetime(moment(data.date_created).format('MM/DD/YYYY hh:mm:ssA'))
+      setDatetime(moment(data.date_created).utc(false).format('MM/DD/YYYY hh:mm:ssA'))
 
       setTimeout(() => {
         window.print();

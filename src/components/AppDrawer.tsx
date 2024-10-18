@@ -46,6 +46,61 @@ export function AppDrawer() {
     router.push('/login');
   }
 
+  const navItems = [
+    {
+      title: 'Home',
+      link: '/'
+    },
+    {
+      title: 'Price Checker',
+      link: '/price-checker'
+    },
+    {
+      title: 'Inventory Checker',
+      link: '/inventory-checker'
+    },
+    {
+      title: 'Stock Request',
+      link: '/stock-request'
+    },
+    {
+      title: 'Manage Stock Requests',
+      link: '/stock-request/manage'
+    },
+    {
+      title: 'Tag Request',
+      link: '/tag-request'
+    },
+    {
+      title: 'Manage Tag Requests',
+      link: '/tag-request/manage'
+    },
+    {
+      title: 'Physical Count',
+      link: '/physical-count'
+    },
+    {
+      title: 'Purchase Returns',
+      link: '/purchase-returns'
+    },
+    {
+      title: 'Stock Transfer - IN',
+      link: '/stock-transfer-in'
+    },
+    {
+      title: 'Stock Transfer - OUT',
+      link: '/stock-transfer-out'
+    },
+    {
+      title: 'Stock Adjustment - IN',
+      link: '/stock-adjustment-in'
+    },
+    {
+      title: 'Stock Adjustment - OUT',
+      link: '/stock-adjustment-out'
+    },
+  ];
+
   return (
     <>
       {/* @ts-ignore */}
@@ -67,13 +122,11 @@ export function AppDrawer() {
 
           <DrawerBody>
             <Stack>
-              <NavItem href="/">Home</NavItem>
-              <NavItem href="/price-checker">Price Checker</NavItem>
-              <NavItem href="/inventory-checker">Inventory Checker</NavItem>
-              <NavItem href="/stock-request">Stock Request</NavItem>
-              <NavItem href="/stock-request/manage">Manage Stock Requests</NavItem>
-              <NavItem href="/tag-request">Tag Request</NavItem>
-              <NavItem href="/tag-request/manage">Manage Tag Requests</NavItem>
+              {
+                navItems.map((i, key) => (
+                  <NavItem key={key} href={i.link}>{i.title}</NavItem>
+                ))
+              }
             </Stack>
           </DrawerBody>
 

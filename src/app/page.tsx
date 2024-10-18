@@ -1,48 +1,66 @@
-import { Box, Center, Container, Grid, GridItem, Icon, Image, LinkBox, LinkOverlay, Text, VStack } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconDefinition, faBarcode, faBoxOpen, faBoxesPacking, faTag } from "@fortawesome/free-solid-svg-icons";
-import { getCurrentBranch, getSession } from "@/auth";
+import { Box, Center, Container, Grid, GridItem, Image, Text, VStack } from "@chakra-ui/react";
+import { faBarcode, faBoxOpen, faBoxesPacking, faBoxesStacked, faMinusCircle, faPlusCircle, faRightFromBracket, faRightToBracket, faRotateLeft, faTag } from "@fortawesome/free-solid-svg-icons";
+import { getCurrentBranch } from "@/auth";
 import Navbar from "@/components/Navbar";
 import React from "react";
-
-type DashboardButtonProps = {
-  icon: IconDefinition,
-  href: string,
-  label: string
-} 
-
-const DashboardButton = ({
-  icon,
-  href,
-  label
-}: DashboardButtonProps) => {
-  return (
-    <LinkBox>
-      <Center
-        rounded='md'
-        boxShadow='md'
-        borderWidth={1}
-        borderColor='gray.100'
-        height='131px'
-      >
-        <VStack>
-          <FontAwesomeIcon
-            icon={icon}
-            fontSize='50px'
-            color='#4FD1C5'
-          ></FontAwesomeIcon>
-          <LinkOverlay href={href} color='teal.300'>
-            <Text fontSize='sm'>{label}</Text>
-          </LinkOverlay>
-        </VStack>
-      </Center>
-    </LinkBox>
-  )
-}
+import DashboardButton from "@/components/DashboardButton";
 
 export default async function Home() {
 
   const branch = await getCurrentBranch();
+
+  const gridItems = [
+    { 
+      icon: faBarcode, 
+      title: 'Price Checker',  
+      link: '/price-checker'
+    },
+    {
+      icon: faBoxOpen, 
+      title: 'Check Inventory',  
+      link: '/inventory-checker'
+    },
+    {
+      icon: faBoxesPacking, 
+      title: 'Stock Request',  
+      link: '/stock-request'
+    },
+    {
+      icon: faTag, 
+      title: 'Request Tag',  
+      link: '/tag-request'
+    },
+    {
+      icon: faBoxesStacked, 
+      title: 'Physical Count',  
+      link: '/physical-count'
+    },
+    {
+      icon: faRotateLeft, 
+      title: 'Purchase Returns',  
+      link: '/purchase-returns'
+    },
+    {
+      icon: faRightToBracket, 
+      title: 'Stock Transfer - IN',  
+      link: '/stock-transfer-in'
+    },
+    {
+      icon: faRightFromBracket, 
+      title: 'Stock Transfer - OUT',  
+      link: '/stock-transfer-out'
+    },
+    {
+      icon: faPlusCircle, 
+      title: 'Stock Adjustment - IN',  
+      link: '/stock-adjustment-in'
+    },
+    {
+      icon: faMinusCircle, 
+      title: 'Stock Adjustment - OUT',  
+      link: '/stock-adjustment-out'
+    },
+  ];
 
   return (
     <VStack>
@@ -64,25 +82,20 @@ export default async function Home() {
           </Box>
         )}
       </Container>
-      <Container>
+      <Container paddingBottom={'20px'}>
         <Grid
           w='100%'
           templateRows='repeat(2, 1fr)'
           templateColumns='repeat(2, 1fr)'
           gap='15px'
         >
-          <GridItem>
-            <DashboardButton icon={faBarcode} href='/price-checker' label='Price Checker'></DashboardButton>
-          </GridItem>
-          <GridItem>
-            <DashboardButton icon={faBoxOpen} href='/inventory-checker' label='Check Inventory'></DashboardButton>
-          </GridItem>
-          <GridItem>
-            <DashboardButton icon={faBoxesPacking} href='/stock-request' label='Stock Request'></DashboardButton>
-          </GridItem>
-          <GridItem>
-            <DashboardButton icon={faTag} href='/tag-request' label='Request Tag'></DashboardButton>
-          </GridItem>
+          {
+            gridItems.map((i, key) => (
+              <GridItem key={key}>
+                <DashboardButton icon={i.icon} href={i.link} label={i.title}></DashboardButton>
+              </GridItem>
+            ))
+          }
         </Grid>
       </Container>
     </VStack>

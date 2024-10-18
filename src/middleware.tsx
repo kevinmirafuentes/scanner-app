@@ -16,5 +16,11 @@ export const config = {
     '/inventory-checker',
     '/stock-request',
     '/tag-request',
+    '/physical-count',
+    '/purchase-returns',
+    '/stock-adjustments-in',
+    '/stock-adjustments-out',
+    '/stock-transfer-in',
+    '/stock-transfer-out'
   ],
 }

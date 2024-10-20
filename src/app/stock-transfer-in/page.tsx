@@ -160,6 +160,29 @@ export default function StockRequest() {
             />
           </FormControl>
           <FormControl>
+            <FormLabel>Supplying Branch</FormLabel>
+            <Select></Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Supplying Branch Ref No.</FormLabel>
+            <Input 
+              type='text' 
+              readOnly={true}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Remarks</FormLabel>
+            <Input 
+              type='text' 
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Date</FormLabel>
+            <Input 
+              type='date' 
+            />
+          </FormControl>
+          <FormControl>
             <FormLabel>Type of Scan Barcode</FormLabel>
             <BarcodeInput clearOnChange={true} onChange={(text: string) => setBarcode(text)} />
           </FormControl>

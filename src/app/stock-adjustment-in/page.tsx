@@ -151,12 +151,24 @@ export default function StockRequest() {
       <Container>
         <VStack spacing='20px'>
           <FormControl>
-            <FormLabel>Reference No.</FormLabel>
+            <FormLabel>Adjustment No.</FormLabel>
             <Input 
               type='text' 
               readOnly={true}
               value={referenceNumber} 
               onChange={e =>setReferenceNumber(e.target.value)} 
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Remarks</FormLabel>
+            <Input 
+              type='text' 
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Date</FormLabel>
+            <Input 
+              type='date' 
             />
           </FormControl>
           <FormControl>

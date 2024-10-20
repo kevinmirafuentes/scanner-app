@@ -4,7 +4,7 @@ import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductQuantityCard from "@/components/ProductQuantityCard";
 import { getBarcodeDetails } from "@/lib/utils";
 import { StoreRequestItem } from "@/types/types";
-import { Button, Card, CardBody, Container, FormControl, FormLabel, HStack, Input, Radio, Skeleton, Stack, Text, VStack, VisuallyHidden, useToast } from "@chakra-ui/react";
+import { Button, Card, CardBody, Container, FormControl, FormLabel, HStack, Input, Radio, Select, Skeleton, Stack, Text, VStack, VisuallyHidden, useToast } from "@chakra-ui/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
@@ -156,6 +156,23 @@ export default function StockRequest() {
               readOnly={true}
               value={referenceNumber} 
               onChange={e =>setReferenceNumber(e.target.value)} 
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Latest Reference No.</FormLabel>
+            <Input 
+              type='text' 
+              readOnly={true}
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Supplier</FormLabel>
+            <Select></Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Date</FormLabel>
+            <Input 
+              type='date' 
             />
           </FormControl>
           <FormControl>

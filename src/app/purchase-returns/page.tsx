@@ -160,8 +160,30 @@ export default function StockRequest() {
             />
           </FormControl>
           <FormControl>
+            <FormLabel>Distributor</FormLabel>
+            <Select></Select>
+          </FormControl>
+          <FormControl>
             <FormLabel>Supplier</FormLabel>
             <Select></Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Return Slip No.</FormLabel>
+            <Input 
+              type='text' 
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Remarks</FormLabel>
+            <Input 
+              type='text' 
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Date</FormLabel>
+            <Input 
+              type='date' 
+            />
           </FormControl>
           <FormControl>
             <FormLabel>Type of Scan Barcode</FormLabel>

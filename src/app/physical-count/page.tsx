@@ -1,9 +1,11 @@
 "use client";
 import BarcodeInput from "@/components/BarcodeInput";
+import ComboBox from "@/components/ComboBox";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductQuantityCard from "@/components/ProductQuantityCard";
+import SelectSupplier from "@/components/SelectSupplier";
 import { getBarcodeDetails } from "@/lib/utils";
-import { StoreRequestItem } from "@/types/types";
+import { ComboBoxOption, StoreRequestItem, Supplier } from "@/types/types";
 import { Button, Card, CardBody, Container, FormControl, FormLabel, HStack, Input, Radio, Select, Skeleton, Stack, Text, VStack, VisuallyHidden, useToast } from "@chakra-ui/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -24,81 +26,45 @@ function SkeletonLoader() {
 
 export default function StockRequest() {
   const [referenceNumber, setReferenceNumber] = useState<string>('');
-  const [remarks, setRemarks] = useState<string>('');1
+  const [latestReferenceNumber, setLatestReferenceNumber] = useState<string>('');
+  const [supplier, setSupplier] = useState<string>('');
   const [date, setDate] = useState<string>(moment().format('YYYY-MM-DD'));
   const [products, setProducts] = useState<StoreRequestItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [printLayout, setPrintLayout] = useState<number>(1);
   const [barcode, setBarcode] = useState<string>('');
   const toast = useToast();
   
   const save = async () => {
     if (!isValidForm()) {
-      alert('Please fill out all fields on stock request form.');
+      alert('Please fill out all fields on the form.');
       return;
     }
 
-    setIsSaving(true);
-    return fetch("/api/stock-request", {
-      method: "POST",
-      body: JSON.stringify({
-        ref_no: referenceNumber, 
-        trans_date: date, 
-        remarks, 
-        items: products, 
-      }),
-      headers: {
-        "content-type": "application/json",
-      },
+    toast({
+      title: 'Physical count created.',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
     })
-    .then((e) => { 
-      
-      toast({
-        title: 'Stock request created.',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      })
 
-      resetForm(); 
-      return e;
-    })
-    .finally(() =>setIsSaving(false))
-    .catch((e) => console.log(e));
+    resetForm();
   };
 
   const resetForm = () => {
     setProducts([]);
     setReferenceNumber('');
-    setRemarks('');
+    setLatestReferenceNumber('');
     setDate(moment().format('YYYY-MM-DD'));
     getMaxReferenceNumber();
   };
 
   const isValidForm = () => {
     if (referenceNumber.length == 0) return false;
+    if (supplier.length == 0) return false; 
     if (date.length == 0) return false; 
     if (products.length == 0) return false;
     return true;
-  };
-
-  const submit = async () => {
-    let res = await save()
-    let data = await res?.json();
-    
-    if (referenceNumber != data.ref_no) {
-      alert(`Reference number ${referenceNumber} is already taken. Generated a new number: ${data.ref_no}`)
-    }
-
-    let url = `/stock-request/${data.ref_id}/print`;
-    if (printLayout == 2) {
-      url = `/stock-request/${data.ref_id}/print-pos`;
-    }
-    let win = window.open('', '_blank');
-    if (win) {
-      win.location = url;
-    }
   };
 
   const onBarcodeChange = async (barcode: string) => {
@@ -130,9 +96,7 @@ export default function StockRequest() {
   };
 
   const getMaxReferenceNumber = async () => {
-    let res = await fetch("/api/stock-request/maxrefnum", { method: "POST" });
-    let resJson = await res.json();
-    setReferenceNumber(resJson.maxrefnum);
+    return 1;
   }
 
   useEffect(() => {
@@ -163,11 +127,13 @@ export default function StockRequest() {
             <Input 
               type='text' 
               readOnly={true}
+              value={latestReferenceNumber}
+              onChange={e => setLatestReferenceNumber(e.target.value)}
             />
           </FormControl>
           <FormControl>
             <FormLabel>Supplier</FormLabel>
-            <Select></Select>
+            <SelectSupplier onChange={(supplier: string) => setSupplier(supplier)}></SelectSupplier>
           </FormControl>
           <FormControl>
             <FormLabel>Date</FormLabel>
@@ -201,7 +167,7 @@ export default function StockRequest() {
               fontWeight="normal"
               fontSize='sm'
               isLoading={isSaving}
-              onClick={submit}
+              onClick={save}
             >
               Save
             </Button>

@@ -96,3 +96,22 @@ export interface TagRequestItem {
   auto_id?: number|null,
   retail_unit_price?: number,
 }
+
+export interface Supplier {
+  supp_id: number, 
+  supp_name: string|null
+}
+
+export interface ComboBoxOption {
+  key: number|string,
+  text: string,
+}
+
+export interface ComboBoxProps {
+  options?: ComboBoxOption[],
+  onChange?: CallableFunction,
+};
+
+export interface SelectSupplierProps {
+  onChange?: CallableFunction
+}

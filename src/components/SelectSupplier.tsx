@@ -1,13 +1,17 @@
 import { ComboBoxOption, SelectSupplierProps, Supplier } from "@/types/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ComboBox from "./ComboBox";
 
 export default function SelectSupplier({ onChange }: SelectSupplierProps) {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  
   const initSuppliersDropdown = async () => {
     let res = await fetch('/api/suppliers');
     setSuppliers(await res.json())
   }
+
+  const ref = useRef();
+
   useEffect(() => {
     initSuppliersDropdown();
   }, []);

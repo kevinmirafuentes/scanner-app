@@ -1,6 +1,6 @@
 import { ComboBoxOption, ComboBoxProps } from "@/types/types";
 import { Box, Card, FormControl, HStack, Input, useDisclosure, VStack } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ComboBox({
   options,
@@ -18,6 +18,20 @@ export default function ComboBox({
     onClose();
   }
 
+  let dropdownRef = useRef(null);
+
+  const handleClickOutside = (e: any) => {
+    // @ts-ignore
+    if (dropdownRef && !dropdownRef?.current?.contains(e.target)) {
+      onClose();
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+  }, 
+  []);
+
   return (
     <Box>
       <FormControl>
@@ -28,6 +42,7 @@ export default function ComboBox({
           onClick={onToggle}></Input>
       </FormControl>
       <Card 
+        ref={dropdownRef}
         position={'absolute'}
         background={'white'}
         zIndex={999}

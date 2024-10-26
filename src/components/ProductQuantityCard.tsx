@@ -21,24 +21,20 @@ export default function ProductQuantityCard({
   const [quantity, setQuantity] = useState<number>(product.qty || 1);
   
   const increment = () => {
-    let newQuantity = quantity + 1;
+    let newQuantity = product.qty + 1;
     setQuantity(newQuantity);
-
     onQuantityChange && onQuantityChange(newQuantity);
   } 
 
   const decrement = () => {
-    if (quantity == 1) {
+    if (product.qty == 1) {
       return;
     }
-    let newQuantity = quantity - 1;
-    setQuantity(newQuantity);
-
+    let newQuantity = product.qty - 1;
     onQuantityChange && onQuantityChange(newQuantity);
   }
 
   const handleQuantityInput = (qty: number) => {
-    setQuantity(qty);
     onQuantityChange && onQuantityChange(qty);
   }
 
@@ -79,7 +75,7 @@ export default function ProductQuantityCard({
                   type='number' 
                   textAlign='center' 
                   width='70px'
-                  value={quantity} 
+                  value={product.qty} 
                   onChange={e => {handleQuantityInput(parseInt(e.target.value))}} 
                 />
                 <InputRightAddon padding='0'>

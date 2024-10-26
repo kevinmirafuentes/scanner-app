@@ -16,6 +16,7 @@ let debounce: any;
 export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputProps) {
   let [barcode, setBarcode] = useState<string>('');
   const audioRef = useRef();
+  const inputRef = useRef();
 
   const playBeepSound = () => {
     if (audioRef.current) {
@@ -42,6 +43,8 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
       onChange(e.target.value);
       clearOnChange && setBarcode('');
     }, 2000);
+
+    inputRef.focus();
   }
 
   const handleManualSubmit = () => {
@@ -63,6 +66,7 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
     </Box>
     <InputGroup>
       <Input
+        ref={inputRef}
         type='number'
         value={barcode}
         onChange={handleChange}

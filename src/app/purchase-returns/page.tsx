@@ -86,6 +86,14 @@ export default function StockRequest() {
       alert(`Barcode '${barcode}' not found`)
       return;
     }
+
+    for (let i = 0; i < products.length; i++) {
+      if (products[i].barcode === productData?.barcode) {
+        setProducts(products.map(p => (p.barcode === productData?.barcode ? {...p, qty: p.qty+1} : p)));
+        return;
+      }
+    }
+    
     setProducts([
       ...products, 
       {

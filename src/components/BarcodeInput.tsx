@@ -4,6 +4,7 @@ import { faBarcode } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useRef, useState } from "react";
 import Scanner from "@/lib/scanner/Scanner";
+import useFocus from "@/lib/useFocus";
 
 interface BarcodeInputProps {
   onChange: CallableFunction,
@@ -16,7 +17,7 @@ let debounce: any;
 export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputProps) {
   let [barcode, setBarcode] = useState<string>('');
   const audioRef = useRef();
-  const inputRef = useRef();
+  const [inputRef, setFocus] = useFocus<HTMLButtonElement>();
 
   const playBeepSound = () => {
     if (audioRef.current) {
@@ -44,7 +45,7 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
       clearOnChange && setBarcode('');
     }, 2000);
 
-    inputRef.focus();
+    setFocus();
   }
 
   const handleManualSubmit = () => {
@@ -67,6 +68,7 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
     <InputGroup>
       <Input
         ref={inputRef}
+        autoFocus 
         type='number'
         value={barcode}
         onChange={handleChange}

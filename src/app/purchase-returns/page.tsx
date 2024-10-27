@@ -7,7 +7,7 @@ import { Button, Container, FormControl, FormLabel, HStack, Input, Select, VStac
 import moment from "moment";
 import { useEffect, useState } from "react";
 
-export default function PurchseReturns() {
+export default function PurchaseReturns() {
   const [referenceNumber, setReferenceNumber] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
   const [distributor, setDistributor] = useState<string>('');

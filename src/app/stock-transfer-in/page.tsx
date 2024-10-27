@@ -6,7 +6,7 @@ import { Button, Container, FormControl, FormLabel, HStack, Input, Select, VStac
 import moment from "moment";
 import { useEffect, useState } from "react";
 
-export default function StockRequest() {
+export default function StockTransferIn() {
   const [referenceNumber, setReferenceNumber] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');1
   const [date, setDate] = useState<string>(moment().format('YYYY-MM-DD'));

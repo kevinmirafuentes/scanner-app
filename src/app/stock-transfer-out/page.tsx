@@ -1,39 +1,18 @@
 "use client";
-import BarcodeInput from "@/components/BarcodeInput";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
-import ProductQuantityCard from "@/components/ProductQuantityCard";
 import ProductsList from "@/components/ProductsList";
-import { getBarcodeDetails } from "@/lib/utils";
 import { StoreRequestItem } from "@/types/types";
-import { Button, Card, CardBody, Checkbox, Collapse, Container, FormControl, FormLabel, HStack, Input, Radio, Select, Skeleton, Stack, Text, VStack, VisuallyHidden, useToast } from "@chakra-ui/react";
+import { Button, Container, FormControl, FormLabel, HStack, Input, Select, VStack, useToast } from "@chakra-ui/react";
 import moment from "moment";
-import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-function SkeletonLoader() {
-  return (
-    <Card width='100%'>
-        <CardBody>
-          <Stack spacing='13px'>
-            <Skeleton height='20px' />
-            <Skeleton height='20px' />
-            <Skeleton height='20px' />
-          </Stack>
-        </CardBody>
-      </Card>
-  );
-} 
-
-export default function StockRequest() {
+export default function StockTransferOut() {
   const [referenceNumber, setReferenceNumber] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');
   const [stockRequestNo, setStockRequestNo] = useState<string>('');
   const [date, setDate] = useState<string>(moment().format('YYYY-MM-DD'));
   const [products, setProducts] = useState<StoreRequestItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [printLayout, setPrintLayout] = useState<number>(1);
-  const [barcode, setBarcode] = useState<string>('');
   const toast = useToast();
   
   const showSuccess = () => {

@@ -1,54 +1,50 @@
 "use client";
-import BarcodeInput from "@/components/BarcodeInput";
-import ComboBox from "@/components/ComboBox";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
-import ProductQuantityCard from "@/components/ProductQuantityCard";
+import ProductsList from "@/components/ProductsList";
 import SelectSupplier from "@/components/SelectSupplier";
-import { getBarcodeDetails } from "@/lib/utils";
-import { ComboBoxOption, StoreRequestItem, Supplier } from "@/types/types";
-import { Button, Card, CardBody, Container, FormControl, FormLabel, HStack, Input, Radio, Select, Skeleton, Stack, Text, VStack, VisuallyHidden, useToast } from "@chakra-ui/react";
+import { StoreRequestItem } from "@/types/types";
+import { Button, Container, FormControl, FormLabel, HStack, Input, UseToastOptions, VStack, useToast } from "@chakra-ui/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
-function SkeletonLoader() {
-  return (
-    <Card width='100%'>
-        <CardBody>
-          <Stack spacing='13px'>
-            <Skeleton height='20px' />
-            <Skeleton height='20px' />
-            <Skeleton height='20px' />
-          </Stack>
-        </CardBody>
-      </Card>
-  );
-} 
-
-export default function StockRequest() {
+export default function PhysicalCount() {
   const [referenceNumber, setReferenceNumber] = useState<string>('');
   const [latestReferenceNumber, setLatestReferenceNumber] = useState<string>('');
   const [supplier, setSupplier] = useState<string>('');
   const [date, setDate] = useState<string>(moment().format('YYYY-MM-DD'));
   const [products, setProducts] = useState<StoreRequestItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [barcode, setBarcode] = useState<string>('');
   const toast = useToast();
   
-  const save = async () => {
-    if (!isValidForm()) {
-      alert('Please fill out all fields on the form.');
-      return;
-    }
-
+  const showSuccess = () => {
     toast({
       title: 'Physical count created.',
       status: 'success',
       duration: 3000,
       isClosable: true,
     })
+  };
 
-    resetForm();
+  const save = async () => {
+    if (!isValidForm()) {
+      alert('Please fill out all fields on the form.');
+      return;
+    }
+    setIsSaving(true);
+    const payload = {
+      method: "POST",
+      body: JSON.stringify({
+        items: products, 
+      }),
+    };
+    return fetch('/api/physical-count', payload)
+      .then(e => {
+        showSuccess();
+        resetForm();
+        return e;
+      })
+      .finally(() => setIsSaving(false))
+      .catch((e) => console.log(e));
   };
 
   const resetForm = () => {
@@ -60,62 +56,21 @@ export default function StockRequest() {
   };
 
   const isValidForm = () => {
-    if (referenceNumber.length == 0) return false;
-    if (supplier.length == 0) return false; 
-    if (date.length == 0) return false; 
-    if (products.length == 0) return false;
-    return true;
-  };
-
-  const onBarcodeChange = async (barcode: string) => {
-    setBarcode('');
-    setIsLoading(true);
-    let res = await getBarcodeDetails(barcode);
-
-    let productData = await res.json();
-    setIsLoading(false);
-
-    if (!res.ok || !productData?.barcode) {
-      alert(`Barcode '${barcode}' not found`)
-      return;
-    }
-
-    for (let i = 0; i < products.length; i++) {
-      if (products[i].barcode === productData?.barcode) {
-        setProducts(products.map(p => (p.barcode === productData?.barcode ? {...p, qty: p.qty+1} : p)));
-        return;
-      }
-    }
-
-    setProducts([
-      ...products, 
-      {
-        product_id: productData?.product_id,
-        barcode: productData?.barcode, 
-        barcode_id: productData.barcode_id,
-        name: productData?.name,
-        qty: 1,
-      }
-    ]);
-  };
-
-  const removeProduct = (index: number) => {
-    setProducts(products.filter((p, i) => i != index));
+    return ![
+      referenceNumber.length,
+      supplier.length,
+      date.length,
+      products.length
+    ].some(c => c === 0);
   };
 
   const getMaxReferenceNumber = async () => {
-    return 1;
+    setReferenceNumber(1);
   }
 
   useEffect(() => {
     getMaxReferenceNumber();
   }, []);
-
-  useEffect(() => {
-    if (barcode)  {
-      onBarcodeChange(barcode);
-    }
-  }, [barcode]);
 
   return (
     <NavFooterLayout title='Physical Count' activeFooter='physical-count'>
@@ -147,24 +102,15 @@ export default function StockRequest() {
             <FormLabel>Date</FormLabel>
             <Input 
               type='date' 
+              value={date} 
+              onChange={e =>setDate(e.target.value)} 
             />
           </FormControl>
-          <FormControl>
-            <FormLabel>Type of Scan Barcode</FormLabel>
-            <BarcodeInput clearOnChange={true} onChange={(text: string) => setBarcode(text)} />
-          </FormControl>
           
-          { products.map((product, index) => (
-            <ProductQuantityCard 
-              key={index} 
-              product={product} 
-              index={index} 
-              onClose={() => removeProduct(index)}
-              onQuantityChange={(qty: number) => product.qty = qty}
-            />  
-          ))}
-
-          {isLoading && (<SkeletonLoader />)}
+          <ProductsList 
+            products={products}
+            onChange={(p: StoreRequestItem[]) => setProducts(p)}
+          />
           
           <HStack width='100%' marginTop='20px'>
             <Button 

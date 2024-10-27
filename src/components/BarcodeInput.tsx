@@ -36,7 +36,6 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
 
   const handleChange = (e: any) => {
     setBarcode(e.target.value);
-
     if (debounce) {
       clearTimeout(debounce);
     }

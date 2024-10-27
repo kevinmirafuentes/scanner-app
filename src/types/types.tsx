@@ -115,3 +115,9 @@ export interface ComboBoxProps {
 export interface SelectSupplierProps {
   onChange?: CallableFunction
 }
+
+export interface ProductsListProps {
+  products: StoreRequestItem[],
+  onChange?: CallableFunction,
+  supplierId?: string
+}

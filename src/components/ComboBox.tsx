@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 
 export default function ComboBox({
   options,
-  onChange
+  onChange,
+  value
 }: ComboBoxProps) {
   
   const [search, setSearch] = useState<string>('');
@@ -29,8 +30,17 @@ export default function ComboBox({
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-  }, 
-  []);
+  }, []);
+
+  useEffect(() => {
+    if (value) {
+      let sel = options?.find((i: ComboBoxOption) => i.key == value);
+      setSelectedText(sel ? sel.text : ''); 
+    } else {
+      setSelectedText(''); 
+    }
+  }, [options, value]);
+  
 
   return (
     <Box>

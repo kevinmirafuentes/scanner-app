@@ -110,10 +110,12 @@ export interface ComboBoxOption {
 export interface ComboBoxProps {
   options?: ComboBoxOption[],
   onChange?: CallableFunction,
+  value?: number|string
 };
 
 export interface SelectSupplierProps {
-  onChange?: CallableFunction
+  onChange?: CallableFunction,
+  value?: string|number
 }
 
 export interface ProductsListProps {

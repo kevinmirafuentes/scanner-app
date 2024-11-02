@@ -2,7 +2,7 @@
 import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductsList from "@/components/ProductsList";
 import SelectSupplier from "@/components/SelectSupplier";
-import { StoreRequestItem } from "@/types/types";
+import { PhysicalCountItem, StoreRequestItem } from "@/types/types";
 import { Button, Container, FormControl, FormLabel, HStack, Input, UseToastOptions, VStack, useToast } from "@chakra-ui/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -25,6 +25,20 @@ export default function PhysicalCount() {
     })
   };
 
+  const createPurchaseReturnPayload = () => {
+    let purchaseReturn = {
+      ref_no: referenceNumber || 0,
+      date: date, 
+      supp_id: supplier,
+      items: products.map((product): PhysicalCountItem => {
+        return {
+          barcode_id: product.barcode_id,
+          qty: product.qty
+        }
+      })
+    };
+    return purchaseReturn;
+  }
   const save = async () => {
     if (!isValidForm()) {
       alert('Please fill out all fields on the form.');
@@ -33,9 +47,7 @@ export default function PhysicalCount() {
     setIsSaving(true);
     const payload = {
       method: "POST",
-      body: JSON.stringify({
-        items: products, 
-      }),
+      body: JSON.stringify(createPurchaseReturnPayload()),
     };
     return fetch('/api/physical-count', payload)
       .then(e => {
@@ -65,11 +77,20 @@ export default function PhysicalCount() {
   };
 
   const getMaxReferenceNumber = async () => {
-    setReferenceNumber(1);
+    let res = await fetch("/api/physical-count/nextrefid", { method: "POST" });
+    let resJson = await res.json();
+    setReferenceNumber(resJson.maxrefnum);
+  }
+
+  const getLatestReferenceNumber = async () => {
+    let res = await fetch("/api/physical-count/latest-ref-number", { method: "GET" });
+    let resJson = await res.json();
+    setLatestReferenceNumber(resJson.latestRefNum);
   }
 
   useEffect(() => {
     getMaxReferenceNumber();
+    getLatestReferenceNumber();
   }, []);
 
   return (
@@ -96,7 +117,7 @@ export default function PhysicalCount() {
           </FormControl>
           <FormControl>
             <FormLabel>Supplier</FormLabel>
-            <SelectSupplier onChange={(supplier: string) => setSupplier(supplier)}></SelectSupplier>
+            <SelectSupplier value={supplier} onChange={(supplier: string) => setSupplier(supplier)}></SelectSupplier>
           </FormControl>
           <FormControl>
             <FormLabel>Date</FormLabel>

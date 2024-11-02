@@ -1,10 +1,6 @@
 import { getCurrentBranch } from "@/auth";
 import { query } from "@/repository/db"
-
-export interface Barcode {
-  product_id: number;
-  brcode: string;
-}
+import { Barcode } from "@/types/types";
 
 export async function getBarcode(code: string) {
   let queryString = `select top 1 * from BarcodeH where barcode='${code}'`;
@@ -37,3 +33,27 @@ export async function getProductByBarcode(code: string, branchId: number) {
   let result = await query(prodSql);
   return result?.recordset[0];
 };
+
+export async function getBarcodeById(id: number) {
+  let queryString = `
+    select 
+      barcode_id, 
+      barcode, 
+      unit_id, 
+      unit_cost 
+    from 
+      imasterprofiles.dbo.BarcodeH 
+    where 
+      barcode_id='${id}'
+    `;
+  let resultSet = await query(queryString);
+
+  if (typeof resultSet.recordset[0] !== 'undefined') {
+    return resultSet.recordset[0];
+  }
+
+  return {
+    barcode_id: null,
+    barcode: null
+  };
+}

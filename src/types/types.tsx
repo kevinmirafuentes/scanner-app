@@ -123,3 +123,54 @@ export interface ProductsListProps {
   onChange?: CallableFunction,
   supplierId?: string
 }
+
+export interface PhysicalCount {
+  branch_id? : number,
+  ref_no: number|string,
+  supp_id?: number|string,
+  date?: Date // transdate
+  status?: string,
+  return_slip_no?: number,
+  remarks?: string
+  total_qty?: number,
+  total_gross_amt?: number,
+  total_disc_amt?: number,
+  total_freight_amt?: number,
+  total_charges_amt?: number,
+  total_vat_amt?: number,
+  total_net_amt?: number,
+  amt_paid?: number,
+  balance?: number,
+  total_vatable_amt?: number,
+  total_non_vatable_amt?: number,
+  user_id?: number,
+  items?: PhysicalCountItem[]  
+}
+
+export interface PhysicalCountItem {
+  ref_id?: number|null,
+  barcode_id?: number,
+  qty?: number,
+  unit_id?: number,
+  unit_price?: number,
+  gross_amt?: number,
+  base_qty?: number,
+  disc_id1?: number,
+  disc_id2?: number,
+  disc_id3?: number,
+  disc_id4?: number,
+  disc_id5?: number,
+  disc_amt?: number,
+  prorated_disc_amt?: number, 
+  freight_id?: number,
+  freight_amt?: number,
+  charges_id?: number,
+  charges_amt?: number, 
+  net_amt?: number,
+  total_cost?: number,
+}
+
+export interface Barcode {
+  barcode_id: number|null,
+  barcode: string|null
+}

@@ -118,6 +118,12 @@ export interface SelectSupplierProps {
   value?: string|number
 }
 
+
+export interface SelectBranchProps {
+  onChange?: CallableFunction,
+  value?: string|number
+}
+
 export interface ProductsListProps {
   products: StoreRequestItem[],
   onChange?: CallableFunction,
@@ -127,16 +133,44 @@ export interface ProductsListProps {
 export interface PhysicalCount {
   branch_id? : number,
   ref_no: number|string,
+  trans_date?: Date // transdate
   supp_id?: number|string,
-  date?: Date // transdate
-  status?: string,
-  return_slip_no?: number,
-  remarks?: string
+  remarks?: string, 
+  total_amt?: number,
+  prepared_id?: number,
+  approved_id?: number,
+  prev_physical_id?: number,
+  branch_ref_no?: string,
+  user_id?: number,
+  posted?: number|null,
+  items?: PhysicalCountItem[]  
+}
+
+export interface PhysicalCountItem {
+  ref_id?: number|null,
+  barcode_id?: number,
+  counted_qty?: number,
+  unit_id?: number,
+}
+
+export interface Barcode {
+  barcode_id: number|null,
+  barcode: string|null
+}
+
+export interface StockTransferIn {
+  branch_id?: number, 
+  ref_no?: string,
+  status?: string, 
+  trans_date?: Date,
+  source_branch_id?: number,
+  transfer_out_ref_no?: string,
+  remarks?: string,
   total_qty?: number,
-  total_gross_amt?: number,
-  total_disc_amt?: number,
   total_freight_amt?: number,
+  total_disc_amt?: number,
   total_charges_amt?: number,
+  total_gross_amt?: number,
   total_vat_amt?: number,
   total_net_amt?: number,
   amt_paid?: number,
@@ -144,11 +178,13 @@ export interface PhysicalCount {
   total_vatable_amt?: number,
   total_non_vatable_amt?: number,
   user_id?: number,
-  items?: PhysicalCountItem[]  
+  branch_ref_no?: string|null,
+  transfer_slip_no?: string|null,
+  items: StockTransferInItem[]
 }
 
-export interface PhysicalCountItem {
-  ref_id?: number|null,
+export interface StockTransferInItem {
+  ref_id?: number,
   barcode_id?: number,
   qty?: number,
   unit_id?: number,
@@ -160,17 +196,14 @@ export interface PhysicalCountItem {
   disc_id3?: number,
   disc_id4?: number,
   disc_id5?: number,
+  disc_id6?: number,
+  disc_id7?: number,
+  disc_id8?: number,
   disc_amt?: number,
-  prorated_disc_amt?: number, 
   freight_id?: number,
   freight_amt?: number,
   charges_id?: number,
-  charges_amt?: number, 
+  charges_amt?: number,
   net_amt?: number,
   total_cost?: number,
-}
-
-export interface Barcode {
-  barcode_id: number|null,
-  barcode: string|null
 }

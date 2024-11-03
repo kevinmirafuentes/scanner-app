@@ -18,3 +18,15 @@ export async function getDefaultBranch() {
   }
   return resultset.recordset[0];
 }
+
+export async function getBranches() {
+  let sql = `
+    select 
+      branch_id,
+      REPLACE(branch_code, ' ', '') as branch_code,
+      branch_name
+    from imasterprofiles..Branch 
+  `
+  let result = await query(sql);
+  return result?.recordset;
+}

@@ -29,156 +29,82 @@ export async function getNextReferenceNumber() {
   return resultSet?.recordset[0];
 }
 
-export async function savePhysicalCount(physicalCount: PhysicalCount) {
+export async function savePhysicalCount(data: PhysicalCount) {
   let insertSql = `
-    insert into imasterdocuments..BadorderH (
+    insert into imasterdocuments..PhysicalH (
       branch_id, 
-      ref_no,
+      ref_no, 
+      trans_date, 
       supp_id, 
-      trans_date,
-      status,
-      return_slip_no,
       remarks,
-      total_qty,
-      total_gross_amt,
-      total_disc_amt,
-      total_freight_amt,
-      total_charges_amt,
-      total_vat_amt,
-      total_net_amt,
-      amt_paid,
-      balance,
-      total_vatable_amt,
-      total_non_vatable_amt,
-      user_id,
-      date_created
+      total_amt, 
+      prepared_id,
+      approved_id, 
+      prev_physical_id,
+      branch_ref_no, 
+      user_id, 
+      posted
     )
-    values 
-    (
-      @branchId,
-      @refNo, 
-      @suppId, 
-      @transDate,
-      @status,
-      @returnSlipNo,
+    values (
+      @branch_id, 
+      @ref_no, 
+      @trans_date, 
+      @supp_id, 
       @remarks,
-      @totalQty,
-      @totalGrossAmt,
-      @totalDiscAmt,
-      @totalFreightAmt,
-      @totalChargesAmt,
-      @totalVatAmt,
-      @totalNetAmt,
-      @amtPaid,
-      @balance,
-      @totalVatableAmt,
-      @totalNonVatableAmt,
-      @userId,
-      CURRENT_TIMESTAMP
+      @total_amt, 
+      @prepared_id,
+      @approved_id, 
+      @prev_physical_id,
+      @branch_ref_no, 
+      @user_id, 
+      @posted
     )
   `;
-  
-  let physicalCountInsertResult = await query(insertSql, [
-    {name: 'branchId', type: sql.Int, value: physicalCount.branch_id},
-    {name: 'refNo', type: sql.Int, value: physicalCount.ref_no},
-    {name: 'suppId', type: sql.Int, value: physicalCount.supp_id},
-    {name: 'transDate', type: sql.Date, value: physicalCount.date},
-    {name: 'status', type: sql.Char, value: physicalCount.status},
-    {name: 'returnSlipNo', type: sql.Int, value: physicalCount.return_slip_no},
-    {name: 'remarks', type: sql.Int, value: physicalCount.remarks},
-    {name: 'totalQty', type: sql.Int, value: physicalCount.total_qty},
-    {name: 'totalGrossAmt', type: sql.Decimal(10, 2), value: physicalCount.total_gross_amt||0},
-    {name: 'totalDiscAmt', type: sql.Decimal(10, 2), value: physicalCount.total_disc_amt||0},
-    {name: 'totalFreightAmt', type: sql.Decimal(10, 2), value: physicalCount.total_freight_amt||0},
-    {name: 'totalChargesAmt', type: sql.Decimal(10, 2), value: physicalCount.total_charges_amt||0},
-    {name: 'totalVatAmt', type: sql.Decimal(10, 2), value: physicalCount.total_vat_amt||0},
-    {name: 'totalNetAmt', type: sql.Decimal(10, 2), value: physicalCount.total_net_amt||0},
-    {name: 'amtPaid', type: sql.Decimal(10, 2), value: physicalCount.amt_paid||0},
-    {name: 'balance', type: sql.Decimal(10, 2), value: physicalCount.balance||0},
-    {name: 'totalVatableAmt', type: sql.Decimal(10, 2), value: physicalCount.total_vat_amt||0},
-    {name: 'totalNonVatableAmt', type: sql.Decimal(10, 2), value: physicalCount.total_non_vatable_amt||0},
-    {name: 'userId', type: sql.Int, value: physicalCount.user_id}
+
+  const result = await query(insertSql, [
+    {name: 'branch_id', type: sql.Int, value: data.branch_id||0}, 
+    {name: 'ref_no', type: sql.Char(20), value: data.ref_no||''}, 
+    {name: 'trans_date', type: sql.Date, value: data.trans_date||new Date}, 
+    {name: 'supp_id', type: sql.Int, value: data.supp_id||0}, 
+    {name: 'remarks', type: sql.VarChar(200), value: data.remarks||''},
+    {name: 'total_amt', type: sql.Decimal(10, 2), value: data.total_amt||0}, 
+    {name: 'prepared_id', type: sql.SmallInt, value: data.prepared_id||0},
+    {name: 'approved_id', type: sql.SmallInt, value: data.approved_id||0}, 
+    {name: 'prev_physical_id', type: sql.Int, value: data.prev_physical_id||0},
+    {name: 'branch_ref_no', type: sql.Char(10), value: data.branch_ref_no||''}, 
+    {name: 'user_id', type: sql.Int, value: data.user_id||0}, 
+    {name: 'posted', type: sql.TinyInt, value: data.posted},
   ]);
 
-  let physicalCountId = physicalCountInsertResult?.recordset[0].IDENTITY_ID;
-  console.log('insert id', physicalCountId)
-  if (physicalCountId && physicalCount.items) {
-    physicalCount.items?.map((i: PhysicalCountItem) => {
-      i.ref_id = physicalCountId;
-      savePhysicalCountItem(i);
+  let insertId = result?.recordset[0].IDENTITY_ID;
+  if (insertId && data.items) {
+    data.items?.map((i: PhysicalCountItem) => {
+      savePhysicalCountItem({...i, ref_id: insertId});
       return i;
     })
   }
 }
 
-export async function savePhysicalCountItem(item: PhysicalCountItem) {
+export async function savePhysicalCountItem(data: PhysicalCountItem) {
     let insertSql = `
       insert into imasterdocuments..BadorderD (
-        ref_id,
+        ref_id, 
         barcode_id, 
-        qty, 
-        unit_id,
-        unit_price,
-        gross_amt,
-        base_qty,
-        disc_id1,
-        disc_id2, 
-        disc_id3, 
-        disc_id4,
-        disc_id5,
-        disc_amt,
-        prorated_disc_amt,
-        freight_id, 
-        freight_amt,
-        charges_id, 
-        charges_amt,
-        net_amt,
-        total_cost
+        counted_qty,
+        unit_id
       )
       values (
-        @refId,
-        @barcodeId,
-        @qty,
-        @unitId,
-        @unitPrice,
-        @grossAmt,
-        @baseQty,
-        @discId1,
-        @discId2,
-        @discId3,
-        @discId4,
-        @discId5, 
-        @discAmt,
-        @proratedDiscAmt,
-        @freightId,
-        @freightAmt,
-        @chargesId,
-        @chargesAmt,
-        @netAmt,
-        @totalCost
+        @ref_id, 
+        @barcode_id, 
+        @counted_qty,
+        @unit_id
       )
     `;
 
     await query(insertSql, [
-      {name: 'refId', type: sql.Int, value: item.ref_id},
-      {name: 'barcodeId', type: sql.Int, value: item.ref_id},
-      {name: 'qty', type: sql.Int, value: item.qty},
-      {name: 'unitId', type: sql.Int, value: item.unit_id||0},
-      {name: 'unitPrice', type: sql.Decimal(12, 4), value: item.unit_price||0},
-      {name: 'grossAmt', type: sql.Decimal(10, 2), value: item.gross_amt||0},
-      {name: 'baseQty', type: sql.Int , value: item.base_qty||0},
-      {name: 'discId1', type: sql.Int, value: item.disc_id1||0},
-      {name: 'discId2', type: sql.Int, value: item.disc_id2||0},
-      {name: 'discId3', type: sql.Int, value: item.disc_id3||0},
-      {name: 'discId4', type: sql.Int, value: item.disc_id4||0},
-      {name: 'discId5', type: sql.Int, value: item.disc_id5||0}, 
-      {name: 'discAmt', type: sql.Decimal(10, 2), value: item.disc_amt||0},
-      {name: 'proratedDiscAmt', type: sql.Decimal(10, 2), value: item.prorated_disc_amt||0},
-      {name: 'freightId', type: sql.Int, value: item.freight_id||0},
-      {name: 'freightAmt', type: sql.Decimal(10, 2), value: item.freight_amt||0},
-      {name: 'chargesId', type: sql.Int, value: item.charges_id||0},
-      {name: 'chargesAmt', type: sql.Decimal(10, 2), value: item.charges_amt||0},
-      {name: 'netAmt', type: sql.Decimal(10, 2), value: item.net_amt||0},
-      {name: 'totalCost', type: sql.Decimal(10, 2), value: item.total_cost||0}
+      {name: 'ref_id', type: sql.BigInt, value: data.ref_id||0}, 
+      {name: 'barcode_id', type: sql.Int, value: data.barcode_id||0}, 
+      {name: 'counted_qty', type: sql.Decimal(11, 3), value: data.counted_qty||0},
+      {name: 'unit_id', type: sql.Int, value: data.unit_id||0},
     ]);
 }

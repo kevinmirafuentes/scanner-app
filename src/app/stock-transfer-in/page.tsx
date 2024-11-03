@@ -1,13 +1,16 @@
 "use client";
 import { NavFooterLayout } from "@/components/NavFooterLayout";import ProductQuantityCard from "@/components/ProductQuantityCard";
 import ProductsList from "@/components/ProductsList";
-import { StoreRequestItem } from "@/types/types";
+import SelectBranch from "@/components/SelectBranch";
+import { StockTransferInItem, StoreRequestItem } from "@/types/types";
 import { Button, Container, FormControl, FormLabel, HStack, Input, Select, VStack, useToast } from "@chakra-ui/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
 export default function StockTransferIn() {
   const [referenceNumber, setReferenceNumber] = useState<string>('');
+  const [supplyingBranch, setSupplyingBranch] = useState<number>();
+  const [supplyingBranchRef, setSupplyingBranchRef] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');1
   const [date, setDate] = useState<string>(moment().format('YYYY-MM-DD'));
   const [products, setProducts] = useState<StoreRequestItem[]>([]);
@@ -23,6 +26,22 @@ export default function StockTransferIn() {
     })
   };
 
+  const createStockTransferInPayload = () => {
+    let stockTransferIn = {
+      ref_no: referenceNumber, 
+      trans_date: date,
+      source_branch_id: supplyingBranch, 
+      branch_ref_no: supplyingBranchRef, 
+      items: products.map((product): StockTransferInItem => {
+        return {
+          barcode_id: product.barcode_id,
+          qty: product.qty
+        }
+      })
+    };
+    return stockTransferIn;
+  };
+
   const save = async () => {
     if (!isValidForm()) {
       alert('Please fill out all fields on the form.');
@@ -31,9 +50,7 @@ export default function StockTransferIn() {
     setIsSaving(true);
     const payload = {
       method: "POST",
-      body: JSON.stringify({
-        items: products, 
-      }),
+      body: JSON.stringify(createStockTransferInPayload()),
     };
     return fetch('/api/stock-transfer-in', payload)
       .then(e => {
@@ -48,6 +65,8 @@ export default function StockTransferIn() {
   const resetForm = () => {
     setProducts([]);
     setReferenceNumber('');
+    setSupplyingBranch(0);
+    setSupplyingBranchRef('');
     setRemarks('');
     setDate(moment().format('YYYY-MM-DD'));
     getMaxReferenceNumber();
@@ -62,7 +81,9 @@ export default function StockTransferIn() {
   };
 
   const getMaxReferenceNumber = async () => {
-    setReferenceNumber(1);
+    let res = await fetch("/api/stock-transfer-in/nextrefid", { method: "POST" });
+    let resJson = await res.json();
+    setReferenceNumber(resJson.maxrefnum);
   }
 
   useEffect(() => {
@@ -78,25 +99,28 @@ export default function StockTransferIn() {
             <Input 
               type='text' 
               readOnly={true}
-              value={referenceNumber} 
-              onChange={e =>setReferenceNumber(e.target.value)} 
+              value={referenceNumber}
             />
           </FormControl>
           <FormControl>
             <FormLabel>Supplying Branch</FormLabel>
-            <Select></Select>
+            <SelectBranch
+              value={supplyingBranch}
+              onChange={(branch: number) => setSupplyingBranch(branch)}
+              ></SelectBranch>
           </FormControl>
           <FormControl>
             <FormLabel>Supplying Branch Ref No.</FormLabel>
             <Input 
               type='text' 
-              readOnly={true}
+              value={supplyingBranchRef}
+              onChange={e => setSupplyingBranchRef(e.target.value)}
             />
           </FormControl>
           <FormControl>
             <FormLabel>Remarks</FormLabel>
             <Input 
-              type='date' 
+              type='text' 
               value={remarks} 
               onChange={e =>setRemarks(e.target.value)} 
             />

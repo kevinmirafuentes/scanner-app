@@ -28,12 +28,12 @@ export default function PhysicalCount() {
   const createPurchaseReturnPayload = () => {
     let purchaseReturn = {
       ref_no: referenceNumber || 0,
-      date: date, 
+      trans_date: date, 
       supp_id: supplier,
       items: products.map((product): PhysicalCountItem => {
         return {
           barcode_id: product.barcode_id,
-          qty: product.qty
+          counted_qty: product.qty
         }
       })
     };

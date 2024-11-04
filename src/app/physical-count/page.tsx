@@ -61,10 +61,10 @@ export default function PhysicalCount() {
 
   const resetForm = () => {
     setProducts([]);
-    setReferenceNumber('');
     setLatestReferenceNumber('');
     setDate(moment().format('YYYY-MM-DD'));
     getMaxReferenceNumber();
+    getLatestReferenceNumber();
   };
 
   const isValidForm = () => {

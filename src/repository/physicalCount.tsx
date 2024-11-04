@@ -2,7 +2,6 @@ import { PhysicalCount, PhysicalCountItem } from "@/types/types";
 import { query } from "./db";
 import sql from 'mssql';
 import moment from "moment";
-import { time } from "console";
 
 export async function getLatestRefNumber(branch: string|number) {
   let sql = `
@@ -23,7 +22,7 @@ export async function getNextReferenceNumber() {
     select case 
       when MAX(convert(int, ref_no)) is not null then MAX(convert(int, ref_no))+1 
       else 1 end as maxrefnum 
-    from IMASTERDOCUMENTS..BadorderH 
+    from IMASTERDOCUMENTS..PhysicalH 
   `;
   let resultSet = await query(sql);
   return resultSet?.recordset[0];
@@ -63,7 +62,7 @@ export async function savePhysicalCount(data: PhysicalCount) {
 
   const result = await query(insertSql, [
     {name: 'branch_id', type: sql.Int, value: data.branch_id||0}, 
-    {name: 'ref_no', type: sql.Char(20), value: data.ref_no||''}, 
+    {name: 'ref_no', type: sql.Char(20), value: data?.ref_no.toString()||''}, 
     {name: 'trans_date', type: sql.Date, value: data.trans_date||new Date}, 
     {name: 'supp_id', type: sql.Int, value: data.supp_id||0}, 
     {name: 'remarks', type: sql.VarChar(200), value: data.remarks||''},
@@ -77,6 +76,7 @@ export async function savePhysicalCount(data: PhysicalCount) {
   ]);
 
   let insertId = result?.recordset[0].IDENTITY_ID;
+
   if (insertId && data.items) {
     data.items?.map((i: PhysicalCountItem) => {
       savePhysicalCountItem({...i, ref_id: insertId});
@@ -87,7 +87,7 @@ export async function savePhysicalCount(data: PhysicalCount) {
 
 export async function savePhysicalCountItem(data: PhysicalCountItem) {
     let insertSql = `
-      insert into imasterdocuments..BadorderD (
+      insert into imasterdocuments..PhysicalD (
         ref_id, 
         barcode_id, 
         counted_qty,

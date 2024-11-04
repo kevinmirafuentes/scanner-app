@@ -132,7 +132,7 @@ export interface ProductsListProps {
 
 export interface PhysicalCount {
   branch_id? : number,
-  ref_no: number|string,
+  ref_no: string,
   trans_date?: Date // transdate
   supp_id?: number|string,
   remarks?: string, 

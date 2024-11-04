@@ -25,8 +25,8 @@ export default function PhysicalCount() {
     })
   };
 
-  const createPurchaseReturnPayload = () => {
-    let purchaseReturn = {
+  const createPhysicalCountPayload = () => {
+    return {
       ref_no: referenceNumber || 0,
       trans_date: date, 
       supp_id: supplier,
@@ -37,7 +37,6 @@ export default function PhysicalCount() {
         }
       })
     };
-    return purchaseReturn;
   }
   const save = async () => {
     if (!isValidForm()) {
@@ -47,7 +46,7 @@ export default function PhysicalCount() {
     setIsSaving(true);
     const payload = {
       method: "POST",
-      body: JSON.stringify(createPurchaseReturnPayload()),
+      body: JSON.stringify(createPhysicalCountPayload()),
     };
     return fetch('/api/physical-count', payload)
       .then(e => {

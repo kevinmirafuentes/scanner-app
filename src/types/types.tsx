@@ -124,6 +124,11 @@ export interface SelectBranchProps {
   value?: string|number
 }
 
+export interface SelectDistributorProps {
+  onChange?: CallableFunction,
+  value?: string|number
+}
+
 export interface ProductsListProps {
   products: StoreRequestItem[],
   onChange?: CallableFunction,
@@ -206,4 +211,65 @@ export interface StockTransferInItem {
   charges_amt?: number,
   net_amt?: number,
   total_cost?: number,
+}
+
+export interface PurchaseReturn {
+  branch_id?: number,
+  ref_no?: string,
+  status?: string,
+  trans_date?: Date,
+  supp_id?: number,
+  return_slip_no?: number,
+  remarks?: string,
+  total_qty?: number,
+  total_gross_amt?: number,
+  total_disc_amt?: number,
+  total_freight_amt?: number,
+  total_charges_amt?: number,
+  total_vat_amt?: number,
+  total_net_amt?: number,
+  amt_paid?: number,
+  balance?: number,
+  total_vatable_amt?: number,
+  total_non_vatable_amt?: number,
+  disc_id1?: number|null,
+  disc_id2?: number|null,
+  disc_id3?: number|null,
+  disc_id4?: number|null,
+  disc_id5?: number|null,
+  user_id?: number,
+  posted?: number,
+  vat_price_indicator?: number|null,
+  branch_ref_no?: string|null,
+  distributor_id?: number|null,
+  items?: PurchaseReturnItem[]
+}
+
+export interface PurchaseReturnItem {
+  ref_id?: number,
+  barcode_id?: number,
+  qty?: number,
+  unit_id?: number,
+  unit_price?: number,
+  gross_amt?: number,
+  base_qty?: number,
+  disc_id1?: number,
+  disc_id2?: number,
+  disc_id3?: number,
+  disc_id4?: number,
+  disc_id5?: number,
+  disc_amt?: number,
+  prorated_disc_amt?: number|null,
+  freight_id?: number,
+  freight_amt?: number,
+  charges_id?: number,
+  charges_amt?: number,
+  net_amt?: number,
+  total_cost?: number,
+}
+
+export interface Distributor {
+  distributor_code: string,
+  distributor_id: number,
+  distributor_name: string,
 }

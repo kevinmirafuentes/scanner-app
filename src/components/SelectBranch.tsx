@@ -5,7 +5,7 @@ import ComboBox from "./ComboBox";
 export default function SelectBranch({ onChange, value }: SelectBranchProps) {
   const [branches, setBranches] = useState<Branch[]>([]);
   
-  const iniBranchDropdown = async () => {
+  const initBranchDropdown = async () => {
     let res = await fetch('/api/branches');
     setBranches(await res.json())
   }
@@ -13,7 +13,7 @@ export default function SelectBranch({ onChange, value }: SelectBranchProps) {
   const ref = useRef();
 
   useEffect(() => {
-    iniBranchDropdown();
+    initBranchDropdown();
   }, []);
 
   return (

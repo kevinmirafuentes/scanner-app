@@ -1,8 +1,9 @@
 "use client";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductsList from "@/components/ProductsList";
+import SelectDistributor from "@/components/SelectDistributor";
 import SelectSupplier from "@/components/SelectSupplier";
-import { StoreRequestItem } from "@/types/types";
+import { PurchaseReturnItem, StoreRequestItem } from "@/types/types";
 import { Button, Container, FormControl, FormLabel, HStack, Input, Select, VStack, useToast } from "@chakra-ui/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -26,6 +27,23 @@ export default function PurchaseReturns() {
       isClosable: true,
     })
   };
+
+  const createPurchaseReturnPayload = () => {
+    return {
+      ref_no: referenceNumber || 0,
+      trans_date: date, 
+      supp_id: supplier,
+      distributor_id: distributor,
+      return_slip_no: returnSlipNo,
+      remarks: remarks,
+      items: products.map((product): PurchaseReturnItem => {
+        return {
+          barcode_id: product.barcode_id,
+          qty: product.qty
+        }
+      })
+    };
+  }
   
   const save = async () => {
     if (!isValidForm()) {
@@ -35,9 +53,7 @@ export default function PurchaseReturns() {
     setIsSaving(true);
     const payload = {
       method: "POST",
-      body: JSON.stringify({
-        items: products, 
-      }),
+      body: JSON.stringify(createPurchaseReturnPayload()),
     };
     return fetch('/api/purchase-returns', payload)
       .then(e => {
@@ -71,7 +87,9 @@ export default function PurchaseReturns() {
   };
 
   const getMaxReferenceNumber = async () => {
-    setReferenceNumber(1);
+    let res = await fetch("/api/purchase-returns/nextrefid", { method: "POST" });
+    let resJson = await res.json();
+    setReferenceNumber(resJson.maxrefnum);
   }
 
   useEffect(() => {
@@ -93,13 +111,17 @@ export default function PurchaseReturns() {
           </FormControl>
           <FormControl>
             <FormLabel>Distributor</FormLabel>
-            <Select></Select>
+            <SelectDistributor
+              value={distributor} 
+              onChange={(d: string) => setSupplier(d)}
+            ></SelectDistributor>
           </FormControl>
           <FormControl>
             <FormLabel>Supplier</FormLabel>
             <SelectSupplier 
               value={supplier} 
-              onChange={(supplier: string) => setSupplier(supplier)}></SelectSupplier>
+              onChange={(s: string) => setSupplier(s)}
+              ></SelectSupplier>
           </FormControl>
           <FormControl>
             <FormLabel>Return Slip No.</FormLabel>

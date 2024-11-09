@@ -10,9 +10,10 @@ const initPurchaseReturnData = async (data: PurchaseReturn) => {
   let { user_id } = await getSession();
 
   data.branch_id = branch_id;
-  data.ref_no = nextRefNum.maxrefnum;
+  data.ref_no = nextRefNum.maxrefnum.toString();
   data.trans_date = new Date(data?.trans_date||'');
   data.user_id = user_id;
+  data.status = 'A';
 
   if (data?.items) {
     for (let i = 0; i < data.items?.length; i++) {

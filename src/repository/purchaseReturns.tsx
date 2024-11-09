@@ -24,7 +24,7 @@ export async function getLatestRefNumber(branch: string|number) {
 
 export async function savePurchaseReturn(data: PurchaseReturn) {
   let insertSql = `
-    insert into imasterprofiles..BadOrderH (
+    insert into imasterdocuments..BadorderH (
       branch_id,
       ref_no,
       status,
@@ -53,8 +53,7 @@ export async function savePurchaseReturn(data: PurchaseReturn) {
       vat_price_indicator,
       branch_ref_no,
       distributor_id,
-      date_created, 
-      time_stamp
+      date_created
     )
     values (
       @branch_id,
@@ -85,7 +84,6 @@ export async function savePurchaseReturn(data: PurchaseReturn) {
       @vat_price_indicator,
       @branch_ref_no,
       @distributor_id,
-      CURRENT_TIMESTAMP, 
       CURRENT_TIMESTAMP
     )
   `;
@@ -123,6 +121,8 @@ export async function savePurchaseReturn(data: PurchaseReturn) {
 
   let insertId = result?.recordset[0].IDENTITY_ID;
 
+  console.log('last purchase return id: ' + insertId);
+
   if (insertId && data.items) {
     data.items?.map((i: PurchaseReturnItem) => {
       savePurchaseReturnItem({...i, ref_id: insertId});
@@ -132,7 +132,7 @@ export async function savePurchaseReturn(data: PurchaseReturn) {
 
 export async function savePurchaseReturnItem(data: PurchaseReturnItem) {
   let insertSql = `
-    insert into imasterprofiles..BadOrderD (
+    insert into imasterdocuments..BadorderD (
       ref_id,
       barcode_id, 
       qty, 

@@ -1,3 +1,4 @@
+import { NumberDecrementStepperProps } from "@chakra-ui/react"
 import { ISqlTypeFactory } from "mssql"
 
 export interface PriceInfo {
@@ -272,4 +273,106 @@ export interface Distributor {
   distributor_code: string,
   distributor_id: number,
   distributor_name: string,
+}
+
+export interface StockTransferOut {
+  source_branch_id?: number, 
+  ref_no?: string,
+  ref_id?: number,
+  status?: string,
+  trans_date?: Date, 
+  dest_branch_id?: number,
+  remarks?: string, 
+  total_qty?: number,
+  total_gross_amt?: number,
+  total_disc_amt?: number,
+  total_freight_amt?: number,
+  total_charges_amt?: number,
+  total_vat_amt?: number,
+  total_net_amt?: number, 
+  amt_paid?: number, 
+  balance?: number,
+  total_vatable_amt?: number,
+  total_non_vatable_amt?: number, 
+  user_id?: number,
+  posted?: number, 
+  transfer_type?: number|null, 
+  cashier_id?: number|null, 
+  branch_ref_no?: string|null,
+  transfer_slip_no?: string|null,
+  items: StockTransferOutItem[]
+}
+
+export interface StockTransferOutItem {
+  ref_id?: number,
+  barcode_id?: number, 
+  qty?: number,
+  unit_id?: number, 
+  unit_price?: number,
+  gross_amt?: number,
+  base_qty?: number,
+  disc_id1?: number,
+  disc_id2?: number,
+  disc_id3?: number,
+  disc_id4?: number,
+  disc_id5?: number,
+  disc_id6?: number,
+  disc_id7?: number,
+  disc_id8?: number,
+  disc_amt?: number,
+  freight_id?: number,
+  freight_amt?: number,
+  charges_id?: number,
+  charges_amt?: number,
+  net_amt?: number, 
+  total_cost?: number, 
+}
+
+export interface StockAdjustmentIn {
+  branch_id?: number, 
+  adj_no?: string, 
+  status?: string, 
+  trans_date?: Date, 
+  remarks?: string, 
+  total_qty?: number, 
+  total_net_amt?: number, 
+  user_id?: number, 
+  posted?: number, 
+  branch_ref_no?: string,
+  items?: StockAdjustmentInItem[]
+}
+
+export interface StockAdjustmentInItem {
+  adj_id?: number, 
+  barcode_id?: number, 
+  unit_id?: number, 
+  unit_price?: number, 
+  base_qty?: number, 
+  net_amt?: number, 
+  expiry_date?: Date|null, 
+  stocks_already_sold?: number,
+}
+
+export interface StockAdjustmentOut {
+  branch_id?: number, 
+  adj_no?: string, 
+  status?: string, 
+  trans_date?: Date, 
+  remarks?: string, 
+  total_qty?: number, 
+  total_net_amt?: number, 
+  user_id?: number, 
+  posted?: number|null, 
+  branch_ref_no?: string, 
+  items: StockAdjustmentOutItem[],
+}
+
+export interface StockAdjustmentOutItem {
+  adj_id?: number, 
+  barcode_id?: number, 
+  qty?: number, 
+  unit_id?: number, 
+  unit_price?: number,
+  base_qty?: number, 
+  net_amt?: number, 
 }

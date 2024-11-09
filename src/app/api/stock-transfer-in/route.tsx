@@ -28,7 +28,7 @@ const initStockTransferInData = async (data: StockTransferIn) => {
   data.transfer_slip_no = '';
 
   data.branch_id = branch_id;
-  data.ref_no = nextRefNum.maxrefnum;
+  data.ref_no = nextRefNum.maxrefnum.toString();
   data.trans_date = new Date(data.trans_date||'');  
   data.user_id = user_id;
 

@@ -1,19 +1,33 @@
 "use client";
 import { NavFooterLayout } from "@/components/NavFooterLayout";
 import ProductsList from "@/components/ProductsList";
-import { StoreRequestItem } from "@/types/types";
+import { StockTransferIn, StockTransferInItem, StoreRequestItem } from "@/types/types";
 import { Button, Container, FormControl, FormLabel, HStack, Input, VStack, useToast } from "@chakra-ui/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
 export default function StockAdjustmentIn() {
-  const [referenceNumber, setReferenceNumber] = useState<string>('');
+  const [adjustmentNo, setAdjustmentNo] = useState<string>('');
   const [remarks, setRemarks] = useState<string>('');1
   const [date, setDate] = useState<string>(moment().format('YYYY-MM-DD'));
   const [products, setProducts] = useState<StoreRequestItem[]>([]);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const toast = useToast();
   
+  const createStockTransferInPayload = () => {
+    return {
+      adj_no: adjustmentNo, 
+      trans_date: date,
+      remarks: remarks,
+      items: products.map((product): StockTransferInItem => {
+        return {
+          barcode_id: product.barcode_id,
+          qty: product.qty
+        }
+      })
+    };
+  };
+
   const showSuccess = () => {
     toast({
       title: 'Stock adjustment created.',
@@ -31,9 +45,7 @@ export default function StockAdjustmentIn() {
     setIsSaving(true);
     const payload = {
       method: "POST",
-      body: JSON.stringify({
-        items: products, 
-      }),
+      body: JSON.stringify(createStockTransferInPayload()),
     };
     return fetch('/api/stock-adjustment-in', payload)
       .then(e => {
@@ -47,21 +59,23 @@ export default function StockAdjustmentIn() {
 
   const resetForm = () => {
     setProducts([]);
-    setReferenceNumber('');
+    setAdjustmentNo('');
     setRemarks('');
     setDate(moment().format('YYYY-MM-DD'));
     getMaxReferenceNumber();
   };
 
   const isValidForm = () => {
-    if (referenceNumber.length == 0) return false;
+    if (adjustmentNo.length == 0) return false;
     if (date.length == 0) return false; 
     if (products.length == 0) return false;
     return true;
   };
 
   const getMaxReferenceNumber = async () => {
-    setReferenceNumber(1);
+    let res = await fetch("/api/stock-adjustment-in/nextrefid", { method: "POST" });
+    let resJson = await res.json();
+    setAdjustmentNo(resJson.maxrefnum);
   }
 
   useEffect(() => {
@@ -77,8 +91,8 @@ export default function StockAdjustmentIn() {
             <Input 
               type='text' 
               readOnly={true}
-              value={referenceNumber} 
-              onChange={e =>setReferenceNumber(e.target.value)} 
+              value={adjustmentNo} 
+              onChange={e =>setAdjustmentNo(e.target.value)} 
             />
           </FormControl>
           <FormControl>

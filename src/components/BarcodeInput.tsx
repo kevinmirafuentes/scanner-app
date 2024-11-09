@@ -48,6 +48,9 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
   }
 
   const handleManualSubmit = () => {
+    if (!barcode) {
+      return;
+    }
     if (debounce) {
       clearTimeout(debounce);
     }

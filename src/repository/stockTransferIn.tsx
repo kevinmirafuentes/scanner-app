@@ -15,7 +15,7 @@ export async function getNextReferenceNumber() {
 
 export async function saveStockTransferIn(data: StockTransferIn) {
   let insertSql = `
-    insert into imasterdocuments..StockTransferInH (
+    insert into imasterdocuments..TransferInH (
       branch_id, 
       ref_no,
       status, 
@@ -36,7 +36,8 @@ export async function saveStockTransferIn(data: StockTransferIn) {
       total_non_vatable_amt,
       user_id,
       branch_ref_no,
-      transfer_slip_no
+      transfer_slip_no,
+      date_created
     ) 
     values (
       @branch_id, 
@@ -59,7 +60,8 @@ export async function saveStockTransferIn(data: StockTransferIn) {
       @total_non_vatable_amt,
       @user_id,
       @branch_ref_no,
-      @transfer_slip_no
+      @transfer_slip_no,
+      CURRENT_TIMESTAMP
     )
   `;
 
@@ -93,8 +95,7 @@ export async function saveStockTransferIn(data: StockTransferIn) {
 
   if (insertId && data?.items) {
     data?.items?.map((i: StockTransferInItem) => {
-      i.ref_id = insertId;
-      saveStockTransferInItem(i);
+      saveStockTransferInItem({ ...i, ref_id: insertId});
       return i;
     })
   }
@@ -102,7 +103,7 @@ export async function saveStockTransferIn(data: StockTransferIn) {
 
 export async function saveStockTransferInItem(item: StockTransferInItem) {
     let insertSql = `
-      insert into imasterdocuments..StockTransferInD (
+      insert into imasterdocuments..TransferInD (
         ref_id, 
         barcode_id, 
         qty, 

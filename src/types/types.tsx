@@ -149,6 +149,7 @@ export interface PhysicalCount {
   branch_ref_no?: string,
   user_id?: number,
   posted?: number|null,
+  date_uploaded?: Date,
   items?: PhysicalCountItem[]  
 }
 

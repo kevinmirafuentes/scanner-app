@@ -30,6 +30,7 @@ export default function PhysicalCount() {
       ref_no: referenceNumber || 0,
       trans_date: date, 
       supp_id: supplier,
+      branch_ref_no: latestReferenceNumber,
       items: products.map((product): PhysicalCountItem => {
         return {
           barcode_id: product.barcode_id,
@@ -61,6 +62,7 @@ export default function PhysicalCount() {
   const resetForm = () => {
     setProducts([]);
     setLatestReferenceNumber('');
+    setSupplier('');
     setDate(moment().format('YYYY-MM-DD'));
     getMaxReferenceNumber();
     getLatestReferenceNumber();

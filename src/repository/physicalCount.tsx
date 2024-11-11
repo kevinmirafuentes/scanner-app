@@ -2,6 +2,24 @@ import { PhysicalCount, PhysicalCountItem } from "@/types/types";
 import { query } from "./db";
 import sql from 'mssql';
 
+const createLatestRefNum = async (branch: string|number) => {
+  let insertSql = `
+    insert into imasterprofiles..AutoGenerateNumber (
+      ref_name,
+      current_value
+    ) 
+    values (
+      @ref_name,
+      @current_value
+    )
+  `;
+  await query(insertSql, [
+    {name: 'ref_name', type: sql.VarChar(50), value: `${branch}-PHYSICAL REF NUMBER-MOBILE`},
+    {name: 'current_value', type: sql.BigInt, value: 0}
+  ]);
+  return await getLatestRefNumber(branch);
+};
+
 export async function getLatestRefNumber(branch: string|number) {
   let sql = `
     select 
@@ -9,11 +27,29 @@ export async function getLatestRefNumber(branch: string|number) {
     from 
       imasterprofiles..AutoGenerateNumber 
     where 
-      ref_name='${branch}-PHYSICAL REF NUMBER'
+      ref_name='${branch}-PHYSICAL REF NUMBER-MOBILE'
   `;
   let resultSet = await query(sql);
   let data = resultSet?.recordset[0]?.current_value;  
+  if (typeof data === 'undefined') {
+    data = await createLatestRefNum(branch);  
+  }
   return data;
+}
+
+export async function incLatestRefNumber(branch: string|number) {
+  let updateSql = `
+    update imasterprofiles..AutoGenerateNumber 
+      set current_value = (
+        select t2.current_value + 1 as newValue 
+        from imasterprofiles..AutoGenerateNumber as t2
+        where t2.ref_name=@ref_name
+      )
+    where ref_name=@ref_name
+  `;
+  await query(updateSql, [
+    {name: 'ref_name', type: sql.VarChar(50), value: `${branch.toString().trim()}-PHYSICAL REF NUMBER-MOBILE`}
+  ]);
 }
 
 export async function getNextReferenceNumber() {
@@ -41,7 +77,8 @@ export async function savePhysicalCount(data: PhysicalCount) {
       prev_physical_id,
       branch_ref_no, 
       user_id, 
-      posted
+      posted,
+      date_uploaded
     )
     values (
       @branch_id, 
@@ -55,7 +92,8 @@ export async function savePhysicalCount(data: PhysicalCount) {
       @prev_physical_id,
       @branch_ref_no, 
       @user_id, 
-      @posted
+      @posted,
+      @date_uploaded
     )
   `;
 
@@ -72,13 +110,14 @@ export async function savePhysicalCount(data: PhysicalCount) {
     {name: 'branch_ref_no', type: sql.Char(10), value: data.branch_ref_no||''}, 
     {name: 'user_id', type: sql.Int, value: data.user_id||0}, 
     {name: 'posted', type: sql.TinyInt, value: data.posted},
+    {name: 'date_uploaded', type: sql.Date, value: data.date_uploaded}, 
   ]);
 
   let insertId = result?.recordset[0].IDENTITY_ID;
 
   if (insertId && data.items) {
-    data.items?.map((i: PhysicalCountItem) => {
-      savePhysicalCountItem({...i, ref_id: insertId});
+    data.items?.map(async (i: PhysicalCountItem) => {
+      await savePhysicalCountItem({...i, ref_id: insertId});
       return i;
     })
   }

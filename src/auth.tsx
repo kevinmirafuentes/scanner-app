@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt, encrypt } from "./lib/utils";
 import { AuthUser, Branch } from "./types/types";
+import { cache } from "react";
 
 const expires = new Date(Date.now() + 2592000 * 1000);
 

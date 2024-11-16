@@ -1,9 +1,11 @@
 import { query } from "@/repository/db"
 import sql from 'mssql';
 
-export async function getProducts() {
-  let queryString = 'select top 1 * from Product';
-  let resultSet = await query(queryString);
+export async function getProductById(id: number) {
+  let queryString = 'select top 1 * from imasterprofiles..Product where id = @id';
+  let resultSet = await query(queryString, [
+    { name: 'id', type: sql.BigInt, value: id}
+  ]);
   // @ts-ignore: This somehow works in mobile
   return resultSet.recordsets[0];
 }

@@ -37,14 +37,16 @@ export async function getProductByBarcode(code: string, branchId: number) {
 export async function getBarcodeById(id: number) {
   let queryString = `
     select 
-      barcode_id, 
-      barcode, 
-      unit_id, 
-      unit_cost 
-    from 
-      imasterprofiles.dbo.BarcodeH 
+      b.barcode_id, 
+      b.barcode, 
+      b.unit_id, 
+      b.unit_cost,
+      b.product_id, 
+      b.order_whole_gross_cost
+    from imasterprofiles..BarcodeH b
+    inner join imasterprofiles..Product p.product_id = b.product_id
     where 
-      barcode_id='${id}'
+      b.barcode_id='${id}'
     `;
   let resultSet = await query(queryString);
 

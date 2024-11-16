@@ -162,7 +162,10 @@ export interface PhysicalCountItem {
 
 export interface Barcode {
   barcode_id: number|null,
-  barcode: string|null
+  barcode: string|null,
+  product_id?: number,
+  order_whole_gross_cost?: number,
+  order_whole_net_cost?: number,
 }
 
 export interface StockTransferIn {

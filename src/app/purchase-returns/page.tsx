@@ -150,6 +150,7 @@ export default function PurchaseReturns() {
           
           <ProductsList 
             products={products}
+            supplierId={supplier||'0'}
             onChange={(p: StoreRequestItem[]) => setProducts(p)}
           />
           

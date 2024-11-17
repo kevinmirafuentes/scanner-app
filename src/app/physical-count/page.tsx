@@ -131,6 +131,7 @@ export default function PhysicalCount() {
           
           <ProductsList 
             products={products}
+            supplierId={supplier||'0'}
             onChange={(p: StoreRequestItem[]) => setProducts(p)}
           />
           

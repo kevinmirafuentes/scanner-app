@@ -13,7 +13,7 @@ export async function getBarcode(code: string) {
   return {};
 }
 
-export async function getProductByBarcode(code: string, branchId: number) {
+export async function getProductByBarcode(code: string, branchId: number, suppId?: string|null) {
   let clean = code.replace(';', '');
   
   // get product detail 
@@ -29,7 +29,12 @@ export async function getProductByBarcode(code: string, branchId: number) {
     inner join imasterprofiles.dbo.BarcodeD d on (d.barcode_id = h.barcode_id)
     where h.barcode = '${clean}'
     and d.branch_id = '${branchId}'
-  `
+  `;
+
+  if (suppId) {
+    prodSql += ` and p.supp_id = '${suppId}'`;
+  }
+
   let result = await query(prodSql);
   return result?.recordset[0];
 };

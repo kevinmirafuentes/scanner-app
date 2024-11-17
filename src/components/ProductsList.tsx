@@ -38,7 +38,7 @@ export default function ProductsList({
 
   const onBarcodeChange = async (barcode: string) => {
     setIsLoading(true);
-    let res = await getBarcodeDetails(barcode);
+    let res = await getBarcodeDetails(barcode, supplierId||null);
     let productData = await res.json();
     setIsLoading(false);
 

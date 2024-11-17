@@ -13,11 +13,13 @@ export async function GET(
   request: Request,
   { params: { barcode } }: { params: { barcode: string} }
 ) {
+  
   let result = {};
   let status = 200;
   let { branch_id } = await getCurrentBranch();
+  let supp_id = (new URL(request.url)).searchParams.get('supp_id');
   try {
-    result = await getProductByBarcode(formatBarcode(barcode), branch_id) || {};
+    result = await getProductByBarcode(formatBarcode(barcode), branch_id, supp_id) || {};
   } catch (err) {
     console.log(err);
     result = {'message': 'Something went wrong'};

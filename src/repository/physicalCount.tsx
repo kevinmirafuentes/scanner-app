@@ -64,6 +64,7 @@ export async function getNextReferenceNumber() {
 }
 
 export async function savePhysicalCount(data: PhysicalCount) {
+
   let insertSql = `
     insert into imasterdocuments..PhysicalH (
       branch_id, 
@@ -78,7 +79,8 @@ export async function savePhysicalCount(data: PhysicalCount) {
       branch_ref_no, 
       user_id, 
       posted,
-      date_uploaded
+      date_uploaded,
+      date_created
     )
     values (
       @branch_id, 
@@ -93,7 +95,8 @@ export async function savePhysicalCount(data: PhysicalCount) {
       @branch_ref_no, 
       @user_id, 
       @posted,
-      @date_uploaded
+      @date_uploaded,
+      CURRENT_TIMESTAMP
     )
   `;
 

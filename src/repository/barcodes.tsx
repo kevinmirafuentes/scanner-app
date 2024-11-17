@@ -41,10 +41,8 @@ export async function getBarcodeById(id: number) {
       b.barcode, 
       b.unit_id, 
       b.unit_cost,
-      b.product_id, 
-      b.order_whole_gross_cost
+      b.product_id
     from imasterprofiles..BarcodeH b
-    inner join imasterprofiles..Product p.product_id = b.product_id
     where 
       b.barcode_id='${id}'
     `;

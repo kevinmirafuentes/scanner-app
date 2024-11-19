@@ -31,3 +31,19 @@ export async function getProductStocks(productId: number, branchId?: number) {
   ]);
   return result?.recordset[0];
 }
+
+export async function getProductOrderCostHistory(productId: number) {
+  let queryString = `
+    select top 1 
+      product_id, 
+      order_whole_gross_cost, 
+      order_whole_net_cost 
+      from imasterprofiles..ProductOrderCostHistory 
+    where eff_date <= CURRENT_TIMESTAMP
+    and product_id = @product_id
+  `;
+  let resultSet = await query(queryString, [
+    {name: 'product_id', type: sql.BigInt, value: productId}
+  ]);
+  return resultSet.recordsets[0];
+}

@@ -2,53 +2,49 @@ import { PhysicalCount, PhysicalCountItem } from "@/types/types";
 import { query } from "./db";
 import sql from 'mssql';
 
-const createLatestRefNum = async (branch: string|number) => {
+const createLatestRefNum = async (branchId: number) => {
   let insertSql = `
     insert into imasterprofiles..AutoGenerateNumber (
       ref_name,
       current_value
     ) 
-    values (
-      @ref_name,
-      @current_value
-    )
+    select 
+      ltrim(rtrim(b.branch_code)) + '-PHYSICAL REF NUMBER-MOBILE' as ref_name,
+      1 as current_value
+    from imasterprofiles..branch b where b.branch_id = @branch_id
   `;
   await query(insertSql, [
-    {name: 'ref_name', type: sql.VarChar(50), value: `${branch}-PHYSICAL REF NUMBER-MOBILE`},
-    {name: 'current_value', type: sql.BigInt, value: 0}
+    {name: 'branch_id', type: sql.BigInt, value: branchId},
   ]);
-  return await getLatestRefNumber(branch);
+  return 1;
 };
 
-export async function getLatestRefNumber(branch: string|number) {
-  let sql = `
-    select 
-      current_value 
-    from 
-      imasterprofiles..AutoGenerateNumber 
-    where 
-      ref_name='${branch}-PHYSICAL REF NUMBER-MOBILE'
+export async function getLatestRefNumber(branchId: number) {
+  let querySql = `
+    select current_value 
+    from imasterprofiles..AutoGenerateNumber 
+    where ref_name=(select top 1 ltrim(rtrim(b.branch_code)) + '-PHYSICAL REF NUMBER-MOBILE' from imasterprofiles..branch b where b.branch_id = @branch_id)
   `;
-  let resultSet = await query(sql);
+  
+  let resultSet = await query(querySql, [
+    {name: 'branch_id', type: sql.BigInt, value: branchId}
+  ]);
+
   let data = resultSet?.recordset[0]?.current_value;  
   if (typeof data === 'undefined') {
-    data = await createLatestRefNum(branch);  
+    data = await createLatestRefNum(branchId);  
   }
   return data;
 }
 
-export async function incLatestRefNumber(branch: string|number) {
+export async function incLatestRefNumber(branch: number) {
   let updateSql = `
-    update imasterprofiles..AutoGenerateNumber 
-      set current_value = (
-        select t2.current_value + 1 as newValue 
-        from imasterprofiles..AutoGenerateNumber as t2
-        where t2.ref_name=@ref_name
-      )
-    where ref_name=@ref_name
+    update imasterprofiles..AutoGenerateNumber
+    set current_value = isnull(current_value, 0) + 1
+    where ref_name = (select top 1 ltrim(rtrim(b.branch_code)) + '-PHYSICAL REF NUMBER-MOBILE' from imasterprofiles..branch b where b.branch_id = @branch_id)
   `;
   await query(updateSql, [
-    {name: 'ref_name', type: sql.VarChar(50), value: `${branch.toString().trim()}-PHYSICAL REF NUMBER-MOBILE`}
+    {name: 'branch_id', type: sql.BigInt, value: branch}
   ]);
 }
 
@@ -64,7 +60,6 @@ export async function getNextReferenceNumber() {
 }
 
 export async function savePhysicalCount(data: PhysicalCount) {
-
   let insertSql = `
     insert into imasterdocuments..PhysicalH (
       branch_id, 
@@ -124,6 +119,8 @@ export async function savePhysicalCount(data: PhysicalCount) {
       return i;
     })
   }
+
+  if (data.branch_id) await incLatestRefNumber(data.branch_id);
 }
 
 export async function savePhysicalCountItem(data: PhysicalCountItem) {

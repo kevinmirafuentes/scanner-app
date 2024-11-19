@@ -17,7 +17,7 @@ let debounce: any;
 export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputProps) {
   let [barcode, setBarcode] = useState<string>('');
   const audioRef = useRef();
-  const [inputRef, setFocus] = useFocus<HTMLButtonElement>();
+  const [inputRef, setFocus] = useFocus<HTMLInputElement>();
 
   const playBeepSound = () => {
     if (audioRef.current) {

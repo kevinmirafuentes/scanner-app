@@ -1,12 +1,12 @@
 import { getCurrentBranch, getSession } from "@/auth";
 import { apiResponse } from "@/lib/utils";
 import { getBarcodeById } from "@/repository/barcodes";
-import { getLatestRefNumber, getNextReferenceNumber, incLatestRefNumber, savePhysicalCount } from "@/repository/physicalCount";
+import { getLatestRefNumber, getNextReferenceNumber, savePhysicalCount } from "@/repository/physicalCount";
 import { PhysicalCount, PhysicalCountItem } from "@/types/types";
 
 const initPhysicalCountData = async (data: PhysicalCount) => {
   let nextRefNum = await getNextReferenceNumber();
-  let { branch_id, branch_code } = await getCurrentBranch();
+  let { branch_id } = await getCurrentBranch();
   let { user_id } = await getSession();
 
   return {
@@ -19,7 +19,7 @@ const initPhysicalCountData = async (data: PhysicalCount) => {
     prepared_by:      0, 
     approved_byL:     0, 
     prev_physical_id: 0, 
-    branch_ref_no:    await getLatestRefNumber(branch_code.trim()), 
+    branch_ref_no:    await getLatestRefNumber(branch_id), 
     user_id:          user_id,  
     posted:           0,
     date_uploaded:    new Date('1900-01-01'),
@@ -43,9 +43,5 @@ export async function POST(
   await savePhysicalCount(
     await initPhysicalCountData(data)
   );
-
-  let {branch_code} = await getCurrentBranch(); 
-  await incLatestRefNumber(branch_code);
-
   return apiResponse({success: true}, 200);
 }

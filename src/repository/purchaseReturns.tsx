@@ -2,6 +2,8 @@ import { PurchaseReturn, PurchaseReturnItem } from "@/types/types";
 import { query } from "./db";
 import sql from 'mssql';
 
+const autoGenerateSuffix = 'BADORDERNUMBER-MOBILE';
+
 export async function getNextReferenceNumber() {
   let sql = `
   select case 
@@ -12,14 +14,51 @@ export async function getNextReferenceNumber() {
   let resultSet = await query(sql);
   return resultSet?.recordset[0];
 }
-
-export async function getLatestRefNumber(branch: string|number) {
-  let queryString = `
-    select current_value from imasterprofiles..AutoGenerateNumber where ref_name='${branch}-BADORDERNUMBER'
+const createLatestRefNum = async (branchId: number) => {
+  let insertSql = `
+    insert into imasterprofiles..AutoGenerateNumber (
+      ref_name,
+      current_value
+    ) 
+    select 
+      ltrim(rtrim(b.branch_code)) + '-${autoGenerateSuffix}' as ref_name,
+      1 as current_value
+    from imasterprofiles..branch b where b.branch_id = @branch_id
   `;
-  let resultSet = await query(queryString);
-  let data = resultSet?.recordset[0];  
+  await query(insertSql, [
+    {name: 'branch_id', type: sql.BigInt, value: branchId},
+  ]);
+  return 1;
+};
+
+export async function getLatestRefNumber(branchId: number) {
+  let querySql = `
+    select current_value 
+    from imasterprofiles..AutoGenerateNumber 
+    where ref_name=(select top 1 ltrim(rtrim(b.branch_code)) + '-${autoGenerateSuffix}' from imasterprofiles..branch b where b.branch_id = @branch_id)
+  `;
+  
+  let resultSet = await query(querySql, [
+    {name: 'branch_id', type: sql.BigInt, value: branchId}
+  ]);
+
+  let data = resultSet?.recordset[0]?.current_value;  
+  if (typeof data === 'undefined') {
+    data = await createLatestRefNum(branchId);  
+  }
   return data;
+}
+
+export async function incLatestRefNumber(branch: number) {
+  let updateSql = `
+    update imasterprofiles..AutoGenerateNumber
+    set current_value = isnull(current_value, 0) + 1
+    where ref_name = (select top 1 ltrim(rtrim(b.branch_code)) + '-${autoGenerateSuffix}' from imasterprofiles..branch b where b.branch_id = @branch_id)
+  `;
+  await query(updateSql, [
+    {name: 'branch_id', type: sql.BigInt, value: branch}
+  ]);
+
 }
 
 export async function savePurchaseReturn(data: PurchaseReturn) {
@@ -90,7 +129,7 @@ export async function savePurchaseReturn(data: PurchaseReturn) {
 
   const result = await query(insertSql, [
     {name: 'branch_id', type: sql.BigInt, value: data.branch_id||0},
-    {name: 'ref_no', type: sql.Char(10), value: data.ref_no||0},
+    {name: 'ref_no', type: sql.Char(10), value: data.ref_no?.toString()},
     {name: 'status', type: sql.Char(1), value: data.status||''},
     {name: 'trans_date', type: sql.Date, value: data.trans_date},
     {name: 'supp_id', type: sql.Int, value: data.supp_id||0},
@@ -115,7 +154,7 @@ export async function savePurchaseReturn(data: PurchaseReturn) {
     {name: 'user_id', type: sql.Int, value: data.user_id||0},
     {name: 'posted', type: sql.Int, value: data.posted||null},
     {name: 'vat_price_indicator', type: sql.Int, value: data.vat_price_indicator||null},
-    {name: 'branch_ref_no', type: sql.Char(10), value: data.branch_ref_no||null},
+    {name: 'branch_ref_no', type: sql.Char(10), value: data.branch_ref_no?.toString()||null},
     {name: 'distributor_id', type: sql.Int, value: data.distributor_id||null},
   ]);
 
@@ -128,6 +167,9 @@ export async function savePurchaseReturn(data: PurchaseReturn) {
       savePurchaseReturnItem({...i, ref_id: insertId});
     })
   }
+
+  // @TODO: update total fields with SUM from badorderD
+  if (data.branch_id) await incLatestRefNumber(data.branch_id);
 }
 
 export async function savePurchaseReturnItem(data: PurchaseReturnItem) {

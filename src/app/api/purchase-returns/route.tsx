@@ -2,59 +2,79 @@ import { getCurrentBranch, getSession } from "@/auth";
 import { apiResponse } from "@/lib/utils";
 import { getBarcodeById } from "@/repository/barcodes";
 import { getSupplierCompanyDiscounts, getSupplierDiscountGrouping } from "@/repository/discounts";
-import { getNextReferenceNumber, savePurchaseReturn } from "@/repository/purchaseReturns";
+import { getProductOrderCostHistory } from "@/repository/products";
+import { getLatestRefNumber, getNextReferenceNumber, savePurchaseReturn } from "@/repository/purchaseReturns";
 import { PurchaseReturn, PurchaseReturnItem } from "@/types/types";
 
 const initPurchaseReturnData = async (data: PurchaseReturn) => {
-  let nextRefNum = await getNextReferenceNumber();
+  let {maxrefnum} = await getNextReferenceNumber();
   let { branch_id } = await getCurrentBranch();
   let { user_id } = await getSession();
+  let boDiscounts = await getSupplierCompanyDiscounts(data.supp_id||0, branch_id);
 
-  data.branch_id = branch_id;
-  data.ref_no = nextRefNum.maxrefnum.toString();
-  data.trans_date = new Date(data?.trans_date||'');
-  data.user_id = user_id;
-  data.status = 'A';
-  data.amt_paid = 0;
-  data.balance = 0;
-  data.posted = 0;
-  data.vat_price_indicator = 0;
-  
-  let supplierCompanyDiscounts = await getSupplierCompanyDiscounts(data.supp_id||0, data.branch_id||0);
-  data.disc_id1 = supplierCompanyDiscounts?.disc_id1;
-  data.disc_id2 = supplierCompanyDiscounts?.disc_id2;
-  data.disc_id3 = supplierCompanyDiscounts?.disc_id3;
-  data.disc_id4 = supplierCompanyDiscounts?.disc_id4;
-
-  if (data?.items) {
-    for (let i = 0; i < data.items?.length; i++) {
-      data.items[i] = await initPurchaseReturnItemData(data.items[i], data);
-    }
-  }
-
-  return data;
+  return {
+    branch_id:          branch_id,
+    ref_no:             maxrefnum, 
+    status:             'A', 
+    trans_date:         new Date(data.trans_date||''),
+    supp_id:            data.supp_id, 
+    return_slip_no:     data.return_slip_no, 
+    remarks:            data.remarks, 
+    total_qty:          0, 
+    total_gross_amt:    0, 
+    total_disc_amt:     0, 
+    total_freight_amt:  0, 
+    total_charges_amt:  0, 
+    total_vat_amt:      0, 
+    total_net_amt:      0, 
+    amt_paid:           0,
+    balance:            0, 
+    total_vatable_amt:  0, 
+    total_non_vatable_amt: 0, 
+    disc_id1:           boDiscounts?.disc_id1 || 0, 
+    disc_id2:           boDiscounts?.disc_id2 || 0, 
+    disc_id3:           boDiscounts?.disc_id3 || 0, 
+    disc_id4:           boDiscounts?.disc_id4 || 0,
+    disc_id5:           boDiscounts?.disc_id5 || 0,
+    user_id:            user_id,
+    posted:             0,
+    vat_price_indicator: 0, 
+    branch_ref_no:      await getLatestRefNumber(branch_id), 
+    distributor_id:     0,
+    items:              data.items ? await Promise.all(data.items?.map(async (i) => await initPurchaseReturnItemData(i, data))) : [],
+  };
 }
 
 const initPurchaseReturnItemData = async (data: PurchaseReturnItem, purchaseReturn: PurchaseReturn) => {
   let barcodeInfo = data?.barcode_id ? await getBarcodeById(data.barcode_id) : null;
-
   let supplierDiscount = await getSupplierDiscountGrouping(
     data?.barcode_id||0, 
     purchaseReturn?.supp_id||0, 
-    purchaseReturn?.balance||0
+    purchaseReturn?.branch_id||0
   );
-  return {
-    ...data,
-    disc_id1: supplierDiscount?.disc_id1||0,
-    disc_id2: supplierDiscount?.disc_id2||0,
-    disc_id3: supplierDiscount?.disc_id3||0,
-    disc_id4: supplierDiscount?.disc_id4||0,
 
-    // @TODO: clarify if this is correct default value of items below
-    unit_id: barcodeInfo?.unit_id,
-    unit_price: barcodeInfo?.unit_cost,
-    gross_amt: barcodeInfo?.order_whole_gross_cost||0,
-    net_amt: barcodeInfo?.order_whole_net_cost||0,
+  let productOrderCostHistory = await getProductOrderCostHistory(barcodeInfo.product_id);
+
+  return {
+    barcode_id:         data.barcode_id, 
+    qty:                data.qty, 
+    unit_id:            barcodeInfo.unit_id, 
+    unit_price:         barcodeInfo.unit_cost, 
+    gross_amt:          productOrderCostHistory?.order_whole_gross_cost || 0, 
+    base_qty:           (data?.qty||0) * (barcodeInfo.content_qty||0), 
+    disc_id1:           supplierDiscount.bo_disc_id1, 
+    disc_id2:           supplierDiscount.bo_disc_id2, 
+    disc_id3:           supplierDiscount.bo_disc_id3,
+    disc_id4:           supplierDiscount.bo_disc_id4,
+    disc_id5:           supplierDiscount.bo_disc_id5,
+    disc_amt:           0, 
+    prorated_disc_amt:  0, 
+    freight_id:         0, 
+    freight_amt:        0, 
+    charges_id:         0, 
+    charges_amt:        0, 
+    net_amt:            0, 
+    total_cost:         0,
   };
 }
 

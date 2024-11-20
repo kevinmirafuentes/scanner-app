@@ -219,6 +219,7 @@ export interface StockTransferInItem {
 }
 
 export interface PurchaseReturn {
+  ref_id?: number,
   branch_id?: number,
   ref_no?: string,
   status?: string,

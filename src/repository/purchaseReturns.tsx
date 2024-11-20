@@ -1,6 +1,7 @@
 import { PurchaseReturn, PurchaseReturnItem } from "@/types/types";
 import { query } from "./db";
 import sql from 'mssql';
+import { purchaseReturnDTO } from "./dto";
 
 const autoGenerateSuffix = 'BADORDERNUMBER-MOBILE';
 
@@ -92,7 +93,8 @@ export async function savePurchaseReturn(data: PurchaseReturn) {
       vat_price_indicator,
       branch_ref_no,
       distributor_id,
-      date_created
+      date_created,
+      date_uploaded
     )
     values (
       @branch_id,
@@ -123,7 +125,8 @@ export async function savePurchaseReturn(data: PurchaseReturn) {
       @vat_price_indicator,
       @branch_ref_no,
       @distributor_id,
-      CURRENT_TIMESTAMP
+      CURRENT_TIMESTAMP,
+      '1900-01-01'
     )
   `;
 
@@ -163,13 +166,41 @@ export async function savePurchaseReturn(data: PurchaseReturn) {
   console.log('last purchase return id: ' + insertId);
 
   if (insertId && data.items) {
-    data.items?.map((i: PurchaseReturnItem) => {
-      savePurchaseReturnItem({...i, ref_id: insertId});
-    })
+    data.items?.map((i: PurchaseReturnItem) => savePurchaseReturnItem({...i, ref_id: insertId}))
   }
 
   // @TODO: update total fields with SUM from badorderD
   if (data.branch_id) await incLatestRefNumber(data.branch_id);
+
+  return await getPurchaseReturnById(insertId);
+}
+
+export async function getPurchaseReturnById(id: number): Promise<PurchaseReturn> {
+  let queryString = `
+    select top 1 
+      * 
+    from imasterdocuments..BadOrderH
+    where ref_id = @ref_id
+  `;
+  let resultSet = await query(queryString, [
+    {name: 'ref_id', type: sql.BigInt, value: id}
+  ]);
+
+  let data = resultSet?.recordset[0];  
+  return await purchaseReturnDTO(data);
+}
+
+export async function getPurchaseReturnItems(refId: number): Promise<PurchaseReturnItem[]> {
+  let queryString = `
+    select top 1 
+      * 
+    from imasterdocuments..BadOrderD
+    where ref_id = @ref_id
+  `;
+  let resultSet = await query(queryString, [
+    {name: 'ref_id', type: sql.BigInt, value: refId}
+  ]);
+  return resultSet?.recordset;
 }
 
 export async function savePurchaseReturnItem(data: PurchaseReturnItem) {

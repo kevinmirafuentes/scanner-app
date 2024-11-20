@@ -37,7 +37,8 @@ export async function getProductOrderCostHistory(productId: number) {
     select top 1 
       product_id, 
       order_whole_gross_cost, 
-      order_whole_net_cost 
+      order_whole_net_cost,
+      order_pcs_gross_cost
       from imasterprofiles..ProductOrderCostHistory 
     where eff_date <= CURRENT_TIMESTAMP
     and product_id = @product_id
@@ -45,5 +46,5 @@ export async function getProductOrderCostHistory(productId: number) {
   let resultSet = await query(queryString, [
     {name: 'product_id', type: sql.BigInt, value: productId}
   ]);
-  return resultSet.recordsets[0];
+  return resultSet.recordset[0];
 }

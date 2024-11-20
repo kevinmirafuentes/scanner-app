@@ -12,6 +12,8 @@ const initPurchaseReturnData = async (data: PurchaseReturn) => {
   let { user_id } = await getSession();
   let boDiscounts = await getSupplierCompanyDiscounts(data.supp_id||0, branch_id);
 
+  let items = data.items ? await Promise.all(data.items?.map(async (i) => await initPurchaseReturnItemData(i, data))) : [];
+  
   return {
     branch_id:          branch_id,
     ref_no:             maxrefnum, 
@@ -20,8 +22,8 @@ const initPurchaseReturnData = async (data: PurchaseReturn) => {
     supp_id:            data.supp_id, 
     return_slip_no:     data.return_slip_no, 
     remarks:            data.remarks, 
-    total_qty:          0, 
-    total_gross_amt:    0, 
+    total_qty:          items.reduce((a, i: PurchaseReturnItem) => a + (i?.qty||0), 0), 
+    total_gross_amt:    items.reduce((a, i: PurchaseReturnItem) => a + (i?.gross_amt||0), 0), 
     total_disc_amt:     0, 
     total_freight_amt:  0, 
     total_charges_amt:  0, 
@@ -41,7 +43,7 @@ const initPurchaseReturnData = async (data: PurchaseReturn) => {
     vat_price_indicator: 0, 
     branch_ref_no:      await getLatestRefNumber(branch_id), 
     distributor_id:     0,
-    items:              data.items ? await Promise.all(data.items?.map(async (i) => await initPurchaseReturnItemData(i, data))) : [],
+    items:              items,
   };
 }
 
@@ -54,14 +56,15 @@ const initPurchaseReturnItemData = async (data: PurchaseReturnItem, purchaseRetu
   );
 
   let productOrderCostHistory = await getProductOrderCostHistory(barcodeInfo.product_id);
+  let unitPrice = productOrderCostHistory?.order_pcs_gross_cost || 0;
 
   return {
     barcode_id:         data.barcode_id, 
     qty:                data.qty, 
     unit_id:            barcodeInfo.unit_id, 
     unit_price:         barcodeInfo.unit_cost, 
-    gross_amt:          productOrderCostHistory?.order_whole_gross_cost || 0, 
-    base_qty:           (data?.qty||0) * (barcodeInfo.content_qty||0), 
+    gross_amt:          unitPrice * (data?.qty||0), 
+    base_qty:           (data.qty||0) * (barcodeInfo.content_qty||0), 
     disc_id1:           supplierDiscount.bo_disc_id1, 
     disc_id2:           supplierDiscount.bo_disc_id2, 
     disc_id3:           supplierDiscount.bo_disc_id3,

@@ -36,7 +36,7 @@ export default function StockRequestPOSPrint({id}: {id:string}) {
 
   }, [id]);
   return (
-    <Table id='stockRequestPos'>
+    <Table className="pos_print" id='stockRequestPos'>
       <Tbody>
         <Tr>
           <Td colSpan={4}>

@@ -1,11 +1,11 @@
-#stockRequestPos td,
+.pos_print td,
 #stockRequestDoc td {
   border: 0;
   padding: 5px;
   font-size: 10px;
 }
 
-#stockRequestPos td {
+.pos_print td {
   padding: 3px;
 }
 
@@ -23,6 +23,9 @@
   border-right: 1px solid black;
 }
 
+.compact * {
+  line-height: 1.2;
+}
 
 @page {
   margin-top: 0.25in;

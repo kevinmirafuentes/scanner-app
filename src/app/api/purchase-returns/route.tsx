@@ -85,8 +85,8 @@ export async function POST(
   request: Request
 ) {
   const data = await request.json();
-  await savePurchaseReturn(
+  let purchaseReturn = await savePurchaseReturn(
     await initPurchaseReturnData(data)
   )
-  return apiResponse({success: true}, 200);
+  return apiResponse(purchaseReturn, 200);
 }

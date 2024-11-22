@@ -85,6 +85,21 @@ export default function PurchaseReturns() {
       supplier
     ].some(v => v.length === 0);
   };
+  
+  const handleSaveAndPrint = async () => {
+    let res = await save()
+    let data = await res?.json();
+    
+    if (referenceNumber != data.ref_no) {
+      alert(`Reference number ${referenceNumber} is already taken. Generated a new number: ${data.ref_no}`)
+    }
+
+    let url = `/purchase-returns/${data.ref_id}/print`;
+    let win = window.open('', '_blank');
+    if (win) {
+      win.location = url;
+    }
+  }
 
   const getMaxReferenceNumber = async () => {
     let res = await fetch("/api/purchase-returns/nextrefid", { method: "POST" });
@@ -163,9 +178,9 @@ export default function PurchaseReturns() {
               fontWeight="normal"
               fontSize='sm'
               isLoading={isSaving}
-              onClick={save}
+              onClick={handleSaveAndPrint}
             >
-              Save
+              Print
             </Button>
           </HStack>
   

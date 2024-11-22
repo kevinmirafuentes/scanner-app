@@ -51,7 +51,8 @@ export interface InventoryDetails {
 export interface Branch {
   branch_id: number,
   branch_code: string,
-  branch_name: string
+  branch_name: string,
+  address?: string,
 }
 
 export interface StoreRequestItem {
@@ -248,14 +249,19 @@ export interface PurchaseReturn {
   vat_price_indicator?: number|null,
   branch_ref_no?: string|null,
   distributor_id?: number|null,
-  items?: PurchaseReturnItem[]
+  date_created?: Date,
+  items?: PurchaseReturnItem[],
+  supplier?: Supplier,
+  branch?: Branch
 }
 
 export interface PurchaseReturnItem {
   ref_id?: number,
   barcode_id?: number,
+  product_name?: string,
   qty?: number,
   unit_id?: number,
+  unit_code?: string,
   unit_price?: number,
   gross_amt?: number,
   base_qty?: number,
@@ -380,4 +386,10 @@ export interface StockAdjustmentOutItem {
   unit_price?: number,
   base_qty?: number, 
   net_amt?: number, 
+}
+
+export interface Unit {
+  unit_id?: number,
+  unit_code?: string,
+  content_qty?: number,
 }

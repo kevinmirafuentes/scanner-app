@@ -1,5 +1,5 @@
 import { apiResponse } from "@/lib/utils";
-import { getNextReferenceNumber } from "@/repository/physicalCount";
+import { getNextReferenceNumber } from "@/repository/purchaseReturns";
 
 export async function POST() {
   let res = await getNextReferenceNumber();

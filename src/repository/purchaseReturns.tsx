@@ -193,8 +193,13 @@ export async function getPurchaseReturnById(id: number): Promise<PurchaseReturn>
 export async function getPurchaseReturnItems(refId: number): Promise<PurchaseReturnItem[]> {
   let queryString = `
     select top 1 
-      * 
-    from imasterdocuments..BadOrderD
+      d.*,
+      u.unit_code,
+      p.short_descript as product_name
+    from imasterdocuments..BadOrderD d
+    inner join imasterprofiles..Unit u on u.unit_id = d.unit_id
+    inner join imasterprofiles..BarcodeH bc on bc.barcode_id = d.barcode_id
+    inner join imasterprofiles..Product p on p.product_id = bc.product_id
     where ref_id = @ref_id
   `;
   let resultSet = await query(queryString, [

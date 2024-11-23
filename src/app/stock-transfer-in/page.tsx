@@ -31,7 +31,8 @@ export default function StockTransferIn() {
       ref_no: referenceNumber, 
       trans_date: date,
       source_branch_id: supplyingBranch, 
-      branch_ref_no: supplyingBranchRef, 
+      transfer_out_ref_no: supplyingBranchRef, 
+      remarks: remarks,
       items: products.map((product): StockTransferInItem => {
         return {
           barcode_id: product.barcode_id,

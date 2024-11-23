@@ -62,7 +62,7 @@ const initPurchaseReturnItemData = async (data: PurchaseReturnItem, purchaseRetu
     barcode_id:         data.barcode_id, 
     qty:                data.qty, 
     unit_id:            barcodeInfo.unit_id, 
-    unit_price:         barcodeInfo.unit_cost, 
+    unit_price:         unitPrice, 
     gross_amt:          unitPrice * (data?.qty||0), 
     base_qty:           (data.qty||0) * (barcodeInfo.content_qty||0), 
     disc_id1:           supplierDiscount.bo_disc_id1, 

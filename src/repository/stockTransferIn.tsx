@@ -2,6 +2,8 @@ import { StockTransferIn, StockTransferInItem } from "@/types/types";
 import { query } from "./db";
 import sql from 'mssql';
 
+const autoGenerateSuffix = 'TRANSFERINNUMBER-MOBILE';
+
 export async function getNextReferenceNumber() {
   let querySql = `
     select case 
@@ -13,7 +15,55 @@ export async function getNextReferenceNumber() {
   return resultSet?.recordset[0];
 }
 
+export async function getLatestRefNumber(branchId: number) {
+  let querySql = `
+    select current_value 
+    from imasterprofiles..AutoGenerateNumber 
+    where ref_name=(select top 1 ltrim(rtrim(b.branch_code)) + '-${autoGenerateSuffix}' from imasterprofiles..branch b where b.branch_id = @branch_id)
+  `;
+  
+  let resultSet = await query(querySql, [
+    {name: 'branch_id', type: sql.BigInt, value: branchId}
+  ]);
+
+  let data = resultSet?.recordset[0]?.current_value;  
+  if (typeof data === 'undefined') {
+    data = await createLatestRefNum(branchId);  
+  }
+  return data;
+}
+
+const createLatestRefNum = async (branchId: number) => {
+  let insertSql = `
+    insert into imasterprofiles..AutoGenerateNumber (
+      ref_name,
+      current_value
+    ) 
+    select 
+      ltrim(rtrim(b.branch_code)) + '-${autoGenerateSuffix}' as ref_name,
+      1 as current_value
+    from imasterprofiles..branch b where b.branch_id = @branch_id
+  `;
+  await query(insertSql, [
+    {name: 'branch_id', type: sql.BigInt, value: branchId},
+  ]);
+  return 1;
+};
+
+export async function incLatestRefNumber(branch: number) {
+  let updateSql = `
+    update imasterprofiles..AutoGenerateNumber
+    set current_value = isnull(current_value, 0) + 1
+    where ref_name = (select top 1 ltrim(rtrim(b.branch_code)) + '-${autoGenerateSuffix}' from imasterprofiles..branch b where b.branch_id = @branch_id)
+  `;
+  await query(updateSql, [
+    {name: 'branch_id', type: sql.BigInt, value: branch}
+  ]);
+
+}
+
 export async function saveStockTransferIn(data: StockTransferIn) {
+  console.log(data);
   let insertSql = `
     insert into imasterdocuments..TransferInH (
       branch_id, 
@@ -35,9 +85,11 @@ export async function saveStockTransferIn(data: StockTransferIn) {
       total_vatable_amt,
       total_non_vatable_amt,
       user_id,
+      posted,
       branch_ref_no,
       transfer_slip_no,
-      date_created
+      date_created,
+      date_uploaded
     ) 
     values (
       @branch_id, 
@@ -59,9 +111,11 @@ export async function saveStockTransferIn(data: StockTransferIn) {
       @total_vatable_amt,
       @total_non_vatable_amt,
       @user_id,
+      @posted,
       @branch_ref_no,
       @transfer_slip_no,
-      CURRENT_TIMESTAMP
+      CURRENT_TIMESTAMP,
+      '1900-01-01'
     )
   `;
 
@@ -85,6 +139,7 @@ export async function saveStockTransferIn(data: StockTransferIn) {
         {name: 'total_vatable_amt', type: sql.Decimal(10, 2), value: data?.total_vatable_amt||0},
         {name: 'total_non_vatable_amt', type: sql.Decimal(10, 2), value: data.total_non_vatable_amt||0},
         {name: 'user_id', type: sql.Int, value: data?.user_id},
+        {name: 'posted', type: sql.TinyInt, value: data?.posted||0},
         {name: 'branch_ref_no', type: sql.Char(10), value: data?.branch_ref_no},
         {name: 'transfer_slip_no', type: sql.Char(10), value: data?.transfer_slip_no},
   ]);
@@ -93,12 +148,12 @@ export async function saveStockTransferIn(data: StockTransferIn) {
   
   console.log('last insert id', insertId);
 
-  if (insertId && data?.items) {
-    data?.items?.map((i: StockTransferInItem) => {
-      saveStockTransferInItem({ ...i, ref_id: insertId});
-      return i;
-    })
+  if (insertId && data.items) {
+    data.items?.map((i: StockTransferInItem) => saveStockTransferInItem({...i, ref_id: insertId}))
   }
+
+  if (data.branch_id) await incLatestRefNumber(data.branch_id);
+
 }
 
 export async function saveStockTransferInItem(item: StockTransferInItem) {

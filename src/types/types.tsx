@@ -189,6 +189,7 @@ export interface StockTransferIn {
   total_vatable_amt?: number,
   total_non_vatable_amt?: number,
   user_id?: number,
+  posted?: number,
   branch_ref_no?: string|null,
   transfer_slip_no?: string|null,
   items: StockTransferInItem[]

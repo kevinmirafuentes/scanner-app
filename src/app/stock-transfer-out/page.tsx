@@ -32,6 +32,7 @@ export default function StockTransferOut() {
       trans_date: date,
       dest_branch_id: requestingBranch,
       remarks: remarks, 
+      transfer_slip_no: stockRequestNo,
       // stock_request_no: stockRequestNo,
       items: products.map((product): StockTransferOutItem => {
         return {

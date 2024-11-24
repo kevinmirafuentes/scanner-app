@@ -357,6 +357,7 @@ export interface StockAdjustmentIn {
 export interface StockAdjustmentInItem {
   adj_id?: number, 
   barcode_id?: number, 
+  qty?: number, 
   unit_id?: number, 
   unit_price?: number, 
   base_qty?: number, 

@@ -25,7 +25,6 @@ export async function getNextReferenceNumber() {
 }
 
 export async function saveStockAdjustmentIn(data: StockAdjustmentIn) {
-  console.log(data)
   let insertSql = `
     insert into imasterdocuments..AdjustmentInH (
       branch_id, 

@@ -363,7 +363,7 @@ export interface StockAdjustmentInItem {
   base_qty?: number, 
   net_amt?: number, 
   expiry_date?: Date|null, 
-  stocks_already_sold?: number,
+  stocks_already_sold?: number|null,
 }
 
 export interface StockAdjustmentOut {

@@ -18,7 +18,8 @@ export function apiResponse(data: any, status?: number|null) {
 }
 
 export function formatBarcode(code: string): string  {
-  if (code.length == 13) {
+  code = code.trim();
+  if (code.length >= 13) {
     return code.substr(0, 12);
   }
   return code;

@@ -1,8 +1,8 @@
 import { ProductsListProps } from "@/types/types";
 import ProductQuantityCard from "./ProductQuantityCard";
 import ProductsListLoader from "./ProductsListLoader";
-import { useState } from "react";
-import { FormControl, FormLabel } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { FormControl, FormLabel, Text } from "@chakra-ui/react";
 import BarcodeInput from "./BarcodeInput";
 import { getBarcodeDetails } from "@/lib/utils";
 
@@ -47,6 +47,8 @@ export default function ProductsList({
       return;
     }
 
+    setBarcode('');
+
     if (typeof onChange === 'undefined') {
       return;
     } 
@@ -64,11 +66,17 @@ export default function ProductsList({
     ]);
   };
 
+  useEffect(() => {
+    if (barcode) {
+      onBarcodeChange(barcode);
+    }
+  }, [barcode]);
+
   return (
     <>
       <FormControl>
         <FormLabel>Type of Scan Barcode</FormLabel>
-        <BarcodeInput clearOnChange={true} onChange={(text: string) => onBarcodeChange(text)} />
+        <BarcodeInput clearOnChange={true} onChange={(text: string) => setBarcode(text)} />
       </FormControl>
 
       { products?.map((product, index) => (

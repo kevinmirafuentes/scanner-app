@@ -19,7 +19,7 @@ export default function SelectSupplier({ onChange, value }: SelectSupplierProps)
   return (
     <ComboBox 
       value={value}
-      options={suppliers.map(s => ({key: s.supp_id, text: s.supp_code + ' - '+ s.supp_name}))}
+      options={suppliers.map(s => ({key: s.supp_id, text: s.supp_code?.trim() + ' - '+ s.supp_name}))}
       onChange={(s: ComboBoxOption) => onChange && onChange(s.key)}>  
     </ComboBox>
   )

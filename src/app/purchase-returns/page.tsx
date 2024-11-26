@@ -4,7 +4,7 @@ import ProductsList from "@/components/ProductsList";
 import SelectDistributor from "@/components/SelectDistributor";
 import SelectSupplier from "@/components/SelectSupplier";
 import { PurchaseReturnItem, StoreRequestItem } from "@/types/types";
-import { Button, Container, FormControl, FormLabel, HStack, Input, Select, VStack, useToast } from "@chakra-ui/react";
+import { Button, Container, FormControl, FormLabel, HStack, Input, Select, Text, VStack, useToast } from "@chakra-ui/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
@@ -31,7 +31,7 @@ export default function PurchaseReturns() {
   const createPurchaseReturnPayload = () => {
     return {
       ref_no: referenceNumber || 0,
-      trans_date: date, 
+      trans_date: date,  
       supp_id: supplier,
       distributor_id: distributor,
       return_slip_no: returnSlipNo,
@@ -46,6 +46,7 @@ export default function PurchaseReturns() {
   }
   
   const save = async () => {
+    alert(JSON.stringify(createPurchaseReturnPayload()))
     if (!isValidForm()) {
       alert('Please fill out all fields on the form.');
       return;
@@ -128,7 +129,7 @@ export default function PurchaseReturns() {
             <FormLabel>Distributor</FormLabel>
             <SelectDistributor
               value={distributor} 
-              onChange={(d: string) => setSupplier(d)}
+              onChange={(d: string) => {setDistributor(d)}}
             ></SelectDistributor>
           </FormControl>
           <FormControl>

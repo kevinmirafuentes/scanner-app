@@ -101,7 +101,8 @@ export interface TagRequestItem {
 
 export interface Supplier {
   supp_id: number, 
-  supp_name: string|null
+  supp_name: string|null,
+  supp_code: string|null,
 }
 
 export interface ComboBoxOption {

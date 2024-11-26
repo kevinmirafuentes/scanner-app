@@ -5,6 +5,7 @@ export async function getSuppliers() {
   let queryString = `
     select
       supp_id, 
+      supp_code,
       supp_name
     from imasterprofiles..supplier
   `;

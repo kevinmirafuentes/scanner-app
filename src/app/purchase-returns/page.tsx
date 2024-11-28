@@ -46,7 +46,6 @@ export default function PurchaseReturns() {
   }
   
   const save = async () => {
-    alert(JSON.stringify(createPurchaseReturnPayload()))
     if (!isValidForm()) {
       alert('Please fill out all fields on the form.');
       return;
@@ -142,7 +141,7 @@ export default function PurchaseReturns() {
           <FormControl>
             <FormLabel>Return Slip No.</FormLabel>
             <Input 
-              type='text' 
+              type='number' 
               value={returnSlipNo} 
               onChange={e =>setReturnSlipNo(e.target.value)}
             />

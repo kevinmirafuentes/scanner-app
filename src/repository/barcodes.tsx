@@ -34,7 +34,7 @@ export async function getProductByBarcode(code: string, branchId: number, suppId
   if (suppId) {
     prodSql += ` and p.supp_id = '${suppId}'`;
   }
-
+console.log(prodSql);
   let result = await query(prodSql);
   return result?.recordset[0];
 };

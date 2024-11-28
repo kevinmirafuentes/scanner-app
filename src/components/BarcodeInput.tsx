@@ -14,7 +14,7 @@ interface BarcodeInputProps {
 let scannerObject = new Scanner;
 let debounce: any;
 
-export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputProps) {
+export default function BarcodeInput({ onChange }: BarcodeInputProps) {
   let [barcode, setBarcode] = useState<string>('');
   const audioRef = useRef();
   const [inputRef, setFocus] = useFocus<HTMLInputElement>();
@@ -39,9 +39,10 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
     if (debounce) {
       clearTimeout(debounce);
     }
+
     debounce = setTimeout(() => {
       onChange(e.target.value);
-      clearOnChange && setBarcode('');
+      setBarcode('');
     }, 2000);
 
     setFocus();
@@ -54,8 +55,10 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
     if (debounce) {
       clearTimeout(debounce);
     }
+    console.log(barcode)
     onChange(barcode);
-    clearOnChange && setBarcode('');
+    setBarcode('');
+    setFocus();
   }
 
   useEffect(() => {
@@ -73,7 +76,12 @@ export default function BarcodeInput({ onChange, clearOnChange }: BarcodeInputPr
         autoFocus 
         type='number'
         value={barcode}
-        onChange={handleChange}
+        onChange={(e) => setBarcode(e.target.value)}
+        onKeyDown={e => {
+          if (e.which == 13) {
+            handleManualSubmit();
+          }
+        }}
         placeholder='Enter barcode' />
       <InputRightAddon onClick={handleManualSubmit}>
         <FontAwesomeIcon

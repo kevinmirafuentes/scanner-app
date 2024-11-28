@@ -177,7 +177,7 @@ export default function StockRequest() {
           </FormControl>
           <FormControl>
             <FormLabel>Type of Scan Barcode</FormLabel>
-            <BarcodeInput clearOnChange={true} onChange={(text: string) => setBarcode(text)} />
+            <BarcodeInput onChange={(text: string) => setBarcode(text)} />
           </FormControl>
           
           { products.map((product, index) => (

@@ -63,12 +63,13 @@ export function formatBarcode(code: string): string  {
 
   // TODO Handle 12 digits
   if (type === 'EAN-8') {
-    code = `0000${code}`;
+    return `0000${code}`;
   }
   
   if (type === 'EAN-13') {
     return code.substr(0, 12);
   }
+  
   return code;
 }
 

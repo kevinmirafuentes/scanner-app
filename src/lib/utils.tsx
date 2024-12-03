@@ -61,7 +61,6 @@ export function formatBarcode(code: string): string  {
   code = code.trim();
   let type = getBarcodeType(code);
 
-  // TODO Handle 12 digits
   if (type === 'EAN-8') {
     return `0000${code}`;
   }
@@ -69,7 +68,7 @@ export function formatBarcode(code: string): string  {
   if (type === 'EAN-13') {
     return code.substr(0, 12);
   }
-  
+
   return code;
 }
 

@@ -49,7 +49,6 @@ export async function saveStockTransferIn(data: StockTransferIn) {
       user_id,
       posted,
       branch_ref_no,
-      transfer_slip_no,
       date_created,
       date_uploaded
     ) 
@@ -75,7 +74,6 @@ export async function saveStockTransferIn(data: StockTransferIn) {
       @user_id,
       @posted,
       @branch_ref_no,
-      @transfer_slip_no,
       CURRENT_TIMESTAMP,
       '1900-01-01'
     )
@@ -103,7 +101,6 @@ export async function saveStockTransferIn(data: StockTransferIn) {
         {name: 'user_id', type: sql.Int, value: data?.user_id},
         {name: 'posted', type: sql.TinyInt, value: data?.posted||0},
         {name: 'branch_ref_no', type: sql.Char(10), value: data?.branch_ref_no},
-        {name: 'transfer_slip_no', type: sql.Char(10), value: data?.transfer_slip_no},
   ]);
 
   let insertId = stockTransferInResult?.recordset[0].IDENTITY_ID;

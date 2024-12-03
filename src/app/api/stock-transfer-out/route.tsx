@@ -35,7 +35,6 @@ const initStockTransferOutData = async (data: StockTransferOut) => {
     transfer_type:        1,
     cashier_id:           0, 
     branch_ref_no:        await getLatestRefNumber(branch_id),
-    transfer_slip_no:     data.transfer_slip_no,
     items:                items,
   };
 }

@@ -35,7 +35,6 @@ const initStockTransferInData = async (data: StockTransferIn) => {
     user_id:              user_id, 
     posted:               0, 
     branch_ref_no:        await getLatestRefNumber(branch_id), 
-    transfer_slip_no:     null,
     items:                items,
   };
 }

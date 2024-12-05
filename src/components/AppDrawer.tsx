@@ -84,6 +84,10 @@ export function AppDrawer() {
       link: '/purchase-returns'
     },
     {
+      title: 'Manage Purchase Returns',
+      link: '/purchase-returns/manage'
+    },
+    {
       title: 'Stock Transfer - IN',
       link: '/stock-transfer-in'
     },

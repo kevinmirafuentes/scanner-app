@@ -3,7 +3,7 @@ import { apiResponse } from "@/lib/utils";
 import { getBarcodeById } from "@/repository/barcodes";
 import { getSupplierCompanyDiscounts, getSupplierDiscountGrouping } from "@/repository/discounts";
 import { getProductOrderCostHistory } from "@/repository/products";
-import { getLatestRefNumber, getNextReferenceNumber, savePurchaseReturn } from "@/repository/purchaseReturns";
+import { getLatestRefNumber, getNextReferenceNumber, getPurchaseReturnsByDate, savePurchaseReturn } from "@/repository/purchaseReturns";
 import { PurchaseReturn, PurchaseReturnItem } from "@/types/types";
 
 const initPurchaseReturnData = async (data: PurchaseReturn) => {
@@ -89,4 +89,13 @@ export async function POST(
     await initPurchaseReturnData(data)
   )
   return apiResponse(purchaseReturn, 200);
+}
+
+export async function GET(
+  request: Request
+) {
+  const url = new URL(request.url);
+  const searchParams = new URLSearchParams(url.search);
+  const results = await getPurchaseReturnsByDate(new Date(searchParams.get('date') || ''));
+  return apiResponse(results, 200);
 }

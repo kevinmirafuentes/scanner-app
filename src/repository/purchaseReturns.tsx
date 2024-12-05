@@ -242,3 +242,28 @@ export async function savePurchaseReturnItem(data: PurchaseReturnItem) {
     {name: 'total_cost', type: sql.Decimal(10, 2), value: data.total_cost||0},
   ]);
 }
+
+export async function getPurchaseReturnsByDate(date: Date): Promise<PurchaseReturn[]> {
+  let queryString = `
+    select 
+      ref_id, 
+      ref_no,
+      date_created
+    from imasterdocuments..BadOrderH
+    where datediff(day, date_created, @date) = 0
+    order by ref_id asc
+  `;
+
+  let resultSet = await query(queryString, [
+    {name: 'date', type: sql.DateTime, value: date}
+  ]);
+
+  let results = [];
+  for (let i=0; i<resultSet?.recordset.length; i++) {
+    let res: any = resultSet?.recordset[i];
+    let itemResultSet = await getPurchaseReturnItems(res.ref_id);
+    results.push({...res, items: itemResultSet});
+  }
+
+  return results; 
+}

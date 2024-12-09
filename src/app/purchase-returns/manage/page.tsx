@@ -1,15 +1,14 @@
 'use client';
 import { NavFooterLayout } from "@/components/NavFooterLayout";
-import StockRequestPrintMenu from "@/components/StockRequestPrintMenu";
 import { printInNewTab } from "@/lib/utils";
 import { StoreRequestItem, StoreStockRequest } from "@/types/types";
-import { Text, Box, Card, CardBody, Container, FormControl, FormLabel, HStack, Input, Skeleton, Stack, Switch, Table, Tbody, Td, Th, Thead, Tr, useToast, Button } from "@chakra-ui/react";
+import { Text, Container, FormControl, FormLabel, Input, Skeleton, Table, Tbody, Td, Th, Thead, Tr, Button } from "@chakra-ui/react";
 import { faPrint } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
-export default function TagRequestList() {
+export default function PurchaseReturnsList() {
   const [date, setDate] = useState<string>(moment().format('YYYY-MM-DD'));
   const [results, setResults] = useState<StoreStockRequest[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);

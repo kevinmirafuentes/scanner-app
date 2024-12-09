@@ -54,7 +54,7 @@ export default function Print() {
           <Td><Text lineHeight={1}>: &nbsp;&nbsp;&nbsp; 0</Text></Td>
         </Tr>
         <Tr>
-          <Td><Text lineHeight={1}>CASHIER</Text></Td>
+          <Td><Text lineHeight={1}>SUPPLIER</Text></Td>
           <Td colSpan={3}><Text lineHeight={1}>: &nbsp;&nbsp;&nbsp; {purchaseReturn?.supplier?.supp_name}</Text></Td>
         </Tr>
         <Tr>

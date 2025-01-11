@@ -73,10 +73,11 @@ export default function ProductQuantityCard({
                 </InputLeftAddon>
                 <Input 
                   type='number' 
+                  step="0.01"
                   textAlign='center' 
                   width='70px'
                   value={product.qty} 
-                  onChange={e => {handleQuantityInput(parseInt(e.target.value))}} 
+                  onChange={e => {handleQuantityInput(parseFloat(e.target.value))}} 
                 />
                 <InputRightAddon padding='0'>
                   <Button size='sm' onClick={increment}>

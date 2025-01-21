@@ -156,7 +156,7 @@ export async function getPurchaseReturnById(id: number): Promise<PurchaseReturn>
 
 export async function getPurchaseReturnItems(refId: number): Promise<PurchaseReturnItem[]> {
   let queryString = `
-    select top 1 
+    select
       d.*,
       u.unit_code,
       p.short_descript as product_name
